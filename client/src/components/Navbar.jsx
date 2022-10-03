@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useContext, useEffect } from "react";
 import { DnsContext } from "../context/DnsContext";
+import styles from "./Navbar.module.css"
 
 
 const Navbar2 = (props) => {

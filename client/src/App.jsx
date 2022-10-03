@@ -2,7 +2,7 @@ import styles from './App.module.css';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./components/Navbar.jsx"
 import Sidebar from './components/Sidebar';
-import Mainpage from "./components/Mainpage";
+import Maincontent from "./components/Mainpage";
 import { useContext } from 'react';
 import { DnsContext } from './context/DnsContext';
 
