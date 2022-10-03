@@ -4,14 +4,15 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 import "./Domain.sol";
+import "./IDns.sol";
 
-contract Dns is ERC721URIStorage {
+contract Dns is ERC721URIStorage, IDns {
     address payable public owner;
 
-    struct EthDomain {
-        string domainName;
-        address contractAddress;
-    }
+    // struct EthDomain {
+    //     string domainName;
+    //     address contractAddress;
+    // }
 
     //Stores the domain to eth address mapping
     mapping(string => address) public domainsToEthAddr;
@@ -39,13 +40,25 @@ contract Dns is ERC721URIStorage {
     //of the state is called a pure function. It can only use local variables that are
     //declared in the function and the arguments that are passed to the function to compute
     //or return a value.
-    function resolveDomain(string calldata name) public view returns (address) {
+
+    function searchDomain(string calldata name) external view override returns (bool){
+        return domainsToEthAddr[name] == address(0);
+    }
+
+    
+    function resolvedomain(string calldata name)
+        external
+        view
+        override
+        returns (address)
+    {
         return domainsToEthAddr[name];
     }
 
     function resolveAddr(address name)
-        public
+        external
         view
+        override
         returns (EthDomain[] memory)
     {
         return ethAddrToDomain[name];
@@ -58,7 +71,11 @@ contract Dns is ERC721URIStorage {
         Domain newEthDomain = new Domain(name);
         address domainEthAddr = address(newEthDomain);
         domainsToEthAddr[name] = owner;
+
+        //Apparently solidity is smart enough to push the struct into an array even tho the array is empty for a new user
         EthDomain memory newDomStruct = EthDomain(name, domainEthAddr);
         ethAddrToDomain[_owner].push(newDomStruct);
     }
+
+    
 }

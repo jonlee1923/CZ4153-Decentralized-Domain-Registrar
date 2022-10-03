@@ -14,7 +14,7 @@ const {ethereum} = window;
 // }
 
 export const DnsProvider = ({children}) => {
-    const[currentAccount, setCurrentAccount] = useState("")
+    const[connected, setCurrentAccount] = useState("")
 
     const checkIfWalletIsConnected = async() => {
         try{
@@ -41,7 +41,7 @@ export const DnsProvider = ({children}) => {
             const accounts = await ethereum.request({method: "eth_requestAccounts",});
 
             setCurrentAccount(accounts[0]);
-            window.location.reload();
+            console.log(connected);
         }catch (error){
             console.log(error);
             throw new Error("No ethereum object");
@@ -53,7 +53,7 @@ export const DnsProvider = ({children}) => {
     }, []);
 
     return(
-        <DnsContext.Provider value={{connectWallet, currentAccount}}>
+        <DnsContext.Provider value={{connectWallet, checkIfWalletIsConnected, connected}}>
             {children}
         </DnsContext.Provider>
     )
