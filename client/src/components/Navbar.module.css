@@ -1,0 +1,22 @@
+.searchbar{
+    width:500px;
+}
+
+.searchbtn{
+    width:175px;
+    margin-right:40px;
+    margin-left:0;
+}
+
+.connectwallet{
+    width:200px;
+}
+
+.brand{
+    height:100px;
+}
+
+.form{
+    position:absolute;
+    right:0;
+}

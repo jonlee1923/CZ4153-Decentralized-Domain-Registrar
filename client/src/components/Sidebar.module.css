@@ -1,0 +1,23 @@
+.sidebar{
+    margin-top:50px;
+    border:solid;
+    width:15%;
+    height:auto;
+    display:flex;
+    text-align:left;
+}
+
+.list{
+    list-style:none;
+}
+.list li{
+    margin:30px 0;
+    font-size:20px;
+}
+.list a{
+    text-decoration: none;
+    color:grey;
+}
+.list a:hover{
+    color:black;
+}

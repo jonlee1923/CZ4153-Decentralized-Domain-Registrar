@@ -1,0 +1,46 @@
+.mainpage{
+    margin-top:50px; 
+    border:solid;
+    position:relative;
+    left:275px;
+    bottom:282px;
+    height:auto;
+    width:80%;
+}
+
+.topbar{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr ;
+}
+
+.registerbtn{
+    width:10%;
+    position:absolute;
+    right:100px;
+}
+
+
+.bottombtn{
+    position:relative;
+    left:450px;
+
+}
+
+.rental{
+    display:grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+
+}
+
+.rentalprice{
+    display:grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+
