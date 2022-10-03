@@ -41,7 +41,7 @@ export const DnsProvider = ({children}) => {
             const accounts = await ethereum.request({method: "eth_requestAccounts",});
 
             setCurrentAccount(accounts[0]);
-            window.location.reload();
+            // window.location.reload();
         }catch (error){
             console.log(error);
             throw new Error("No ethereum object");

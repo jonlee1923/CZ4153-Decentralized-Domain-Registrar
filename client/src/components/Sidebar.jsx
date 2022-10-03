@@ -1,6 +1,5 @@
 import styles from "./Sidebar.module.css";
-import {HeartFill,ArchiveFill,ChatLeftDotsFill} from 'react-bootstrap-icons';
-import {useState} from "react";
+import {CardList,ArchiveFill,ListColumns} from 'react-bootstrap-icons';
 
 const Sidebar = () => {
 
@@ -8,8 +7,8 @@ const Sidebar = () => {
     <div className={`${styles.sidebar}`}>
       <ul className={`${styles.list}`}>
         <li><ArchiveFill/><a href="#mynames">      My Names</a></li>
-        <li><HeartFill/><a href="#fav">      Favorites</a></li>
-        <li><ChatLeftDotsFill/><a href="#about">      About</a></li>
+        <li><CardList/><a href="#fav">      My Biddings</a></li>
+        <li><ListColumns/><a href="#about">      Bidding List</a></li>
       </ul>
     </div>
   );

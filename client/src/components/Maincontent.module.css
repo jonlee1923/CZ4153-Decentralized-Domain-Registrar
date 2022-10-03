@@ -15,25 +15,36 @@
 }
 
 .registerbtn{
-    width:10%;
-    position:absolute;
-    right:100px;
+    width:50%;
+    position:relative;
 }
 
 
 .bottombtn{
     position:relative;
-    left:450px;
+    left: 900px;
 
 }
 
-.rental{
+.period{
     display:grid;
     grid-template-columns: 2fr 1fr 2fr 1fr;
+    
 
 }
+.rentalperiod{
+    text-align:center;
+    position:relative;
+    top:5px;
+    right:10px;
+}
+/* .price{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
 
-.rentalprice{
+} */
+
+.periodprice{
     display:grid;
     grid-template-columns: 1fr 2fr;
 }
@@ -43,4 +54,8 @@
     grid-template-columns: 1fr 1fr 1fr;
 }
 
+.plusminusbtn {
+    width:70%;
+    height:80%;
+}
 
