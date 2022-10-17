@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.4;
 
-contract Auction {
+import "./IAuction.sol";
+
+contract Auction is IAuction {
     struct Bid {
         bytes32 blindedBid;
         uint deposit;
@@ -11,6 +13,7 @@ contract Auction {
     uint public biddingEnd;
     uint public revealEnd;
     bool public ended;
+    string public override name;
 
     mapping(address => Bid) public bids;
 
@@ -34,8 +37,10 @@ contract Auction {
     constructor(
         uint _biddingTime,
         uint _revealTime,
-        address payable _dns
+        address payable _dns,
+        string memory _name
     ) {
+        name = _name;
         dns = _dns;
         biddingEnd = block.timestamp + _biddingTime;
         revealEnd = biddingEnd + _revealTime;
@@ -47,27 +52,31 @@ contract Auction {
     /// revealed in the revealing phase. The bid is valid if the
     /// ether sent together with the bid is at least "value"
 
-    function _bid(bytes32 _blindedBid, uint bidAmount) private onlyBefore(biddingEnd) {
+    function _bid(address user, bytes32 _blindedBid, uint bidAmount)
+        private
+        onlyBefore(biddingEnd)
+    {
         // bids[msg.sender] = Bid({blindedbid: _blindedBid, deposit: msg.value});
-        bids[msg.sender] = Bid({blindedBid: _blindedBid, deposit: bidAmount});
+        bids[user] = Bid({blindedBid: _blindedBid, deposit: bidAmount});
     }
 
-    function bid(uint rawBid, string memory secret) external payable {
+    function bid(address user, uint rawBid, string memory secret) external payable override {
         bytes32 blindedBid = keccak256(abi.encodePacked(rawBid, secret));
-        _bid(blindedBid, msg.value);
+        _bid(user, blindedBid, msg.value);
     }
 
     /// Reveal your blinded bids. You will get a refund for all
     /// correctly blinded invalid bids and for all bids except for
     /// the totally highest.
-    function reveal(uint _value, bytes32 _secret)
-        public
+    function reveal(address _user, uint _value, bytes32 _secret)
+        external
+        override
         onlyAfter(biddingEnd)
         onlyBefore(revealEnd)
         returns (bool result)
     {
         uint refund;
-        Bid storage bidToCheck = bids[msg.sender];
+        Bid storage bidToCheck = bids[_user];
         if (
             bidToCheck.blindedBid !=
             keccak256(abi.encodePacked(_value, _secret))
@@ -77,7 +86,7 @@ contract Auction {
             return false;
         }
         if (bidToCheck.deposit >= _value) {
-            if (refreshHighestBid(msg.sender, _value)) {
+            if (refreshHighestBid(_user, _value)) {
                 refund -= _value;
             }
         }
@@ -85,7 +94,7 @@ contract Auction {
         // the same deposit.
         bidToCheck.blindedBid = bytes32(0);
         if (refund != 0) {
-            (bool sent,) = msg.sender.call{value: refund}("");
+            (bool sent, ) = _user.call{value: refund}("");
             require(sent, "Failed to send Ether");
         }
 
@@ -110,20 +119,6 @@ contract Auction {
         highestBidder = bidder;
         return true;
     }
-
-    // /// Withdraw a bid that was overbid.
-    // function withdraw() public {
-    //     uint amount = pendingReturns[msg.sender];
-    //     if (amount > 0) {
-    //         // It is important to set this to zero because the recipient
-    //         // can call this function again as part of the receiving call
-    //         // before `transfer` returns (see the remark above about
-    //         // conditions -> effects -> interaction).
-    //         pendingReturns[msg.sender] = 0;
-
-    //         msg.sender.transfer(amount);
-    //     }
-    // }
 
     /// End the auction and send the highest bid
     /// to the dns.
