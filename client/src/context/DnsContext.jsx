@@ -57,6 +57,7 @@ export const DnsProvider = ({ children }) => {
     const createAuction = async (name) => {
         try {
             if (!ethereum) return alert("Please install metamask");
+            console.log("in createAuction");
             let transaction = await dnsContract.startAuction(name, 180, 180);
             let tx = await transaction.wait();
             console.log("Transaction events: ", tx.events[0]);
@@ -85,8 +86,11 @@ export const DnsProvider = ({ children }) => {
         try {
             setLoading(true);
             if (!ethereum) return alert("Please install metamask");
+            console.log("auction");
             createAuction(name);
-            bid(name, parseInt(amount), secret);
+            console.log("bidding");
+            bid(name, amount, secret);
+            console.log("done");
             setLoading(false);
         } catch (err) {
             console.log(err);
@@ -99,6 +103,22 @@ export const DnsProvider = ({ children }) => {
             let auctions = await dnsContract.getAuctions();
             console.log(auctions);
             return auctions;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const getMyBiddings = async (address) => {
+        try {
+            setLoading(true);
+
+            if (!ethereum) return alert("Please install metamask");
+            console.log("in context fn");
+            let bids = await dnsContract.getBiddings(address);
+            console.log("done context fn");
+            setLoading(false);
+
+            return bids;
         } catch (err) {
             console.log(err);
         }
@@ -120,6 +140,7 @@ export const DnsProvider = ({ children }) => {
                 getAuctions,
                 bid,
                 createAuctionAndBid,
+                getMyBiddings,
             }}
         >
             {children}
