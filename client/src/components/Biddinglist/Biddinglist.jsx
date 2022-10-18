@@ -67,7 +67,7 @@ const BiddingList = (props) => {
     ];
 
     const [auctions, setAuctions] = useState();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const {
         connectWallet,
@@ -83,11 +83,9 @@ const BiddingList = (props) => {
 
             const auctionsMapped = await Promise.all(
                 data.map(async (i) => {
-
-
-                  const unixTime = i.biddingEnd.toNumber();
-                  let date = new Date(unixTime*1000);
-                  date = date.toUTCString();
+                    const unixTime = i.biddingEnd.toNumber();
+                    let date = new Date(unixTime * 1000);
+                    date = date.toUTCString();
 
                     let auctionItem = {
                         auctionId: i.auctionId.toNumber(),
@@ -98,7 +96,7 @@ const BiddingList = (props) => {
                     return auctionItem;
                 })
             );
-
+            setLoading(true);
             setAuctions(auctionsMapped);
             setLoading(false);
         };
@@ -116,39 +114,34 @@ const BiddingList = (props) => {
     }
     return (
         <div>
-            {loading && <p>Loading</p>}
+            {loading && !auctions && <p>Loading</p>}
 
-            {!loading && (
+            {!loading && auctions && (
                 <Container>
                     <h2 className={styles.pagename}>Bidding List</h2>
                     {auctions.map((auction) => {
-                                    return (
-                                        <Col lg={4} md={6} sm={12} xs={12}>
-                                            <Card
-                                                className={styles.card}
-                                                key={auction.id}
-                                            >
-                                                <p>Domain Name: {auction.name}</p>
-                                                <p>End: {auction.biddingEnd}</p>
-                                                <Button
-                                                    className={`btn btn-primary ${styles.bidbtn}`}
-                                                >
-                                                    <NavLink
-                                                        to={bidPath}
-                                                        state={{
-                                                            name: `${auction.name}`,
-                                                        }}
-                                                        className={
-                                                            styles.bidlink
-                                                        }
-                                                    >
-                                                        Place a Bid!
-                                                    </NavLink>
-                                                </Button>
-                                            </Card>
-                                        </Col>
-                                    );
-                                })}
+                        return (
+                            <Col lg={4} md={6} sm={12} xs={12}>
+                                <Card className={styles.card} key={auction.id}>
+                                    <p>Domain Name: {auction.name}</p>
+                                    <p>End: {auction.biddingEnd}</p>
+                                    <Button
+                                        className={`btn btn-primary ${styles.bidbtn}`}
+                                    >
+                                        <NavLink
+                                            to={bidPath}
+                                            state={{
+                                                name: `${auction.name}`,
+                                            }}
+                                            className={styles.bidlink}
+                                        >
+                                            Place a Bid!
+                                        </NavLink>
+                                    </Button>
+                                </Card>
+                            </Col>
+                        );
+                    })}
                     {/* {dummyBidGroup.map((dummyBid) => {
                         return (
                             <Row>
