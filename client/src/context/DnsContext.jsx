@@ -12,7 +12,7 @@ const { ethereum } = window;
 
 export const DnsProvider = ({ children }) => {
     const [connected, setCurrentAccount] = useState("");
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const dnsContract = new ethers.Contract(
@@ -84,14 +84,14 @@ export const DnsProvider = ({ children }) => {
 
     const createAuctionAndBid = async (name, amount, secret) => {
         try {
-            setLoading(true);
+            // setLoading(true);
             if (!ethereum) return alert("Please install metamask");
             console.log("auction");
             createAuction(name);
             console.log("bidding");
             bid(name, amount, secret);
             console.log("done");
-            setLoading(false);
+            // setLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -110,13 +110,13 @@ export const DnsProvider = ({ children }) => {
 
     const getMyBiddings = async (address) => {
         try {
-            setLoading(true);
+            // setLoading(true);
 
             if (!ethereum) return alert("Please install metamask");
             console.log("in context fn");
             let bids = await dnsContract.getBiddings(address);
             console.log("done context fn");
-            setLoading(false);
+            // setLoading(false);
 
             return bids;
         } catch (err) {
@@ -134,7 +134,7 @@ export const DnsProvider = ({ children }) => {
                 connectWallet,
                 checkIfWalletIsConnected,
                 connected,
-                loading,
+                // loading,
                 //FUNCTIONS
                 createAuction,
                 getAuctions,

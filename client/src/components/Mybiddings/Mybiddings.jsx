@@ -72,10 +72,10 @@ const Mybiddings = (props) => {
         // checkIfWalletIsConnected,
         // connected,
         // createAuction,
-        loading,
+        // loading,
         getMyBiddings,
     } = useContext(DnsContext);
-
+    const [loading, setLoading] = useState(false);
     const [bids, setBiddings] = useState();
 
     useEffect(() => {
@@ -94,8 +94,9 @@ const Mybiddings = (props) => {
 
             console.log(bids);
         };
-
+        setLoading(true);
         getBids();
+        setLoading(false);
     }, [getMyBiddings]);
 
     let bidPath = "";
@@ -113,7 +114,16 @@ const Mybiddings = (props) => {
 
     return (
         <Container>
-        {reveal && <InputModal onConfirm={revealHandler} title="Reveal" placeholder= "Please input secret integer" type="password" pattern="\d*" label="Secret:"/>}
+            {reveal && (
+                <InputModal
+                    onConfirm={revealHandler}
+                    title="Reveal"
+                    placeholder="Please input secret integer"
+                    type="password"
+                    pattern="\d*"
+                    label="Secret:"
+                />
+            )}
             <h2 className={styles.pagename}>My Biddings</h2>
             {/* {dummyBidGroup.map((dummyBid) => {
                 return (
@@ -140,28 +150,27 @@ const Mybiddings = (props) => {
             })} */}
 
             <Row>
-                {loading ? (
-                    <p>Loading</p>
-                ) : (
+                {loading && !bids && <p>Loading</p>}
+                {!loading && bids &&
                     <div>
                         {bids.map((bid) => {
                             return (
-                              <Col lg={4} md={6} sm={12} xs={12}>
-                              <Card className={styles.card} key={bid.id}>
-                                  <p>Domain Name: {bid.name}</p>
-                         
-                                  <Button
-                                      className={`btn btn-primary ${styles.bidbtn}`}
-                                      onClick={revealHandler}
-                                  >
-                                      Check status
-                                  </Button>
-                              </Card>
-                          </Col>
+                                <Col lg={4} md={6} sm={12} xs={12}>
+                                    <Card className={styles.card} key={bid.id}>
+                                        <p>Domain Name: {bid.name}</p>
+
+                                        <Button
+                                            className={`btn btn-primary ${styles.bidbtn}`}
+                                            onClick={revealHandler}
+                                        >
+                                            Check status
+                                        </Button>
+                                    </Card>
+                                </Col>
                             );
                         })}
                     </div>
-                )}
+                }
             </Row>
         </Container>
     );
