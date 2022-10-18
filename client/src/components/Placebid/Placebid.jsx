@@ -1,6 +1,7 @@
 import styles from "./Placebid.module.css";
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useContext } from "react";
+import {ethers } from 'ethers';
+import { DnsContext } from "../../context/DnsContext";
 import Button from "react-bootstrap/Button";
 import { NavLink, useLocation } from "react-router-dom";
 import { Icon1Circle, Icon2Circle, Icon3Circle } from "react-bootstrap-icons";
@@ -13,11 +14,22 @@ const Placebid = (props) => {
   const { state } = location;
   let existingBid = false;
 
+  const {
+    connectWallet,
+    checkIfWalletIsConnected,
+    connected,
+    createAuction
+} = useContext(DnsContext);
+
   if (!state) {
     existingBid = false;
   } else {
     existingBid = true;
   }
+
+  // const createAuctionHandler = () => {
+
+  // }
 
   const domainNameHandler = (event) => {
     setDomainName(event.target.value);
@@ -109,6 +121,7 @@ const Placebid = (props) => {
         <Button
           type="button"
           className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
+          onClick={createAuction}
         >
           <NavLink to="/" className={styles.regbtn}>
             Register!
