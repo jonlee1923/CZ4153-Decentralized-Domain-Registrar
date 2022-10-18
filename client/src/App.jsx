@@ -9,7 +9,7 @@ import Connectpage from "./components/Connectpage/Connectpage";
 import Placebid from "./components/Placebid/Placebid";
 import Ethertx from "./components/Ethertx/Ethertx";
 import Mynames from "./components/Mynames/Mynames";
-import Reveal from './components/Reveal/Reveal';
+import InputModal from './components/InputModal/InputModal';
 
 import {
   BrowserRouter,
@@ -40,7 +40,6 @@ function App() {
         <Route path="/mynames" element={<Mynames connected={connected} />}/>
         <Route path="/mybiddings" element={<Mybiddings connected={connected} />}/>
         <Route path="/ethertx" element={<Ethertx connected={connected} />}/>
-        <Route path="/reveal" element={<Reveal connected={connected} />}/>
       </Routes>
     </BrowserRouter>
   );

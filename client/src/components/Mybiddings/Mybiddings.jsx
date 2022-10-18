@@ -6,7 +6,7 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "../Card/Card.jsx";
-import Reveal from "../Reveal/Reveal";
+import InputModal from "../InputModal/InputModal";
 
 const Mybiddings = (props) => {
   const dummyBidGroup = [
@@ -81,7 +81,7 @@ const Mybiddings = (props) => {
 
   return (
     <Container>
-      {reveal && <Reveal onConfirm={revealHandler} />}
+      {reveal && <InputModal onConfirm={revealHandler} title="Reveal" placeholder= "Please input secret integer" type="password" pattern="\d*" label="Secret:"/>}
       <h2 className={styles.pagename}>My Biddings</h2>
       {dummyBidGroup.map((dummyBid) => {
         return (

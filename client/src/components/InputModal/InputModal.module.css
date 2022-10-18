@@ -30,6 +30,8 @@
   
   .content {
     padding: 1rem;
+    font-size:20px;
+    margin-top:20px;
   }
   
   .actions {
@@ -56,6 +58,10 @@
     color:white;
   }
   
+  .inputbox{
+    width:300px;
+    height:50px;
+  }
   @media (min-width: 768px) {
     .modal {
       left: calc(50% - 20rem);

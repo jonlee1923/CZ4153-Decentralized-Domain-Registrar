@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import styles from "./Mynames.module.css";
 
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { NavLink } from "react-router-dom";
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
 
@@ -69,18 +68,10 @@ const Mynames = (props) => {
 
   const [error,setError] = useState(false);
 
-  const withdrawHandler = () =>{
-    setError(!error);
+  const withdrawHandler = () => {
+    setError(false);
   }
 
-  
-
-  let bidPath = "";
-  if (props.connected) {
-    bidPath = "/placebid";
-  } else {
-    bidPath = "/connect";
-  }
   return (
     <Container>
     {error && <ErrorModal onConfirm={withdrawHandler} title={"Balance Insufficient"} message={"Please input an amount below your current balance"}/>}
