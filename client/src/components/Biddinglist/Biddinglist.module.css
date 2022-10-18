@@ -1,0 +1,23 @@
+.pagename {
+  text-align: center;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.card {
+  position: relative;
+  margin: 10px 0;
+  height: 200px;
+  column-width: 300px;
+}
+
+.bidbtn {
+    position:relative;
+    left:200px;
+}
+
+.bidlink {
+  color: white;
+}
+.bidlink:hover {
+  color: white;
+}

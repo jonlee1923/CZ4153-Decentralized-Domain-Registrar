@@ -1,20 +1,48 @@
-import styles from './App.module.css';
+import React,{useRef} from 'react';
+import styles from "./App.module.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "./components/Navbar.jsx"
-import Sidebar from './components/Sidebar';
-import Maincontent from "./components/Mainpage";
-import { useContext } from 'react';
-import { DnsContext } from './context/DnsContext';
+
+import Navbar2 from "./components/Navbar/Navbar.jsx";
+import BiddingList from "./components/Biddinglist/Biddinglist.jsx";
+import Mybiddings from "./components/Mybiddings/Mybiddings";
+import Connectpage from "./components/Connectpage/Connectpage";
+import Placebid from "./components/Placebid/Placebid";
+import Ethertx from "./components/Ethertx/Ethertx";
+import Mynames from "./components/Mynames/Mynames";
+import Reveal from './components/Reveal/Reveal';
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
+
+import { useContext } from "react";
+import { DnsContext } from "./context/DnsContext";
 
 function App() {
-  const {connected, connectWallet} = useContext(DnsContext);
+  const { connected, connectWallet } = useContext(DnsContext);
+  const scrollRef = useRef();
+  const executeScroll = () => {
+    scrollRef.current.scrollIntoView();
+  }
+
 
   return (
-    <div className="App">
-      <Navbar connected = {connected} connectWallet={connectWallet}/>
-      <Sidebar/>
-      <Maincontent/>
-    </div>
+    <BrowserRouter>
+      <Navbar2 connected={connected} connectWallet={connectWallet} scrollRef={scrollRef}/>
+      <Routes>
+        <Route path="/" element={<BiddingList connected={connected} />}/>
+        <Route path="/connect" element={<Connectpage executeScroll={executeScroll} />}/>
+        <Route path="/placebid" element={<Placebid connected={connected} />}/>
+        <Route path="/mynames" element={<Mynames connected={connected} />}/>
+        <Route path="/mybiddings" element={<Mybiddings connected={connected} />}/>
+        <Route path="/ethertx" element={<Ethertx connected={connected} />}/>
+        <Route path="/reveal" element={<Reveal connected={connected} />}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 export default App;

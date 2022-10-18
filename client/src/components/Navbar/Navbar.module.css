@@ -9,14 +9,21 @@
 }
 
 .connectwallet{
+    position:relative;
     width:200px;
+    left:10px;
 }
 
 .brand{
-    height:100px;
+    width:250px;
+    height:auto;
 }
 
 .form{
-    position:absolute;
-    right:0;
+    position:relative;
+}
+
+.dropdown{
+    position:relative;
+    left:50px;
 }

@@ -7,6 +7,12 @@
     text-align:left;
 }
 
+.notconnected{
+    visibility:hidden;
+}
+
+
+
 .list{
     list-style:none;
 }

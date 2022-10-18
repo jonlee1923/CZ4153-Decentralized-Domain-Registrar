@@ -1,0 +1,102 @@
+label {
+  font-size: 30px;
+  padding-right: 10px;
+}
+
+.mainpage {
+  display: grid;
+  grid-template-rows: 1fr 2fr 1fr;
+  border: solid;
+  position: relative;
+  height: 460px;
+  margin: 30px;
+}
+
+.topbar {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-left:20px;
+}
+
+.topbar p {
+  font-size: 30px;
+}
+.topbar span {
+  text-decoration: underline;
+}
+
+.middle{
+    margin:20px;
+}
+
+.nameinput {
+  font-size: 30px;
+  width: 60%;
+}
+
+.domainname {
+  /* width:100px;
+    height:100px; */
+  background-color: #d3d3d3;
+  border-radius: 10px;
+}
+
+.rentalprice {
+  font-size: 30px;
+  width: 60%;
+}
+
+.period {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 50px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 30px;
+}
+
+.step p {
+  font-size: 18px;
+}
+
+.note {
+  font-size: 15px;
+  color: grey;
+  position: relative;
+  right: 20px;
+}
+
+.cancelbtn {
+  color: black;
+}
+.cancelbtn:hover{
+    color:black;
+}
+
+.regbtn {
+  color: white;
+}
+.regbtn:hover{
+    color:white;
+}
+
+.bottombtn {
+  position: relative;
+  left: 1200px;
+}
+
+.reqregisterbtn {
+    margin-right:30px;
+    text-decoration:underline;
+}
+
+

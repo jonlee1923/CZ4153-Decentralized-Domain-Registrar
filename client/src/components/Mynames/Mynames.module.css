@@ -1,0 +1,24 @@
+.pagename{
+    text-align:center;
+    text-decoration:underline;
+    font-weight:bold;
+}
+.card{
+    position:relative;
+    margin:10px 0;
+    height:150px;
+    column-width:300px;
+}
+
+/* .gridcontainer{
+    display:flex;
+    flex-wrap:wrap;
+} */
+
+.bidbtn{
+    position:absolute;
+    right:10px;
+}
+.bidlink{
+    color:white;
+}
