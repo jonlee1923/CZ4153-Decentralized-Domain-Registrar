@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "./IDomain.sol";
 
@@ -8,8 +8,8 @@ contract Domain is IDomain {
     address payable public owner;
     string domainName;
 
-    constructor(string memory _domainName) {
-        owner = payable(msg.sender);
+    constructor(string memory _domainName, address _owner) {
+        owner = payable(_owner);
         domainName = _domainName;
     }
 

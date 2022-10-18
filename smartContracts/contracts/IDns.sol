@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 interface IDns {
     struct EthDomain {
@@ -8,12 +8,27 @@ interface IDns {
         address contractAddress;
     }
 
-    function resolvedomain(string calldata name) external view returns (address);
+    struct Bid {
+        string name;
+        address bidder;
+        bool revealed;
+        uint revealedBid;
+    }
 
-    function resolveAddr(address name)
+    struct Auction {
+        uint biddingEnd;
+        uint revealEnd;
+        string name;
+        uint auctionId;
+        uint highestBid;
+        address highestBidder;
+    }
+
+    function getDomains(address ownerAddress)
         external
         view
         returns (EthDomain[] memory);
 
-    function searchDomain(string calldata name) external view returns (bool);
+    function getBiddings(address user) external view returns (Bid[] memory);
+
 }
