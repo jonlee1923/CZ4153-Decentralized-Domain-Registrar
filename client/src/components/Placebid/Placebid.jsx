@@ -11,12 +11,16 @@ const Placebid = (props) => {
   const [domainName, setDomainName] = useState("");
   const [secretInt, setSecretInt] = useState("");
 
-  const location = useLocation();
-  const { state } = location;
-  let existingBid = false;
+    const location = useLocation();
+    const { state } = location;
+    let existingBid = false;
 
-  const { connectWallet, checkIfWalletIsConnected, connected, createAuction } =
-    useContext(DnsContext);
+    const {
+        connectWallet,
+        checkIfWalletIsConnected,
+        connected,
+        createAuction,
+    } = useContext(DnsContext);
 
   if (!state) {
     existingBid = false;
@@ -28,9 +32,9 @@ const Placebid = (props) => {
     setDomainName(event.target.value);
   };
 
-  const priceHandler = (event) => {
-    setRentalPrice(event.target.value);
-  };
+    const priceHandler = (event) => {
+        setRentalPrice(event.target.value);
+    };
 
   const secretHandler = (event) => {
     setSecretInt(event.target.value);
