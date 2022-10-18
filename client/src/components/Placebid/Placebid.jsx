@@ -75,7 +75,7 @@ const Placebid = (props) => {
             id="rentalprice"
             type="text"
             placeholder="0"
-            pattern="\d*"
+            pattern="^\d*(\.\d{0,6})?$"
             value={rentalPrice}
             onChange={priceHandler}
             className={styles.rentalprice}
@@ -86,7 +86,7 @@ const Placebid = (props) => {
           <input
             id="secret"
             type="password"
-            pattern="\d* | .{8,}"
+            pattern="\d+"
             value={secretInt}
             onChange={secretHandler}
             className={styles.secretInt}
@@ -139,7 +139,7 @@ const Placebid = (props) => {
         <Button
           type="submit"
           className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
-          onClick={createAuction}
+          onClick={() => {createAuction(domainName)}}
         >
           Register!
         </Button>
