@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { contractABI, contractAddress } from "../utils/constants";
+import DnsAbi from "../contractsData/Dns.json";
+import DnsAddress from "../contractsData/Dns-address.json";
 export const DnsContext = React.createContext();
 
 const { ethereum } = window;
@@ -15,8 +16,8 @@ export const DnsProvider = ({ children }) => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const dnsContract = new ethers.Contract(
-        contractAddress,
-        contractABI,
+        DnsAddress.address,
+        DnsAbi.abi,
         signer
     );
 
@@ -53,10 +54,14 @@ export const DnsProvider = ({ children }) => {
         }
     };
 
-    const createAuction = async (name, bid, secret) => {
+    const createAuction = async (name) => {
         try {
+            console.log("in the context create function trying to create auction for: " + name.value);
             if (!ethereum) return alert("Please install metamask");
-            await dnsContract.startAuction(name, 180, 180);
+            let transaction = await dnsContract.startAuction(name, 180, 180);
+            let tx = await transaction.wait();
+            console.log('Transaction events: ', tx.events[0]);
+
         } catch (err) {
             console.log(err);
         }
