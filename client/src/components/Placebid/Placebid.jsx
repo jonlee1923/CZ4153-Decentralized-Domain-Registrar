@@ -1,6 +1,6 @@
 import styles from "./Placebid.module.css";
 import { useState, useEffect, useContext } from "react";
-import {ethers } from 'ethers';
+import { ethers } from "ethers";
 import { DnsContext } from "../../context/DnsContext";
 import Button from "react-bootstrap/Button";
 import { NavLink, useLocation } from "react-router-dom";
@@ -9,27 +9,20 @@ import { Icon1Circle, Icon2Circle, Icon3Circle } from "react-bootstrap-icons";
 const Placebid = (props) => {
   const [rentalPrice, setRentalPrice] = useState("");
   const [domainName, setDomainName] = useState("");
+  const [secretInt, setSecretInt] = useState("");
 
   const location = useLocation();
   const { state } = location;
   let existingBid = false;
 
-  const {
-    connectWallet,
-    checkIfWalletIsConnected,
-    connected,
-    createAuction
-} = useContext(DnsContext);
+  const { connectWallet, checkIfWalletIsConnected, connected, createAuction } =
+    useContext(DnsContext);
 
   if (!state) {
     existingBid = false;
   } else {
     existingBid = true;
   }
-
-  // const createAuctionHandler = () => {
-
-  // }
 
   const domainNameHandler = (event) => {
     setDomainName(event.target.value);
@@ -39,8 +32,16 @@ const Placebid = (props) => {
     setRentalPrice(event.target.value);
   };
 
+  const secretHandler = (event) => {
+    setSecretInt(event.target.value);
+  };
+
+  const submitHandler = (event) =>{
+    event.preventDefault();
+    console.log("submitted!");
+  }
   return (
-    <div className={`${styles.mainpage}`}>
+    <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
       <div className={`${styles.topbar}`}>
         {existingBid && (
           <p>
@@ -51,7 +52,7 @@ const Placebid = (props) => {
           </p>
         )}
         {!existingBid && (
-          <div>
+          <div className={styles.newauction}>
             <label htmlFor="nameinput">Domain Name: </label>
             <input
               id="nameinput"
@@ -61,6 +62,7 @@ const Placebid = (props) => {
               value={domainName}
               className={styles.nameinput}
             />
+            <p className={styles.domain}>.ntu</p>
           </div>
         )}
         <div className={`${styles.price}`}>
@@ -69,9 +71,21 @@ const Placebid = (props) => {
             id="rentalprice"
             type="text"
             placeholder="0"
+            pattern="\d*"
             value={rentalPrice}
             onChange={priceHandler}
             className={styles.rentalprice}
+          />
+        </div>
+        <div className={`${styles.secret}`}>
+          <label htmlFor="secret">Secret: </label>
+          <input
+            id="secret"
+            type="password"
+            pattern="\d* | .{8,}"
+            value={secretInt}
+            onChange={secretHandler}
+            className={styles.secretInt}
           />
         </div>
       </div>
@@ -119,16 +133,14 @@ const Placebid = (props) => {
           </NavLink>
         </Button>
         <Button
-          type="button"
+          type="submit"
           className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
           onClick={createAuction}
         >
-          <NavLink to="/" className={styles.regbtn}>
-            Register!
-          </NavLink>
+          Register!
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 
