@@ -220,7 +220,7 @@ contract Dns is IDns, ERC721 {
         }
 
         _bid(msg.sender, _name);
-        // emit BidMade(msg.sender, _name);
+        emit BidMade(msg.sender, _name);
     }
 
     function _bid(address user, string memory _name) private {

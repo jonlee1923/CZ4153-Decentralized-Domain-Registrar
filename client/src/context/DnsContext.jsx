@@ -12,7 +12,7 @@ const { ethereum } = window;
 
 export const DnsProvider = ({ children }) => {
     const [connected, setCurrentAccount] = useState("");
-
+    const [loading, setLoading] = useState(false);
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const dnsContract = new ethers.Contract(
@@ -56,12 +56,49 @@ export const DnsProvider = ({ children }) => {
 
     const createAuction = async (name) => {
         try {
-            console.log("in the context create function trying to create auction for: " + name.value);
             if (!ethereum) return alert("Please install metamask");
             let transaction = await dnsContract.startAuction(name, 180, 180);
             let tx = await transaction.wait();
-            console.log('Transaction events: ', tx.events[0]);
+            console.log("Transaction events: ", tx.events[0]);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
+    const bid = async (name, bid, secret) => {
+        try {
+            if (!ethereum) return alert("Please install metamask");
+            console.log(connected);
+            const bytecode = await dnsContract.getBytecode(connected, name);
+
+            let transaction = await dnsContract.bid(bytecode, secret, name, {
+                value: ethers.utils.parseEther(bid),
+            });
+            let tx = await transaction.wait();
+            console.log("Transaction events: ", tx.events[0]);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const createAuctionAndBid = async (name, amount, secret) => {
+        try {
+            setLoading(true);
+            if (!ethereum) return alert("Please install metamask");
+            createAuction(name);
+            bid(name, parseInt(amount), secret);
+            setLoading(false);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const getAuctions = async () => {
+        try {
+            if (!ethereum) return alert("Please install metamask");
+            let auctions = await dnsContract.getAuctions();
+            console.log(auctions);
+            return auctions;
         } catch (err) {
             console.log(err);
         }
@@ -77,8 +114,12 @@ export const DnsProvider = ({ children }) => {
                 connectWallet,
                 checkIfWalletIsConnected,
                 connected,
+                loading,
                 //FUNCTIONS
                 createAuction,
+                getAuctions,
+                bid,
+                createAuctionAndBid,
             }}
         >
             {children}
