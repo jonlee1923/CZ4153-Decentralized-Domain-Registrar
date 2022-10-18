@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./Mynames.module.css";
 
 import Button from "react-bootstrap/esm/Button";
@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
+import InputModal from "../InputModal/InputModal";
 
 const Mynames = (props) => {
   const dummyBidGroup = [
@@ -14,19 +15,19 @@ const Mynames = (props) => {
       {
         name: "JonLee.ens",
         value: "20",
-        balance:"30",
+        balance: "30",
         id: 1,
       },
       {
         name: "GeneLum.ens",
         value: "30",
-        balance:"30",
+        balance: "30",
         id: 2,
       },
       {
         name: "Chuansong.ens",
         value: "40",
-        balance:"30",
+        balance: "30",
         id: 3,
       },
     ],
@@ -34,19 +35,19 @@ const Mynames = (props) => {
       {
         name: "CatChew.ens",
         value: "40",
-        balance:"30",
+        balance: "30",
         id: 4,
       },
       {
         name: "JonLee.ens",
         value: "20",
-        balance:"30",
+        balance: "30",
         id: 5,
       },
       {
         name: "GeneLum.ens",
         value: "30",
-        balance:"30",
+        balance: "30",
         id: 6,
       },
     ],
@@ -54,28 +55,51 @@ const Mynames = (props) => {
       {
         name: "CatChew.ens",
         value: "40",
-        balance:"30",
+        balance: "30",
         id: 8,
       },
       {
         name: "Chuansong.ens",
         value: "40",
-        balance:"30",
+        balance: "30",
         id: 7,
       },
     ],
   ];
-
-  const [error,setError] = useState(false);
+  const balanceInsufficient = false;
+  const [balanceError, setBalanceError] = useState(false);
+  const [validWithdraw, setValidWithdraw] = useState(false);
 
   const withdrawHandler = () => {
-    setError(false);
-  }
+    if (balanceInsufficient) {
+      setBalanceError(true);
+      setValidWithdraw(false);
+    } else {
+      setBalanceError(false);
+      setValidWithdraw(!validWithdraw);
+    }
+  };
 
   return (
     <Container>
-    {error && <ErrorModal onConfirm={withdrawHandler} title={"Balance Insufficient"} message={"Please input an amount below your current balance"}/>}
-    <h2 className={styles.pagename}>My Names</h2>
+      {balanceError && (
+        <ErrorModal
+          onConfirm={withdrawHandler}
+          title={"Balance Insufficient"}
+          message={"Please input an amount below your current balance"}
+        />
+      )}
+      {validWithdraw && (
+        <InputModal
+          onConfirm={withdrawHandler}
+          title="Withdrawal"
+          placeholder="Please input withdraw amount"
+          type="text"
+          pattern="^\d*(\.\d{0,6})?$"
+          label="Amount:"
+        />
+      )}
+      <h2 className={styles.pagename}>My Names</h2>
       {dummyBidGroup.map((dummyBid) => {
         return (
           <Row>
@@ -86,7 +110,12 @@ const Mynames = (props) => {
                     <p>Domain Name: {bid.name}</p>
                     <p>Value Purchased: {bid.value} eth</p>
                     <p>Balance: {bid.balance} eth</p>
-                    <Button className={styles.withdrawbtn} onClick={withdrawHandler}>Withdraw</Button>
+                    <Button
+                      className={styles.withdrawbtn}
+                      onClick={withdrawHandler}
+                    >
+                      Withdraw
+                    </Button>
                   </Card>
                 </Col>
               );
