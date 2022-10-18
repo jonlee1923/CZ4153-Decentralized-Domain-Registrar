@@ -62,6 +62,7 @@ label {
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-gap: 30px;
+  position:relative;
 }
 
 .step p {
@@ -71,8 +72,9 @@ label {
 .note {
   font-size: 15px;
   color: grey;
-  position: relative;
-  right: 20px;
+  position: absolute;
+  left:150px;
+  width:auto;
 }
 
 .cancelbtn {
@@ -90,8 +92,9 @@ label {
 }
 
 .bottombtn {
-  position: relative;
-  left: 1200px;
+  position: absolute;
+  right: 20px;
+  bottom: 40px;
 }
 
 .reqregisterbtn {

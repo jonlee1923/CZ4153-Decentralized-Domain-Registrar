@@ -79,7 +79,16 @@ const Placebid = (props) => {
             <Icon2Circle size={50} />
             <span>
               <h4>Bidding Amount</h4>
-              <p>Enter bid for blind auction.<br/><span className={styles.note}><ol>Note:<li>Bid cannot be withdrawn until auction is over</li><li>Bid amount cannot be changed once committed</li></ol></span></p>
+              <p>
+                Enter bid for blind auction.
+                <br />
+              </p>
+              <span className={styles.note}>
+                <ol>
+                  Note:<li>Bid cannot be withdrawn</li>
+                  <li>Bid amount cannot be changed once committed</li>
+                </ol>
+              </span>
             </span>
           </div>
           <div className={styles.step}>
