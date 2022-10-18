@@ -113,7 +113,7 @@ const Mybiddings = (props) => {
 
     return (
         <Container>
-            {reveal && <Reveal onConfirm={revealHandler} />}
+        {reveal && <InputModal onConfirm={revealHandler} title="Reveal" placeholder= "Please input secret integer" type="password" pattern="\d*" label="Secret:"/>}
             <h2 className={styles.pagename}>My Biddings</h2>
             {/* {dummyBidGroup.map((dummyBid) => {
                 return (
