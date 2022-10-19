@@ -70,12 +70,15 @@ const BiddingList = (props) => {
     const [loading, setLoading] = useState(false);
 
     const {
-        connectWallet,
-        checkIfWalletIsConnected,
-        connected,
-        createAuction,
+        // connectWallet,
+        // checkIfWalletIsConnected,
+        // connected,
+        // createAuction,
+        bid,
         getAuctions,
     } = useContext(DnsContext);
+
+
 
     useEffect(() => {
         const getAuctionsHandler = async () => {
@@ -127,6 +130,7 @@ const BiddingList = (props) => {
                                     <p>End: {auction.biddingEnd}</p>
                                     <Button
                                         className={`btn btn-primary ${styles.bidbtn}`}
+                                        onClick={() => {}}
                                     >
                                         <NavLink
                                             to={bidPath}

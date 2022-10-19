@@ -111,7 +111,6 @@ export const DnsProvider = ({ children }) => {
     const getMyBiddings = async (address) => {
         try {
             // setLoading(true);
-
             if (!ethereum) return alert("Please install metamask");
             console.log("in context fn");
             let bids = await dnsContract.getBiddings(address);
@@ -119,6 +118,40 @@ export const DnsProvider = ({ children }) => {
             // setLoading(false);
 
             return bids;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const getBytecode = async (name) => {
+        try {
+            if (!ethereum) return alert("Please install metamask");
+
+            const bytecode = await dnsContract.getBytecode(connected, name);
+            return bytecode;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const reveal = async (name, secret) => {
+        try {
+            if (!ethereum) return alert("Please install metamask");
+            const bytecode = getBytecode(name);
+            const transaction = await dnsContract.check(bytecode, secret, name);
+            let tx = await transaction.wait();
+            console.log("Transaction events: ", tx.events[0]);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const endAuction = async (name) => {
+        try {
+            if (!ethereum) return alert("Please install metamask");
+            const transaction = await dnsContract.endAuction(name);
+            let tx = await transaction.wait();
+            console.log("Transaction events: ", tx.events[0]);
         } catch (err) {
             console.log(err);
         }
@@ -141,6 +174,9 @@ export const DnsProvider = ({ children }) => {
                 bid,
                 createAuctionAndBid,
                 getMyBiddings,
+                getBytecode,
+                reveal,
+                endAuction,
             }}
         >
             {children}
