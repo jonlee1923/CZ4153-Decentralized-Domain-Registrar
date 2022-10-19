@@ -107,7 +107,6 @@ const Navbar2 = React.forwardRef((props, ref) => {
                                 Ether Transaction
                             </NavDropdown.Item>
                         </NavDropdown>
-                        <button onClick={() => {}}></button>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

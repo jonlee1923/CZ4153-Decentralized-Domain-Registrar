@@ -4,7 +4,8 @@ import { ethers } from "ethers";
 import { DnsContext } from "../../context/DnsContext";
 import Button from "react-bootstrap/Button";
 import {useLocation,useNavigate } from "react-router-dom";
-import Steps from "../Steps/Steps";
+import Steps from "./Steps/Steps";
+import Input from "./Input/Input";
 
 const Placebid = (props) => {
   const [rentalPrice, setRentalPrice] = useState("");
@@ -71,31 +72,29 @@ const Placebid = (props) => {
             <p className={styles.domain}>.ntu</p>
           </div>
         )}
-        <div className={`${styles.price}`}>
-          <label htmlFor="rentalprice">Bid: </label>
-          <input
+          <Input
             id="rentalprice"
             type="text"
             placeholder="0"
             pattern="^\d*(\.\d{0,6})?$"
             value={rentalPrice}
             onChange={priceHandler}
-            className={styles.rentalprice}
+            inputClassName={styles.rentalprice}
+            label="Bid:"
+            divClassName={styles.price}
           />
-        </div>
-        <div className={`${styles.secret}`}>
-          <label htmlFor="secret">Secret: </label>
-          <input
+          <Input
             id="secret"
             type="password"
             pattern="\d*"
             value={secretInt}
             onChange={secretHandler}
-            className={styles.secretInt}
+            inputClassName={styles.secretInt}
+            label="Secret:"
+            divClassName={styles.secret}
           />
-        </div>
       </div>
-      <Steps existingBid={existingBid} />
+      <Steps/>
       <div className={`${styles.bottombtn}`}>
         <Button className={`btn btn-light btn-lg ${styles.reqregisterbtn}`} onClick={cancelHandler}>
             Cancel
