@@ -157,6 +157,15 @@ export const DnsProvider = ({ children }) => {
         }
     };
 
+    const checkAuctionExists = async (name) => {
+        try {
+            const auctionExists = await dnsContract.checkIfAuctionExists(name);
+            return auctionExists;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         checkIfWalletIsConnected();
     }, []);
@@ -177,6 +186,7 @@ export const DnsProvider = ({ children }) => {
                 getBytecode,
                 reveal,
                 endAuction,
+                checkAuctionExists
             }}
         >
             {children}

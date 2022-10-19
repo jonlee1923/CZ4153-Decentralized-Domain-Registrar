@@ -42,6 +42,18 @@ contract Dns is IDns, ERC721 {
         _;
     }
 
+    modifier existingBid(string memory _name, address bidder) {
+        Bid[] memory bids = myBiddings[bidder];
+        for (uint i = 0; i < bids.length; i++) {
+            require(
+                keccak256(abi.encodePacked(bids[i].name)) !=
+                    keccak256(abi.encodePacked(_name)),
+                "Bid already exists"
+            );
+        }
+        _;
+    }
+
     constructor() ERC721("NTU domain registrar", "NTU") {
         owner = msg.sender;
         console.log("NTU domain registrar deployed");
@@ -51,6 +63,19 @@ contract Dns is IDns, ERC721 {
     //of the state is called a pure function. It can only use local variables that are
     //declared in the function and the arguments that are passed to the function to compute
     //or return a value.
+
+    //To check if the domain is already registered or not
+    function checkIfAuctionExists(string memory name)
+        external
+        view
+        returns (bool)
+    {
+        if (domainsToEthAddr[name] == address(0)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     function getDomains(address ownerAddress)
         external
@@ -151,7 +176,9 @@ contract Dns is IDns, ERC721 {
             name: _name,
             auctionId: auctionCount,
             highestBid: 0,
-            highestBidder: address(0)
+            highestBidder: address(0),
+            start: block.timestamp,
+            end: block.timestamp + _bidDuration + _revealDuration
         });
 
         auctions[_name] = newAuction;
@@ -203,7 +230,7 @@ contract Dns is IDns, ERC721 {
         bytes memory bytecode,
         uint _salt,
         string memory _name // string memory _name
-    ) public payable {
+    ) public payable notRegistered(_name) {
         address addr;
         assembly {
             addr := create2(
@@ -224,14 +251,29 @@ contract Dns is IDns, ERC721 {
     }
 
     function _bid(address user, string memory _name) private {
+        uint startTime = auctions[_name].start;
+        uint endTime = auctions[_name].end;
         myBiddings[user].push(
-            Bid({name: _name, bidder: user, revealed: false, revealedBid: 0})
+            Bid({
+                name: _name,
+                bidder: user,
+                revealed: false,
+                revealedBid: 0,
+                start: startTime,
+                end: endTime
+            })
         );
         biddingsForAuctions[_name].push(
-            Bid({name: _name, bidder: user, revealed: false, revealedBid: 0})
+            Bid({
+                name: _name,
+                bidder: user,
+                revealed: false,
+                revealedBid: 0,
+                start: startTime,
+                end: endTime
+            })
         );
     }
-
 
     function getAddress(bytes memory bytecode, uint _salt)
         public
@@ -291,13 +333,11 @@ contract Dns is IDns, ERC721 {
         }
     }
 
-    receive() external payable {
-    }
+    receive() external payable {}
 
-    function getBalance() public view returns (uint){
+    function getBalance() public view returns (uint) {
         return address(this).balance;
     }
-
 
     function refreshHighestBid(
         string memory _name,

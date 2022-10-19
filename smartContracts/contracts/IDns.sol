@@ -13,6 +13,8 @@ interface IDns {
         address bidder;
         bool revealed;
         uint revealedBid;
+        uint start;
+        uint end;
     }
 
     struct Auction {
@@ -22,6 +24,8 @@ interface IDns {
         uint auctionId;
         uint highestBid;
         address highestBidder;
+        uint start;
+        uint end;
     }
 
     function getDomains(address ownerAddress)
