@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import { DnsContext } from "../../context/DnsContext";
 import Button from "react-bootstrap/Button";
 import {useLocation,useNavigate } from "react-router-dom";
-import { Icon1Circle, Icon2Circle, Icon3Circle } from "react-bootstrap-icons";
+import Steps from "../Steps/Steps";
 
 const Placebid = (props) => {
   const [rentalPrice, setRentalPrice] = useState("");
@@ -19,11 +19,7 @@ const Placebid = (props) => {
   const cancelHandler = () => {
     navigate("/");
   }
-
   const {
-    // connectWallet,
-    // checkIfWalletIsConnected,
-    // connected,
     loading,
     createAuctionAndBid,
   } = useContext(DnsContext);
@@ -99,45 +95,7 @@ const Placebid = (props) => {
           />
         </div>
       </div>
-      <div className={styles.middle}>
-        <h2>
-          Registering a domain name requires you to complete these steps:{" "}
-        </h2>
-        {existingBid && (
-          <div className={styles.steps}>
-            <div className={styles.step}>
-              <Icon1Circle size={50} />
-              <span>
-                <h4>New Auction</h4>
-                <p>Enter domain name to check for availability </p>
-              </span>
-            </div>
-            <div className={styles.step}>
-              <Icon2Circle size={50} />
-              <span>
-                <h4>Bidding Amount</h4>
-                <p>
-                  Enter bid for blind auction.
-                  <br />
-                </p>
-                <span className={styles.note}>
-                  <ol>
-                    Note:<li>Bid cannot be withdrawn</li>
-                    <li>Bid amount cannot be changed once committed</li>
-                  </ol>
-                </span>
-              </span>
-            </div>
-            <div className={styles.step}>
-              <Icon3Circle size={50} />
-              <span>
-                <h4>Register</h4>
-                <p>Hit the register button to commit your bid! </p>
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
+      <Steps existingBid={existingBid} />
       <div className={`${styles.bottombtn}`}>
         <Button className={`btn btn-light btn-lg ${styles.reqregisterbtn}`} onClick={cancelHandler}>
             Cancel
