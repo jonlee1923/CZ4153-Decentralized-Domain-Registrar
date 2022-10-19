@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
 import InputModal from "../InputModal/InputModal";
+import { DnsContext } from "../../context/DnsContext";
 
 const Mynames = (props) => {
   const dummyBidGroup = [
@@ -66,12 +67,15 @@ const Mynames = (props) => {
       },
     ],
   ];
-  const balanceInsufficient = false;
+  const {withdrawBalance,displayBalance,} = useContext(DnsContext) 
+  // withdrawBalance -> put balance into withdrawBalance, if more than current balance, throw error. Else, withdraw
+  // displayBalance -> Function that return the current balance to display on card
   const [balanceError, setBalanceError] = useState(false);
   const [validWithdraw, setValidWithdraw] = useState(false);
+  const [balance,setBalance] = useState(0);
 
   const withdrawHandler = () => {
-    if (balanceInsufficient) {
+    if (balance) {
       setBalanceError(true);
       setValidWithdraw(false);
     } else {
@@ -79,6 +83,9 @@ const Mynames = (props) => {
       setValidWithdraw(!validWithdraw);
     }
   };
+  const balanceHandler = (balance) => {
+
+  }
 
   return (
     <Container>
@@ -97,6 +104,7 @@ const Mynames = (props) => {
           type="text"
           pattern="^\d*(\.\d{0,6})?$"
           label="Amount:"
+          valueHandler = {balanceHandler}
         />
       )}
       <h2 className={styles.pagename}>My Names</h2>

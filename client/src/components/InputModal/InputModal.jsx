@@ -9,10 +9,7 @@ const Backdrop = (props) => {
 };
 
 const ModalOverlay = (props) => {
-  const [input, setInput] = useState("");
-  const inputHandler = (event) => {
-    setInput(event.target.value);
-  };
+  
   const submitHandler = (event) => {
     event.preventDefault();
     props.onConfirm();
@@ -29,8 +26,8 @@ const ModalOverlay = (props) => {
           type={props.type}
           id="input"
           pattern={props.pattern}
-          onChange={inputHandler}
-          value={input}
+          onChange={props.onChange}
+          value={props.value}
           placeholder={props.placeholder}
           className={styles.inputbox}
         />
@@ -69,6 +66,8 @@ const InputModal = (props) => {
           type={props.type}
           pattern={props.pattern}
           label={props.label}
+          value={props.value}
+          onChange={props.onChange}
         />,
         document.getElementById("overlay-root")
       )}

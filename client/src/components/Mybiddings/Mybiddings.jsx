@@ -117,10 +117,14 @@ const Mybiddings = (props) => {
     }
 
     const [reveal, setReveal] = useState(false);
-
+    const [secret,setSecret] = useState();
     const revealHandler = (event) => {
         setReveal(!reveal);
     };
+
+    const secretHandler = (event) => {
+        setSecret(event.target.value);
+    }
 
     return (
         <Container>
@@ -132,6 +136,9 @@ const Mybiddings = (props) => {
                     type="password"
                     pattern="\d*"
                     label="Secret:"
+                    onChange={secretHandler}
+                    value={secret}
+
                 />
             )}
             <h2 className={styles.pagename}>My Biddings</h2>
