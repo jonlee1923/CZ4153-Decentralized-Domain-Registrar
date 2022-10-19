@@ -1,11 +1,11 @@
 label {
-  font-size: 25px;
+  font-size: 17px;
   padding-right: 10px;
 }
 
-
-.input{
-  font-size:25px;
+input{
+  font-size:17px;
+  width:100%;
 }
 
 .mainpage {
@@ -20,13 +20,13 @@ label {
 
 .topbar {
   margin-top: 20px;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  /* display: grid; */
+  /* grid-template-columns: 2fr 1fr 1fr; */
   margin-left:20px;
 }
 
 .topbar p {
-  font-size: 25px;
+  font-size: 17px;
 }
 
 .domain{
@@ -34,22 +34,21 @@ label {
 }
 
 .nameinput {
-  width: 60%;
+  width: 50%;
+}
+
+.secretInt{
+  width:50%;
+}
+
+.rentalprice {
+  width: 50%;
 }
 
 .domainname {
   background-color: #d3d3d3;
   border-radius: 10px;
   text-decoration:underline;
-}
-
-.rentalprice {
-  width: 60%;
-}
-
-.period {
-  display: grid;
-  grid-template-columns: 2fr 1fr 2fr 1fr;
 }
 
 .cancelbtn {
@@ -75,4 +74,16 @@ label {
 .reqregisterbtn {
     margin-right:30px;
     text-decoration:underline;
+}
+
+@media (max-width:995px){
+  .mainpage{
+    height:600px;
+  }
+}
+
+@media (max-width:768px){
+  .mainpage {
+    height:850px;
+  }
 }
