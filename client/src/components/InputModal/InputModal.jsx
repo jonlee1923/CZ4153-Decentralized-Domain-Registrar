@@ -18,6 +18,7 @@ const ModalOverlay = (props) => {
     props.onConfirm();
     console.log(props.title + "submitted!");
   };
+  props.valueHandler(input);
   return (
     <Card className={styles.modal}>
       <header className={styles.header}>
@@ -69,6 +70,7 @@ const InputModal = (props) => {
           type={props.type}
           pattern={props.pattern}
           label={props.label}
+          valueHandler = {props.valueHandler}
         />,
         document.getElementById("overlay-root")
       )}

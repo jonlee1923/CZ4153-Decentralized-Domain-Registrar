@@ -3,17 +3,19 @@ label {
   padding-right: 10px;
 }
 
+
 .input{
   font-size:25px;
 }
 
 .mainpage {
-  display: grid;
-  grid-template-rows: 1fr 2fr 1fr;
+  /* display: grid; */
+  /* grid-template-rows: 1fr 2fr 1fr; */
   border: solid;
   position: relative;
   height: 460px;
   margin: 30px;
+  border-radius:10px;
 }
 
 .topbar {
@@ -74,5 +76,3 @@ label {
     margin-right:30px;
     text-decoration:underline;
 }
-
-
