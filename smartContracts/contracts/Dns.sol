@@ -65,16 +65,18 @@ contract Dns is IDns, ERC721 {
     //or return a value.
 
     //To check if the domain is already registered or not
-    function checkIfAuctionExists(string memory name)
+    function checkIfAuctionExists(string memory _name)
         external
         view
         returns (bool)
     {
-        if (domainsToEthAddr[name] == address(0)) {
-            return false;
-        } else {
-            return true;
+        for(uint i = 0; i < auctionsArray.length; i++){
+            if (keccak256(abi.encodePacked(auctionsArray[i].name)) ==
+                    keccak256(abi.encodePacked(_name))){
+                return true;
+            }
         }
+        return false;
     }
 
     function getDomains(address ownerAddress)
@@ -230,7 +232,7 @@ contract Dns is IDns, ERC721 {
         bytes memory bytecode,
         uint _salt,
         string memory _name // string memory _name
-    ) public payable notRegistered(_name) {
+    ) public payable  {
         address addr;
         assembly {
             addr := create2(
