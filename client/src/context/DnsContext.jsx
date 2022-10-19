@@ -132,11 +132,15 @@ export const DnsProvider = ({ children }) => {
         }
     };
 
-    const reveal = async (name, secret) => {
+    const revealBid = async (name, secret) => {
         try {
             if (!ethereum) return alert("Please install metamask");
             const bytecode = getBytecode(name);
-            const transaction = await dnsContract.check(bytecode, secret, name);
+            const transaction = await dnsContract.check(
+                bytecode,
+                parseInt(secret),
+                name
+            );
             let tx = await transaction.wait();
             console.log("Transaction events: ", tx.events[0]);
         } catch (err) {
@@ -186,7 +190,7 @@ export const DnsProvider = ({ children }) => {
                 createAuctionAndBid,
                 getMyBiddings,
                 getBytecode,
-                reveal,
+                revealBid,
                 endAuction,
                 checkAuctionExists,
             }}

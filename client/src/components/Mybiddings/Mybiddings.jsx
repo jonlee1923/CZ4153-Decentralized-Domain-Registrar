@@ -73,6 +73,7 @@ const Mybiddings = (props) => {
         // connected,
         // createAuction,
         // loading,
+        revealBid,
         getMyBiddings,
     } = useContext(DnsContext);
     const [loading, setLoading] = useState(false);
@@ -90,11 +91,11 @@ const Mybiddings = (props) => {
                     const unixEnd = i.end.toNumber();
                     let endDate = new Date(unixEnd * 1000);
                     endDate = endDate.toUTCString();
-
                     let bidItem = {
                         name: i.name,
                         start: startDate,
-                        end: endDate
+                        end: endDate,
+                        revealed: i.revealed,
                     };
                     return bidItem;
                 })
@@ -117,20 +118,31 @@ const Mybiddings = (props) => {
     }
 
     const [reveal, setReveal] = useState(false);
-    const [secret,setSecret] = useState();
+    const [secret, setSecret] = useState();
+    const [name, setName] = useState("");
+
+    const revealBidSubmit = async () => {
+        console.log("secret ", secret, " name ", name);
+
+        await revealBid(name, secret);
+        revealHandler();
+    };
+
     const revealHandler = (event) => {
         setReveal(!reveal);
     };
 
     const secretHandler = (event) => {
         setSecret(event.target.value);
-    }
+    };
 
     return (
         <Container>
             {reveal && (
                 <InputModal
-                    onConfirm={revealHandler}
+                    onConfirm={() => {
+                        revealBidSubmit();
+                    }}
                     title="Reveal"
                     placeholder="Please input secret integer"
                     type="password"
@@ -138,7 +150,6 @@ const Mybiddings = (props) => {
                     label="Secret:"
                     onChange={secretHandler}
                     value={secret}
-
                 />
             )}
             <h2 className={styles.pagename}>My Biddings</h2>
@@ -153,9 +164,13 @@ const Mybiddings = (props) => {
                                         <p>Domain Name: {bid.name}</p>
                                         <p>Start: {bid.start}</p>
                                         <p>End: {bid.end}</p>
+                                        <p>Revealed: {bid.revealed.toString()}</p>
                                         <Button
                                             className={`btn btn-primary ${styles.bidbtn}`}
-                                            onClick={revealHandler}
+                                            onClick={() => {
+                                                setName(bid.name);
+                                                revealHandler();
+                                            }}
                                         >
                                             Check status
                                         </Button>
