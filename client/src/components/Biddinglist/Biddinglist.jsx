@@ -72,10 +72,11 @@ const BiddingList = (props) => {
 
 
   const {
-    connectWallet,
-    checkIfWalletIsConnected,
-    connected,
-    createAuction,
+    // connectWallet,
+    // checkIfWalletIsConnected,
+    // connected,
+    // createAuction,
+        bid,
     getAuctions,
   } = useContext(DnsContext);
 
