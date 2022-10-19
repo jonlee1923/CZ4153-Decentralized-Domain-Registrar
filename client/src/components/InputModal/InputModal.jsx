@@ -9,16 +9,12 @@ const Backdrop = (props) => {
 };
 
 const ModalOverlay = (props) => {
-  const [input, setInput] = useState("");
-  const inputHandler = (event) => {
-    setInput(event.target.value);
-  };
+  
   const submitHandler = (event) => {
     event.preventDefault();
     props.onConfirm();
     console.log(props.title + "submitted!");
   };
-  props.valueHandler(input);
   return (
     <Card className={styles.modal}>
       <header className={styles.header}>
@@ -30,8 +26,8 @@ const ModalOverlay = (props) => {
           type={props.type}
           id="input"
           pattern={props.pattern}
-          onChange={inputHandler}
-          value={input}
+          onChange={props.onChange}
+          value={props.value}
           placeholder={props.placeholder}
           className={styles.inputbox}
         />
@@ -70,7 +66,8 @@ const InputModal = (props) => {
           type={props.type}
           pattern={props.pattern}
           label={props.label}
-          valueHandler = {props.valueHandler}
+          value={props.value}
+          onChange={props.onChange}
         />,
         document.getElementById("overlay-root")
       )}
