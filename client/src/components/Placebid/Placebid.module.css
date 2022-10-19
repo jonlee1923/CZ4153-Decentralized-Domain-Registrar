@@ -27,10 +27,6 @@ label {
   font-size: 25px;
 }
 
-.middle{
-    margin:20px;
-}
-
 .domain{
   display:inline-block;
 }
@@ -52,31 +48,6 @@ label {
 .period {
   display: grid;
   grid-template-columns: 2fr 1fr 2fr 1fr;
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 50px;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-gap: 30px;
-  position:relative;
-}
-
-.step p {
-  font-size: 18px;
-}
-
-.note {
-  font-size: 15px;
-  color: grey;
-  position: absolute;
-  left:150px;
-  width:auto;
 }
 
 .cancelbtn {
