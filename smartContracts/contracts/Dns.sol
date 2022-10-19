@@ -70,9 +70,11 @@ contract Dns is IDns, ERC721 {
         view
         returns (bool)
     {
-        for(uint i = 0; i < auctionsArray.length; i++){
-            if (keccak256(abi.encodePacked(auctionsArray[i].name)) ==
-                    keccak256(abi.encodePacked(_name))){
+        for (uint i = 0; i < auctionsArray.length; i++) {
+            if (
+                keccak256(abi.encodePacked(auctionsArray[i].name)) ==
+                keccak256(abi.encodePacked(_name))
+            ) {
                 return true;
             }
         }
@@ -232,7 +234,9 @@ contract Dns is IDns, ERC721 {
         bytes memory bytecode,
         uint _salt,
         string memory _name // string memory _name
-    ) public payable  {
+    ) public payable {
+        require(auctions[_name].start != 0, "auction does not exist");
+
         address addr;
         assembly {
             addr := create2(
@@ -253,6 +257,7 @@ contract Dns is IDns, ERC721 {
     }
 
     function _bid(address user, string memory _name) private {
+        require(auctions[_name].start != 0, "auction does not exist");
         uint startTime = auctions[_name].start;
         uint endTime = auctions[_name].end;
         myBiddings[user].push(

@@ -83,8 +83,18 @@ const Mybiddings = (props) => {
             const data = await getMyBiddings(props.connected);
             const biddingsMapped = await Promise.all(
                 data.map(async (i) => {
+                    const unixStart = i.start.toNumber();
+                    let startDate = new Date(unixStart * 1000);
+                    startDate = startDate.toUTCString();
+
+                    const unixEnd = i.end.toNumber();
+                    let endDate = new Date(unixEnd * 1000);
+                    endDate = endDate.toUTCString();
+
                     let bidItem = {
                         name: i.name,
+                        start: startDate,
+                        end: endDate
                     };
                     return bidItem;
                 })
@@ -125,10 +135,11 @@ const Mybiddings = (props) => {
                 />
             )}
             <h2 className={styles.pagename}>My Biddings</h2>
-            {/* {dummyBidGroup.map((dummyBid) => {
-                return (
-                    <Row>
-                        {dummyBid.map((bid) => {
+            <Row>
+                {loading && !bids && <p>Loading</p>}
+                {!loading && bids && (
+                    <div>
+                        {bids.map((bid) => {
                             return (
                                 <Col lg={4} md={6} sm={12} xs={12}>
                                     <Card className={styles.card} key={bid.id}>
@@ -145,32 +156,8 @@ const Mybiddings = (props) => {
                                 </Col>
                             );
                         })}
-                    </Row>
-                );
-            })} */}
-
-            <Row>
-                {loading && !bids && <p>Loading</p>}
-                {!loading && bids &&
-                    <div>
-                        {bids.map((bid) => {
-                            return (
-                                <Col lg={4} md={6} sm={12} xs={12}>
-                                    <Card className={styles.card} key={bid.id}>
-                                        <p>Domain Name: {bid.name}</p>
-
-                                        <Button
-                                            className={`btn btn-primary ${styles.bidbtn}`}
-                                            onClick={revealHandler}
-                                        >
-                                            Check status
-                                        </Button>
-                                    </Card>
-                                </Col>
-                            );
-                        })}
                     </div>
-                }
+                )}
             </Row>
         </Container>
     );

@@ -48,6 +48,16 @@ const Placebid = (props) => {
     event.preventDefault();
     console.log("submitted!");
   };
+
+  const pressBidHandler = async () => {
+    const result = await checkAuctionExists(domainName);
+    if (result === true) {
+        bid(domainName, rentalPrice, secretInt);
+    } else {
+        createAuctionAndBid(domainName, rentalPrice, secretInt);
+    }
+};
+
   return (
     <Container>
       <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
@@ -110,19 +120,7 @@ const Placebid = (props) => {
                 type="submit"
                 size="sm"
                 className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
-                onClick={() => {
-                  // if (checkAuctionExists(domainName) === true) {
-                  //     bid(domainName, rentalPrice, secretInt);
-                  // } else {
-                  //     createAuctionAndBid(
-                  //         domainName,
-                  //         rentalPrice,
-                  //         secretInt
-                  //     );
-                  // }
-                  console.log("domainname: ", domainName);
-                  createAuctionAndBid(domainName, rentalPrice, secretInt);
-                }}
+                onClick={pressBidHandler}
               >
                 Register!
               </Button>
