@@ -15,21 +15,22 @@ const Placebid = (props) => {
   const [domainName, setDomainName] = useState("");
   const [secretInt, setSecretInt] = useState("");
 
-  const location = useLocation();
-  const { state } = location;
-  let existingBid = false;
-  const navigate = useNavigate();
-  console.log("this is state", state);
-  const cancelHandler = () => {
-    navigate("/");
-  };
-  const { loading, createAuctionAndBid } = useContext(DnsContext);
+    const location = useLocation();
+    const { state } = location;
+    let existingBid = false;
+    const navigate = useNavigate();
+    console.log("this is state", state);
 
-  if (!state) {
-    existingBid = false;
-  } else {
-    existingBid = true;
-  }
+    const cancelHandler = () => {
+        navigate("/");
+    };
+    const { loading, createAuctionAndBid, checkAuctionExists, bid } =
+        useContext(DnsContext);
+
+    // if (state) {
+    //     setDomainName(state.name);
+    //     console.log("this is domainname",domainName);
+    // }
 
   const domainNameHandler = (event) => {
     setDomainName(event.target.value);
@@ -43,83 +44,82 @@ const Placebid = (props) => {
     setSecretInt(event.target.value);
   };
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-    console.log("submitted!");
-  };
-  return (
-    <Container>
-      <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
-        <Row className={`${styles.topbar}`}>
-          {existingBid && (
-            <p>
-              Domain Name:{" "}
-              <span className={styles.domainname}>
-                <em>{state.name}.ntu</em>
-              </span>
-            </p>
-          )}
-          {!existingBid && (
-            <div className={styles.newauction}>
-              <label htmlFor="nameinput">Domain Name: </label>
-              <input
-                id="nameinput"
-                type="text"
-                placeholder="Enter Domain Name"
-                onChange={domainNameHandler}
-                value={domainName}
-                className={styles.nameinput}
-              />
-              <p className={styles.domain}>.ntu</p>
+    const submitHandler = (event) => {
+        event.preventDefault();
+        console.log("submitted!");
+    };
+    return (
+        <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
+            <div className={`${styles.topbar}`}>
+                <div className={styles.newauction}>
+                    <label htmlFor="nameinput">Domain Name: </label>
+                    <input
+                        id="nameinput"
+                        type="text"
+                        placeholder="Enter Domain Name"
+                        onChange={domainNameHandler}
+                        value={domainName}
+                        className={styles.nameinput}
+                    />
+                    <p className={styles.domain}>.ntu</p>
+                </div>
+
+                <Input
+                    id="rentalprice"
+                    type="text"
+                    placeholder="0"
+                    pattern="^\d*(\.\d{0,6})?$"
+                    value={rentalPrice}
+                    onChange={priceHandler}
+                    inputClassName={styles.rentalprice}
+                    label="Bid:"
+                    divClassName={styles.price}
+                />
+                <Input
+                    id="secret"
+                    type="password"
+                    pattern="\d*"
+                    value={secretInt}
+                    onChange={secretHandler}
+                    inputClassName={styles.secretInt}
+                    label="Secret:"
+                    divClassName={styles.secret}
+                />
             </div>
-          )}
-          <Input
-            id="rentalprice"
-            type="text"
-            placeholder="0"
-            pattern="^\d*(\.\d{0,6})?$"
-            value={rentalPrice}
-            onChange={priceHandler}
-            inputClassName={styles.rentalprice}
-            label="Bid:"
-            divClassName={styles.price}
-          />
-          <Input
-            id="secret"
-            type="password"
-            pattern="\d*"
-            value={secretInt}
-            onChange={secretHandler}
-            inputClassName={styles.secretInt}
-            label="Secret:"
-            divClassName={styles.secret}
-          />
-        </Row>
-        <Steps />
-        <div className={`${styles.bottombtn}`}>
-          <Button
-            className={`btn btn-light btn-lg ${styles.reqregisterbtn}`}
-            onClick={cancelHandler}
-          >
-            Cancel
-          </Button>
-          {loading ? (
-            <p>Loading</p>
-          ) : (
-            <Button
-              type="submit"
-              className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
-              onClick={() => {
-                createAuctionAndBid(domainName, rentalPrice, secretInt);
-              }}
-            >
-              Register!
-            </Button>
-          )}
-        </div>
-      </form>
-    </Container>
-  );
+            <Steps />
+            <div className={`${styles.bottombtn}`}>
+                <Button
+                    className={`btn btn-light btn-lg ${styles.reqregisterbtn}`}
+                    onClick={cancelHandler}
+                >
+                    Cancel
+                </Button>
+                {loading ? (
+                    <p>Loading</p>
+                ) : (
+                    <Button
+                        type="submit"
+                        className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
+                        onClick={() => {
+                            // if (checkAuctionExists(domainName) === true) {
+                            //     bid(domainName, rentalPrice, secretInt);
+                            // } else {
+                            //     createAuctionAndBid(
+                            //         domainName,
+                            //         rentalPrice,
+                            //         secretInt
+                            //     );
+                            // }
+                            console.log("domainname: ",domainName);
+                            createAuctionAndBid(domainName, rentalPrice, secretInt);
+                        }}
+                    >
+                        Register!
+                    </Button>
+                )}
+            </div>
+        </form>
+    );
 };
 
 export default Placebid;
