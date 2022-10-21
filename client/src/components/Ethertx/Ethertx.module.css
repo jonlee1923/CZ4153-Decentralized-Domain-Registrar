@@ -1,0 +1,19 @@
+.pagename{
+    text-align:center;
+    text-decoration:underline;
+    font-weight:bold;
+}
+.card{
+    position:relative;
+    margin:10px 0;
+    height:200px;
+    column-width:300px;
+}
+.bidlink{
+    color:white;
+}
+
+.withdrawbtn{
+    position:absolute;
+    right:10px;
+}
