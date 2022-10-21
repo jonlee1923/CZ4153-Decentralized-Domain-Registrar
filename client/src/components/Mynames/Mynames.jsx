@@ -135,7 +135,7 @@ const Mynames = (props) => {
         />
       )}
       <h2 className={styles.pagename}>My Names</h2>
-      {names.map((domain) => {
+      {!loading && names && names.map((domain) => {
         return (
           <Col lg={4} md={6} sm={12} xs={12}>
             <Card className={styles.card} key={domain.id}>
