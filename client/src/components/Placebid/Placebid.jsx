@@ -17,9 +17,7 @@ const Placebid = (props) => {
 
   const location = useLocation();
   const { state } = location;
-  let existingBid = false;
   const navigate = useNavigate();
-  console.log("this is state", state);
 
   const cancelHandler = () => {
     navigate("/");
@@ -31,7 +29,11 @@ const Placebid = (props) => {
   //     setDomainName(state.name);
   //     console.log("this is domainname",domainName);
   // }
-
+  useEffect(()=>{
+    if(state){
+      setDomainName(state.name)
+    }
+  },[state])
   const domainNameHandler = (event) => {
     setDomainName(event.target.value);
   };

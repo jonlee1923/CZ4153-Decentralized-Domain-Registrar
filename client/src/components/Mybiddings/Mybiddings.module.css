@@ -6,13 +6,13 @@
   .card {
     position: relative;
     margin: 10px 0;
-    height: 200px;
+    height: 240px;
     column-width: 300px;
   }
   
   .bidbtn {
-      position:relative;
-      left:200px;
+      position:absolute;
+      right:10px;
   }
   
   .bidlink {

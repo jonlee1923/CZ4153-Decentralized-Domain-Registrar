@@ -69,9 +69,8 @@ const BiddingList = (props) => {
 
   const [auctions, setAuctions] = useState();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  let errorMsg = "";
   let bidPath = "";
 
   if (props.connected) {
@@ -115,9 +114,7 @@ const BiddingList = (props) => {
         setAuctions(auctionsMapped);
         setLoading(false);
       } catch (err) {
-        console.log(err);
-        setError(true);
-        errorMsg = err.msg;
+        setError("Something went wrong!");
       }
     };
 
@@ -127,15 +124,15 @@ const BiddingList = (props) => {
   }, [getAuctions]);
 
   const errorHandler = (event) => {
-    setError(!error);
+    setError("");
   };
-console.log("error",error);
+
   return (
     <div>
       {error && (
         <ErrorModal
           title="Error occurred"
-          message={errorMsg}
+          message={error}
           onConfirm={errorHandler}
         />
       )}

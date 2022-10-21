@@ -79,8 +79,8 @@ const Mybiddings = (props) => {
   } = useContext(DnsContext);
   const [loading, setLoading] = useState(false);
   const [bids, setBiddings] = useState();
+  // const [errorMsg,setErrorMsg] = useState("");
 
-  let errorMsg = "";
   useEffect(() => {
     const getBids = async () => {
       try {
@@ -108,9 +108,8 @@ const Mybiddings = (props) => {
 
         console.log(bids);
       } catch (err) {
-        setError(true);
+        setError("Something went wrong!");
         setReveal(false);
-        errorMsg = err.msg;
       }
     };
     setLoading(true);
@@ -121,7 +120,7 @@ const Mybiddings = (props) => {
   const [reveal, setReveal] = useState(false);
   const [secret, setSecret] = useState();
   const [name, setName] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
   const revealBidSubmit = async () => {
     try{
@@ -144,7 +143,7 @@ const Mybiddings = (props) => {
   };
 
   const errorHandler = (event) => {
-    setError(!error);
+    setError("");
   };
 
   return (
@@ -152,7 +151,7 @@ const Mybiddings = (props) => {
       {error && (
         <ErrorModal
           title="Error occurred"
-          message={errorMsg}
+          message={error}
           onConfirm={errorHandler}
         />
       )}
