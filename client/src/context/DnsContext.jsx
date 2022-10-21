@@ -67,6 +67,18 @@ export const DnsProvider = ({ children }) => {
         }
     };
 
+    const getBytecode = async (name) => {
+        try {
+            if (!ethereum) return alert("Please install metamask");
+
+            const bytecode = await dnsContract.getBytecode(connected, name);
+            return bytecode;
+        } catch (err) {
+            console.log(err);
+            throw Error(err.message);
+        }
+    };
+
     const bid = async (name, bid, secret) => {
         try {
             if (!ethereum) return alert("Please install metamask");
@@ -120,18 +132,6 @@ export const DnsProvider = ({ children }) => {
         }
     };
 
-    const getBytecode = async (name) => {
-        try {
-            if (!ethereum) return alert("Please install metamask");
-
-            const bytecode = await dnsContract.getBytecode(connected, name);
-            return bytecode;
-        } catch (err) {
-            console.log(err);
-            throw Error(err.message);
-        }
-    };
-
     const revealBid = async (name, secret) => {
         try {
             if (!ethereum) return alert("Please install metamask");
@@ -172,6 +172,43 @@ export const DnsProvider = ({ children }) => {
         }
     };
 
+    const getDomains = async () => {
+        try {
+            const data = await dnsContract.getDomains(connected);
+            console.log(data);
+            return data;
+        } catch (err) {
+            console.log(err);
+            throw Error(err.message);
+        }
+    };
+
+    const sendDomain = async (name, amount) => {
+        try {
+            const transaction = await dnsContract.sendDomain(name, {
+                value: ethers.utils.parseEther(amount),
+            });
+            let tx = await transaction.wait();
+            console.log("Transaction events: ", tx.events[0]);
+        } catch (err) {
+            console.log(err);
+            throw Error(err.message);
+        }
+    };
+
+    const withdrawFromDomain = async (name, amount) => {
+        try {
+            const transaction = await dnsContract.withdrawFrmDomain(
+                name,
+                amount
+            );
+            let tx = await transaction.wait();
+            console.log("Transaction events: ", tx.events[0]);
+        } catch (err) {
+            console.log(err);
+            throw Error(err.message);
+        }
+    };
     useEffect(() => {
         checkIfWalletIsConnected();
     }, []);
@@ -182,7 +219,6 @@ export const DnsProvider = ({ children }) => {
                 connectWallet,
                 checkIfWalletIsConnected,
                 connected,
-                // loading,
                 //FUNCTIONS
                 createAuction,
                 getAuctions,
@@ -193,6 +229,9 @@ export const DnsProvider = ({ children }) => {
                 revealBid,
                 endAuction,
                 checkAuctionExists,
+                getDomains,
+                sendDomain,
+                withdrawFromDomain,
             }}
         >
             {children}

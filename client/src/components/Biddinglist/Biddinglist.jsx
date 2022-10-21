@@ -77,6 +77,7 @@ const BiddingList = (props) => {
         // createAuction,
         bid,
         getAuctions,
+        endAuction,
     } = useContext(DnsContext);
 
     useEffect(() => {
@@ -117,6 +118,14 @@ const BiddingList = (props) => {
         console.log(auctions);
     }, [getAuctions]);
 
+    const endAuctionHandler = async (name) => {
+        try {
+            await endAuction(name);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     let bidPath = "";
     if (props.connected) {
         bidPath = "/placebid";
@@ -149,6 +158,13 @@ const BiddingList = (props) => {
                                     >
                                         Place a Bid!
                                     </Button>
+                                    <button
+                                        onClick={() => {
+                                            endAuctionHandler(auction.name);
+                                        }}
+                                    >
+                                        End
+                                    </button>
                                 </Card>
                             </Col>
                         );

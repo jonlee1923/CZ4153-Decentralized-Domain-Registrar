@@ -107,6 +107,7 @@ const Mybiddings = (props) => {
         };
         setLoading(true);
         getBids();
+        console.log(bids);
         setLoading(false);
     }, [getMyBiddings]);
 
@@ -164,7 +165,9 @@ const Mybiddings = (props) => {
                                         <p>Domain Name: {bid.name}</p>
                                         <p>Start: {bid.start}</p>
                                         <p>End: {bid.end}</p>
-                                        <p>Revealed: {bid.revealed.toString()}</p>
+                                        <p>
+                                            Revealed: {bid.revealed.toString()}
+                                        </p>
                                         <Button
                                             className={`btn btn-primary ${styles.bidbtn}`}
                                             onClick={() => {

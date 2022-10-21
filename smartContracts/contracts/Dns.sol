@@ -18,7 +18,6 @@ contract Dns is IDns {
     mapping(string => uint) public nameToDomainId;
     mapping(uint => EthDomain) public domains;
 
-
     // //Stores the domain to eth address mapping
     // mapping(string => address) public domainsToEthAddr;
 
@@ -107,9 +106,11 @@ contract Dns is IDns {
         returns (EthDomain[] memory)
     {
         uint index = 0;
-        EthDomain[] memory names = new EthDomain[](addrToDomainId[ownerAddress].length);
+        EthDomain[] memory names = new EthDomain[](
+            addrToDomainId[ownerAddress].length
+        );
 
-        for (uint i = 0; i < addrToDomainId[ownerAddress].length; i++){
+        for (uint i = 0; i < addrToDomainId[ownerAddress].length; i++) {
             names[index] = domains[addrToDomainId[ownerAddress][i]];
         }
 
@@ -138,10 +139,7 @@ contract Dns is IDns {
 
     function sendDomain(string memory _name) external payable {
         require(msg.sender != address(0), "Transfer from the zero address");
-        require(
-            nameToDomainId[_name] !=0,
-            "Domain name does not exist"
-        );
+        require(nameToDomainId[_name] != 0, "Domain name does not exist");
 
         EthDomain storage domain = domains[nameToDomainId[_name]];
         domain.balance += msg.value;
@@ -150,10 +148,7 @@ contract Dns is IDns {
     }
 
     function withdrawFrmDomain(string memory _name, uint amount) external {
-        require(
-            nameToDomainId[_name] != 0,
-            "Domain name does not exist"
-        );
+        require(nameToDomainId[_name] != 0, "Domain name does not exist");
 
         EthDomain storage domain = domains[nameToDomainId[_name]];
         require(msg.sender == domain.owner, "You do not own these funds");
@@ -163,15 +158,17 @@ contract Dns is IDns {
         emit WithdrawnFromDomain(msg.sender, _name, amount);
     }
 
-    function registerName(string memory _name, address _owner)
-        public
-        notRegistered(_name)
-    {
+    function registerName(
+        string memory _name,
+        address _owner,
+        uint _value
+    ) public notRegistered(_name) {
         nameCount.increment();
         EthDomain memory newEthDomain = EthDomain({
             domainName: _name,
             owner: _owner,
-            balance: 0
+            balance: 0,
+            value: _value
         });
 
         // nameToDomain[_name] = newEthDomain;
@@ -294,7 +291,11 @@ contract Dns is IDns {
                         bids[ids[i]].revealedBid
                     );
                 } else {
-                    registerName(_name, bids[ids[i]].bidder);
+                    registerName(
+                        _name,
+                        bids[ids[i]].bidder,
+                        bids[ids[i]].revealedBid
+                    );
                     emit AuctionEnded(_name, bids[ids[i]].bidder);
                 }
             }

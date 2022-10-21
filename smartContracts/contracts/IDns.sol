@@ -8,6 +8,7 @@ interface IDns {
         string domainName;
         address owner;
         uint balance;
+        uint value;
     }
 
     struct Bid {
