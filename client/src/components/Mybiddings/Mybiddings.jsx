@@ -124,10 +124,15 @@ const Mybiddings = (props) => {
   const [error, setError] = useState(false);
 
   const revealBidSubmit = async () => {
+    try{
     console.log("secret ", secret, " name ", name);
 
     await revealBid(name, secret);
     revealHandler();
+    } catch(err){
+        setError(true);
+        setReveal(false);
+    }
   };
 
   const revealHandler = (event) => {

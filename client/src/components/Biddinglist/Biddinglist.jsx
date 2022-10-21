@@ -129,7 +129,7 @@ const BiddingList = (props) => {
   const errorHandler = (event) => {
     setError(!error);
   };
-
+console.log("error",error);
   return (
     <div>
       {error && (
