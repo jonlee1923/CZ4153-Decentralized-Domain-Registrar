@@ -4,8 +4,10 @@ pragma solidity ^0.8.4;
 
 interface IDns {
     struct EthDomain {
+        // uint id;
         string domainName;
-        address contractAddress;
+        address owner;
+        uint balance;
     }
 
     struct Bid {
