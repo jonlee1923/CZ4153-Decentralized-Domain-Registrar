@@ -6,14 +6,15 @@
 .card{
     position:relative;
     margin:10px 0;
-    height:200px;
+    height:100px;
     column-width:300px;
 }
 .bidlink{
     color:white;
 }
 
-.withdrawbtn{
+.transferbtn{
     position:absolute;
     right:10px;
+    bottom:10px;
 }

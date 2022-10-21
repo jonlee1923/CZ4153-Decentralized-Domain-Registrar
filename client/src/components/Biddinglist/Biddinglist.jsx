@@ -141,29 +141,31 @@ const BiddingList = (props) => {
       {!loading && auctions && (
         <Container>
           <h2 className={styles.pagename}>Bidding List</h2>
-          {auctions.map((auction) => {
-            return (
-              <Col lg={4} md={6} sm={12} xs={12}>
-                <Card className={styles.card} key={auction.id}>
-                  <p>Domain Name: {auction.name}</p>
-                  <p>Start: {auction.start}</p>
-                  <p>Bidding End: {auction.biddingEnd}</p>
-                  <p>Reveal End: {auction.revealEnd}</p>
+          <Row>
+            {auctions.map((auction) => {
+              return (
+                <Col lg={4} md={6} sm={12} xs={12}>
+                  <Card className={styles.card} key={auction.id}>
+                    <p>Domain Name: {auction.name+".ntu"}</p>
+                    <p>Start: {auction.start}</p>
+                    <p>Bidding End: {auction.biddingEnd}</p>
+                    <p>Reveal End: {auction.revealEnd}</p>
 
-                  <Button
-                    className={`btn btn-primary ${styles.bidbtn}`}
-                    onClick={() => {
-                      navigate(bidPath, {
-                        state: { name: auction.name },
-                      });
-                    }}
-                  >
-                    Place a Bid!
-                  </Button>
-                </Card>
-              </Col>
-            );
-          })}
+                    <Button
+                      className={`btn btn-primary ${styles.bidbtn}`}
+                      onClick={() => {
+                        navigate(bidPath, {
+                          state: { name: auction.name },
+                        });
+                      }}
+                    >
+                      Place a Bid!
+                    </Button>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
         </Container>
       )}
     </div>

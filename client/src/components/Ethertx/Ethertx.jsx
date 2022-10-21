@@ -13,45 +13,41 @@ import { useEffect } from "react";
 
 const Ethertx = (props) => {
   const dummyBidGroup = [
-      {
-        name: "JonLee.ens",
-        id: 1,
-      },
-      {
-        name: "GeneLum.ens",
-        id: 2,
-      },
-      {
-        name: "Chuansong.ens",
-        id: 3,
-      },
-      {
-        name: "CatChew.ens",
-        id: 4,
-      },
-      {
-        name: "JonLee.ens",
-        id: 5,
-      },
-      {
-        name: "GeneLum.ens",
-        id: 6,
-      },
-      {
-        name: "CatChew.ens",
-        id: 8,
-      },
-      {
-        name: "Chuansong.ens",
-        id: 7,
-      },
+    {
+      name: "JonLee.ens",
+      id: 1,
+    },
+    {
+      name: "GeneLum.ens",
+      id: 2,
+    },
+    {
+      name: "Chuansong.ens",
+      id: 3,
+    },
+    {
+      name: "CatChew.ens",
+      id: 4,
+    },
+    {
+      name: "JonLee.ens",
+      id: 5,
+    },
+    {
+      name: "GeneLum.ens",
+      id: 6,
+    },
+    {
+      name: "CatChew.ens",
+      id: 8,
+    },
+    {
+      name: "Chuansong.ens",
+      id: 7,
+    },
   ];
-  const {
-    getDomains,
-    sendDomain,
-    withdrawFromDomain,
-  } = useContext(DnsContext);
-  
+  const { getDomains, sendDomain, withdrawFromDomain } = useContext(DnsContext);
+
   const [validTransfer, setValidTransfer] = useState(false);
   const [error, setError] = useState(false);
 
@@ -60,9 +56,9 @@ const Ethertx = (props) => {
 
   const transferHandler = () => {
     if (error) {
-        setValidTransfer(false);
+      setValidTransfer(false);
     } else {
-        setValidTransfer(!validTransfer);
+      setValidTransfer(!validTransfer);
     }
   };
   return (
@@ -85,18 +81,23 @@ const Ethertx = (props) => {
         />
       )}
       <h2 className={styles.pagename}>Ether Transfer</h2>
-      {dummyBidGroup.map((domain) => {
-        return (
-          <Col lg={4} md={6} sm={12} xs={12}>
-            <Card className={styles.card} key={domain.id}>
-              <p>Domain Name: {domain.name}</p>
-              <Button className={styles.withdrawbtn} onClick={transferHandler}>
-                Transfer Ether
-              </Button>
-            </Card>
-          </Col>
-        );
-      })}
+      <Row>
+        {dummyBidGroup.map((domain) => {
+          return (
+            <Col lg={4} md={6} sm={12} xs={12}>
+              <Card className={styles.card} key={domain.id}>
+                <p>Domain Name: {domain.name}</p>
+                <Button
+                  className={styles.transferbtn}
+                  onClick={transferHandler}
+                >
+                  Transfer Ether
+                </Button>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
     </Container>
   );
 };
