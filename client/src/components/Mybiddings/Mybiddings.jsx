@@ -80,7 +80,7 @@ const Mybiddings = (props) => {
   const [loading, setLoading] = useState(false);
   const [bids, setBiddings] = useState();
 
-  let errorMsg = ""
+  let errorMsg = "";
   useEffect(() => {
     const getBids = async () => {
       try {
@@ -121,7 +121,7 @@ const Mybiddings = (props) => {
   const [reveal, setReveal] = useState(false);
   const [secret, setSecret] = useState();
   const [name, setName] = useState("");
-  const [error,setError] = useState(false);
+  const [error, setError] = useState(false);
 
   const revealBidSubmit = async () => {
     console.log("secret ", secret, " name ", name);
@@ -138,13 +138,19 @@ const Mybiddings = (props) => {
     setSecret(event.target.value);
   };
 
-  const errorHandler = (event) =>{
-    setError(!error)
-  }
+  const errorHandler = (event) => {
+    setError(!error);
+  };
 
   return (
     <Container>
-    {error && <ErrorModal title="Error occurred" message={errorMsg} onConfirm={errorHandler}/>}
+      {error && (
+        <ErrorModal
+          title="Error occurred"
+          message={errorMsg}
+          onConfirm={errorHandler}
+        />
+      )}
       {reveal && (
         <InputModal
           onConfirm={() => {
@@ -161,7 +167,6 @@ const Mybiddings = (props) => {
       )}
       <h2 className={styles.pagename}>My Biddings</h2>
       <Row>
-      
         {loading && !bids && <p>Loading</p>}
         {!loading && bids && (
           <div>
