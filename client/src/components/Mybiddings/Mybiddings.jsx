@@ -83,7 +83,7 @@ const Mybiddings = (props) => {
 
   useEffect(() => {
     const getBids = async () => {
-      try {
+      // try {
         const data = await getMyBiddings(props.connected);
         const biddingsMapped = await Promise.all(
           data.map(async (i) => {
@@ -107,10 +107,10 @@ const Mybiddings = (props) => {
         setBiddings(biddingsMapped);
 
         console.log(bids);
-      } catch (err) {
-        setError("Something went wrong!");
-        setReveal(false);
-      }
+      // } catch (err) {
+        // setError("Something went wrong!");
+        // setReveal(false);
+      // }
     };
     setLoading(true);
     getBids();
@@ -127,6 +127,8 @@ const Mybiddings = (props) => {
     console.log("secret ", secret, " name ", name);
 
     await revealBid(name, secret);
+
+    console.log("exit revealBid js function");
     revealHandler();
     } catch(err){
         setError(true);

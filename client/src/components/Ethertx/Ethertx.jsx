@@ -65,6 +65,7 @@ const Ethertx = (props) => {
         const getAllNamesHandler = async () => {
             try {
                 const data = await getDomains();
+                // console.log("using dnsctx getdomains fn");
 
                 const mappedNames = await Promise.all(
                     data.map(async (i) => {
@@ -102,6 +103,7 @@ const Ethertx = (props) => {
     const sendDomainHandler = async (name, amount) => {
         try {
             await sendDomain(name, amount);
+            console.log("after handler");
             transferCancelHandler();
         } catch (err) {
             // setError(err);
