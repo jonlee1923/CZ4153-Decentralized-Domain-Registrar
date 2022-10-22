@@ -14,11 +14,6 @@ const Navbar2 = React.forwardRef((props, ref) => {
   // const { connectWallet, checkIfWalletIsConnected, connected } = useContext(DnsContext);
   const lumeel = require("../../assets/lumeel.png");
   const navigate = useNavigate();
-  const [newPath, setNewPath] = useState("/");
-
-  useEffect(()=>{
-    
-  },[props.connected])
 
   let myNamesPath = "";
   let myBiddingsPath = "";
@@ -71,7 +66,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
                   className={`btn btn-primary ${styles.connectwallet}`}
                   onClick={() => {
                     props.connectWallet();
-                    navigate(newPath);
+                    navigate("/");
                   }}
                   ref={props.scrollRef}
                 >
@@ -86,40 +81,17 @@ const Navbar2 = React.forwardRef((props, ref) => {
             >
               <NavDropdown.Item href="/">Bidding List</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item
-                // href={myBiddingsPath}
-                onClick={() => {
-                  navigate(myBiddingsPath);
-                  setNewPath("/mybiddings");
-                }}
-              >
+              <NavDropdown.Item href={myBiddingsPath}>
                 My Biddings
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item
-                onClick={() => {
-                  navigate(myNamesPath);
-                  setNewPath("/mynames");
-                }}
-              >
-                My Names
-              </NavDropdown.Item>
+              <NavDropdown.Item href={myNamesPath}>My Names</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item
-                onClick={() => {
-                  navigate(placeBidPath);
-                  setNewPath("/placebid");
-                }}
-              >
+              <NavDropdown.Item href={placeBidPath}>
                 Place Bids
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item
-                onClick={() => {
-                  navigate(etherTxPath);
-                  setNewPath("/ethertx");
-                }}
-              >
+              <NavDropdown.Item href={etherTxPath}>
                 Ether Transaction
               </NavDropdown.Item>
             </NavDropdown>

@@ -14,6 +14,7 @@ const Placebid = (props) => {
   const [rentalPrice, setRentalPrice] = useState("");
   const [domainName, setDomainName] = useState("");
   const [secretInt, setSecretInt] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const location = useLocation();
   const { state } = location;
@@ -22,18 +23,18 @@ const Placebid = (props) => {
   const cancelHandler = () => {
     navigate("/");
   };
-  const { loading, createAuctionAndBid, checkAuctionExists, bid } =
+  const {createAuctionAndBid, checkAuctionExists, bid } =
     useContext(DnsContext);
 
   // if (state) {
   //     setDomainName(state.name);
   //     console.log("this is domainname",domainName);
   // }
-  useEffect(()=>{
-    if(state){
-      setDomainName(state.name)
+  useEffect(() => {
+    if (state) {
+      setDomainName(state.name);
     }
-  },[state])
+  }, [state]);
   const domainNameHandler = (event) => {
     setDomainName(event.target.value);
   };
@@ -52,16 +53,20 @@ const Placebid = (props) => {
   };
 
   const pressBidHandler = async () => {
+    setLoading(true);
     const result = await checkAuctionExists(domainName);
     if (result === true) {
-        bid(domainName, rentalPrice, secretInt);
+      bid(domainName, rentalPrice, secretInt); 
     } else {
-        createAuctionAndBid(domainName, rentalPrice, secretInt);
+      createAuctionAndBid(domainName, rentalPrice, secretInt);
     }
-};
+    setLoading(false);
+  };
 
   return (
     <Container>
+    {loading && <p>Loading...</p>}
+    {!loading && (
       <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
         <Row className={`${styles.topbar}`}>
           <Col lg={4} md={6} sm={12} xs={12} className={styles.newauction}>
@@ -115,22 +120,20 @@ const Placebid = (props) => {
             </Button>
           </Col>
           <Col lg={6} md={6} sm={12}>
-            {loading ? (
-              <p>Loading</p>
-            ) : (
-              <Button
-                type="submit"
-                size="sm"
-                className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
-                onClick={pressBidHandler}
-              >
-                Register!
-              </Button>
-            )}
+            <Button
+              type="submit"
+              size="sm"
+              className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
+              onClick={pressBidHandler}
+            >
+              Register!
+            </Button>
           </Col>
         </Row>
       </form>
+      )}
     </Container>
+
   );
 };
 
