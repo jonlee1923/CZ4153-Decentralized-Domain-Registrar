@@ -35,13 +35,14 @@ const ModalOverlay = (props) => {
         <footer className={styles.actions}>
           <Button
             className={`btn btn-light ${styles.btn}`}
-            onClick={props.onConfirm}
+            onClick={props.onCancel}
           >
             Cancel
           </Button>
           <Button
             type="submit"
             className={`btn btn-primary ${styles.btn}`}
+            onClick={props.onConfirm}
           >
             Confirm
           </Button>
@@ -68,6 +69,7 @@ const InputModal = (props) => {
           label={props.label}
           value={props.value}
           onChange={props.onChange}
+          onCancel={props.onCancel}
         />,
         document.getElementById("overlay-root")
       )}

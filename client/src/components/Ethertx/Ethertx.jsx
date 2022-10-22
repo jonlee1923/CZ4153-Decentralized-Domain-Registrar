@@ -10,6 +10,7 @@ import ErrorModal from "../ErrorModal/ErrorModal";
 import InputModal from "../InputModal/InputModal";
 import { DnsContext } from "../../context/DnsContext";
 import { useEffect } from "react";
+import { computePublicKey } from "ethers/lib/utils";
 
 const Ethertx = (props) => {
     const dummyBidGroup = [
@@ -55,7 +56,9 @@ const Ethertx = (props) => {
     const [names, setNames] = useState();
     const [nameToSend, setNameToSend] = useState();
     const [loading, setLoading] = useState(false);
+    const [xfer,setXfer] = useState(0);
 
+    console.log(xfer);
     useEffect(() => {
         const getAllNamesHandler = async () => {
             try {
@@ -83,18 +86,21 @@ const Ethertx = (props) => {
         setLoading(false);
     }, [getDomains]);
 
-    const transferHandler = () => {
-        if (error) {
+    const transferCancelHandler = () => {
+        if(error){
             setValidTransfer(false);
-        } else {
-            setValidTransfer(!validTransfer);
         }
+        else{
+            setValidTransfer(!validTransfer);
+
+        }
+        setXfer(0);
     };
 
     const sendDomainHandler = async (name, amount) => {
         try {
             await sendDomain(name, amount);
-            transferHandler();
+            transferCancelHandler();
         } catch (err) {
             // setError(err.message);
         }
@@ -104,7 +110,7 @@ const Ethertx = (props) => {
         <Container>
             {error && (
                 <ErrorModal
-                    onConfirm={transferHandler}
+                    onConfirm={transferCancelHandler}
                     title={"Balance Insufficient"}
                     message={error}
                 />
@@ -112,20 +118,23 @@ const Ethertx = (props) => {
             {validTransfer && (
                 <InputModal
                     onConfirm={() => {
-                        sendDomainHandler(nameToSend, value);
+                        sendDomainHandler(nameToSend, xfer);
                     }}
                     title="Withdrawal"
                     placeholder="Please input transfer amount"
                     type="text"
                     pattern="^\d*(\.\d{0,6})?$"
                     label="Amount:"
+                    onChange={(event)=>{setXfer(event.target.value)}}
+                    value={xfer}
+                    onCancel={transferCancelHandler}
                 />
             )}
             <h2 className={styles.pagename}>Ether Transfer</h2>
             {loading && <p>Loading</p>}
             {!loading &&
                 names &&
-                names.map((domain) => {
+                dummyBidGroup.map((domain) => {
                     return (
                         <Col lg={4} md={6} sm={12} xs={12}>
                             <Card className={styles.card} key={domain.id}>
@@ -135,7 +144,7 @@ const Ethertx = (props) => {
                                     onClick={() => {
                                         setNameToSend(domain.name);
                                         setValidTransfer(true);
-                                        transferHandler();
+                                        transferCancelHandler();
                                     }}
                                 >
                                     Transfer Ether
