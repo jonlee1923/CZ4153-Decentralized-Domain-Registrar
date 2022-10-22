@@ -30,7 +30,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
   }
 
   return (
-    <Navbar bg="light" expand="xl" className={styles.navbar}>
+    <Navbar expand="xl" className={styles.navbar2}>
       <Container>
         <Navbar.Brand href="/">
           <img src={lumeel} alt="logo pic" className={`${styles.brand}`} />
@@ -54,7 +54,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
               {props.connected && (
                 <Button
                   type="button"
-                  className={`btn btn-secondary ${styles.connectwallet}`}
+                  className={`btn btn-info ${styles.connectwallet} ${styles.successbtn}`}
                   disabled={true}
                 >
                   Connected!

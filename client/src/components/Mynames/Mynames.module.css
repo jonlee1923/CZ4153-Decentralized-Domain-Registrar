@@ -1,19 +1,24 @@
-.pagename{
-    text-align:center;
-    text-decoration:underline;
-    font-weight:bold;
+.pagename {
+  text-align: center;
+  text-decoration: underline;
+  font-weight: bold;
 }
-.card{
-    position:relative;
-    margin:10px 0;
-    height:200px;
-    column-width:300px;
-}
-.bidlink{
-    color:white;
+.card {
+  position: relative;
+  margin: 10px 0;
+  height: 200px;
+  column-width: 300px;
 }
 
-.withdrawbtn{
-    position:absolute;
-    right:10px;
+.card p {
+  color: white;
+}
+.bidlink {
+  color: white;
+}
+
+.withdrawbtn {
+  position: absolute;
+  right: 10px;
+  background: #484954;
 }

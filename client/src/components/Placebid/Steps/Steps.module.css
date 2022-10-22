@@ -1,35 +1,21 @@
-.middle{
-    margin:20px;
+h5 {
+  font-weight: 700;
+}
+.middle {
+  margin: 20px;
 }
 
-/* .steps {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 50px;
-  } */
-  
-  .step {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: 30px;
-    position:relative;
-    width:300px;
-  }
-  
-  .step p {
-    font-size: 15px;
-    /* white-space: nowrap; */
-    overflow: hidden;
-    text-overflow: ellipsis;  
-    
-  }
-  
-  .note {
-    font-size: 15px;
-    color: red;
-    position: absolute;
-    left:100px;
-    width:300px;
-    /* background-color:#D3D3D3; */
-    border-radius:10px;
-  }
+.step {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 30px;
+  position: relative;
+  width: 300px;
+}
+
+.step p {
+  font-size: 15px;
+  /* white-space: nowrap; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

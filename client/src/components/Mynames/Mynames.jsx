@@ -154,9 +154,9 @@ const Mynames = (props) => {
                     return (
                         <Col lg={4} md={6} sm={12} xs={12}>
                             <Card className={styles.card} key={domain.id}>
-                                <p>Domain Name: {domain.name}</p>
-                                <p>Value Purchased: {domain.value} eth</p>
-                                <p>Balance: {domain.balance} eth</p>
+                                <p>Domain Name: <span>{domain.name}</span></p>
+                                <p>Value Purchased: <span>{domain.value} eth</span></p>
+                                <p>Balance: <span>{domain.balance} eth</span></p>
                                 <Button
                                     className={styles.withdrawbtn}
                                     onClick={() => {

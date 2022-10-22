@@ -9,10 +9,15 @@
     height: 240px;
     column-width: 300px;
   }
+
+  .card p{
+    color:white;
+  }
   
   .bidbtn {
       position:absolute;
       right:10px;
+      background:#484954;
   }
   
   .bidlink {

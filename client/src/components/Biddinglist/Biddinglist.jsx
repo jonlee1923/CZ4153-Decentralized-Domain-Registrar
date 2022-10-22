@@ -155,28 +155,41 @@ const BiddingList = (props) => {
               return (
                 <Col lg={4} md={6} sm={12} xs={12}>
                   <Card className={styles.card} key={auction.id}>
-                    <p>Domain Name: {auction.name + ".ntu"}</p>
-                    <p>Start: {auction.start}</p>
-                    <p>Bidding End: {auction.biddingEnd}</p>
-                    <p>Reveal End: {auction.revealEnd}</p>
-                    <p>Auction Ended: {auction.ended.toString()}</p>
-                    <Button
-                      className={`btn btn-primary ${styles.bidbtn}`}
-                      onClick={() => {
-                        navigate(bidPath, {
-                          state: { name: auction.name },
-                        });
-                      }}
-                    >
-                      Place a Bid!
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        endAuctionHandler(auction.name);
-                      }}
-                    >
-                      End
-                    </Button>
+                    <p>
+                      Domain Name: <span>{auction.name + ".ntu"}</span>
+                    </p>
+                    <p>
+                      Start: <span>{auction.start}</span>
+                    </p>
+                    <p>
+                      Bidding End: <span>{auction.biddingEnd}</span>
+                    </p>
+                    <p>
+                      Reveal End: <span>{auction.revealEnd}</span>
+                    </p>
+                    <p>
+                      Auction Ended: <span>{auction.ended.toString()}</span>
+                    </p>
+                    <div className={styles.buttons}>
+                      <Button
+                        className={`btn btn-secondary ${styles.bidbtn} ${styles.btmbutton}`}
+                        onClick={() => {
+                          navigate(bidPath, {
+                            state: { name: auction.name },
+                          });
+                        }}
+                      >
+                        Place a Bid!
+                      </Button>
+                      <Button
+                        className={`btn btn-secondary ${styles.btmbutton}`}
+                        onClick={() => {
+                          endAuctionHandler(auction.name);
+                        }}
+                      >
+                        End
+                      </Button>
+                    </div>
                   </Card>
                 </Col>
               );

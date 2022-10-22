@@ -141,9 +141,9 @@ const Ethertx = (props) => {
                     return (
                         <Col lg={4} md={6} sm={12} xs={12}>
                             <Card className={styles.card} key={domain.id}>
-                                <p>Domain Name: {domain.name}</p>
+                                <p>Domain Name: <span>{domain.name+".ntu"}</span></p>
                                 <Button
-                                    className={styles.withdrawbtn}
+                                    className={styles.transferbtn}
                                     onClick={() => {
                                         setNameToSend(domain.name);
                                         setValidTransfer(true);

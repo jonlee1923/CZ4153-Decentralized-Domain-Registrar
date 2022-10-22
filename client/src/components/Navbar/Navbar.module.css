@@ -1,3 +1,6 @@
+.navbar2{
+    background: #454DF1;
+}
 .searchbar{
     width:500px;
 }
@@ -6,6 +9,7 @@
     width:175px;
     margin-right:40px;
     margin-left:0;
+    color:white;
 }
 
 .connectwallet{

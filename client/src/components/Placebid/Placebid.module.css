@@ -1,11 +1,19 @@
+body{
+  font-size:18px;
+}
+
 label {
-  font-size: 17px;
   padding-right: 10px;
+  font-size:18px;
 }
 
 input{
-  font-size:17px;
   width:100%;
+  border-radius:10px;
+}
+
+.placebidpage{
+  background:white;
 }
 
 .mainpage {
@@ -23,10 +31,6 @@ input{
   /* display: grid; */
   /* grid-template-columns: 2fr 1fr 1fr; */
   margin-left:20px;
-}
-
-.topbar p {
-  font-size: 17px;
 }
 
 .domain{
@@ -67,13 +71,17 @@ input{
 
 .bottombtn {
   position: absolute;
-  right: 20px;
-  bottom: 40px;
+  right: 10px;
+  bottom: 20px;
 }
 
 .reqregisterbtn {
     margin-right:30px;
     text-decoration:underline;
+    height:100px;
+    width:200px;
+    font-size:30px;
+    border-radius:20px;
 }
 
 @media (max-width:995px){

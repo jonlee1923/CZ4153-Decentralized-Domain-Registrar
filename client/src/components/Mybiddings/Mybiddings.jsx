@@ -180,10 +180,10 @@ const Mybiddings = (props) => {
               return (
                 <Col lg={4} md={6} sm={12} xs={12}>
                   <Card className={styles.card} key={bid.id}>
-                    <p>Domain Name: {bid.name+".ntu"}</p>
-                    <p>Start: {bid.start}</p>
-                    <p>End: {bid.end}</p>
-                    <p>Revealed: {bid.revealed.toString()}</p>
+                    <p>Domain Name: <span>{bid.name+".ntu"}</span></p>
+                    <p>Start: <span>{bid.start}</span></p>
+                    <p>End: <span>{bid.end}</span></p>
+                    <p>Revealed: <span>{bid.revealed.toString()}</span></p>
                     <Button
                       className={`btn btn-primary ${styles.bidbtn}`}
                       onClick={() => {

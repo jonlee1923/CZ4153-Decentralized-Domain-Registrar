@@ -64,7 +64,7 @@ const Placebid = (props) => {
   };
 
   return (
-    <Container>
+    <Container className={styles.placebidbox}>
     {loading && <p>Loading...</p>}
     {!loading && (
       <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
@@ -112,7 +112,7 @@ const Placebid = (props) => {
         <Row className={`${styles.bottombtn}`}>
           <Col lg={6} md={6} sm={12}>
             <Button
-              className={`btn btn-light btn-lg ${styles.reqregisterbtn}`}
+              className={`btn btn-secondary btn-lg ${styles.reqregisterbtn}`}
               onClick={cancelHandler}
               size="sm"
             >
