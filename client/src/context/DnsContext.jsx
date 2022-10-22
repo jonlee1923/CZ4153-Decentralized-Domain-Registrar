@@ -186,6 +186,7 @@ export const DnsProvider = ({ children }) => {
 
     const sendDomain = async (name, amount) => {
         try {
+            console.log("type", typeof amount);
             const transaction = await dnsContract.sendDomain(name, {
                 value: ethers.utils.parseEther(amount),
             });

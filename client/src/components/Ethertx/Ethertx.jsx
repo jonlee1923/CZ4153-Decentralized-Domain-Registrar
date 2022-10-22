@@ -50,11 +50,10 @@ const Ethertx = (props) => {
         useContext(DnsContext);
 
     const [validTransfer, setValidTransfer] = useState(false);
-    const [error, setError] = useState();
+    const [error, setError] = useState(false);
 
     const [names, setNames] = useState();
     const [nameToSend, setNameToSend] = useState();
-    const [amountToSend, setAmountToSend] = useState();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -75,7 +74,7 @@ const Ethertx = (props) => {
 
                 setNames(mappedNames);
             } catch (err) {
-                setError("Something went wrong!");
+                // setError(err.message);
             }
         };
         setLoading(true);
@@ -85,11 +84,11 @@ const Ethertx = (props) => {
     }, [getDomains]);
 
     const transferHandler = () => {
-        // if (error) {
-        //     setValidTransfer(false);
-        // } else {
-        setValidTransfer(!validTransfer);
-        // }
+        if (error) {
+            setValidTransfer(false);
+        } else {
+            setValidTransfer(!validTransfer);
+        }
     };
 
     const sendDomainHandler = async (name, amount) => {
@@ -97,7 +96,7 @@ const Ethertx = (props) => {
             await sendDomain(name, amount);
             transferHandler();
         } catch (err) {
-            setError(err.message);
+            // setError(err.message);
         }
     };
 
@@ -105,17 +104,15 @@ const Ethertx = (props) => {
         <Container>
             {error && (
                 <ErrorModal
-                    // onConfirm={transferHandler}
+                    onConfirm={transferHandler}
                     title={"Balance Insufficient"}
                     message={error}
                 />
             )}
             {validTransfer && (
                 <InputModal
-                    onConfirm={(amount) => {
-                        setAmountToSend(amount);
-                        setAmountToSend();
-                        sendDomainHandler(nameToSend, amountToSend);
+                    onConfirm={() => {
+                        sendDomainHandler(nameToSend, value);
                     }}
                     title="Withdrawal"
                     placeholder="Please input transfer amount"
@@ -136,8 +133,8 @@ const Ethertx = (props) => {
                                 <Button
                                     className={styles.withdrawbtn}
                                     onClick={() => {
-                                        sendDomainHandler(domain.name);
-
+                                        setNameToSend(domain.name);
+                                        setValidTransfer(true);
                                         transferHandler();
                                     }}
                                 >
