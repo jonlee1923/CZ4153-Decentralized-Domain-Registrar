@@ -73,7 +73,8 @@ const Mynames = (props) => {
     const [balanceError, setBalanceError] = useState(false);
     const [validWithdraw, setValidWithdraw] = useState(false);
     const [error, setError] = useState(false);
-
+    const [amount, setAmount] = useState(0);
+    const [name, setDomainName] = useState(0);
     const [names, setNames] = useState();
     const [loading, setLoading] = useState(false);
 
@@ -83,7 +84,8 @@ const Mynames = (props) => {
             const mappedNames = await Promise.all(
                 data.map(async (i) => {
                     const _name = i.domainName;
-                    const _balance = i.balance.toNumber();
+                    // const _balance = i.balance.toNumber();
+                    const _balance = ethers.utils.formatEther(i.balance);
                     const _value = ethers.utils.formatEther(i.value);
 
                     let domainName = {
@@ -113,9 +115,9 @@ const Mynames = (props) => {
         }
     };
 
-    const withdrawDomain = async (amount) => {
+    const withdrawDomain = async () => {
         try {
-            await withdrawFromDomain(amount);
+            await withdrawFromDomain(name , amount);
         } catch (err) {}
     };
 
@@ -136,6 +138,7 @@ const Mynames = (props) => {
                         withdrawHandler();
                         withdrawDomain();
                     }}
+                    onChange = {(event)=>{setAmount(event.target.value)}}
                     title="Withdrawal"
                     placeholder="Please input withdraw amount"
                     type="text"
@@ -155,7 +158,10 @@ const Mynames = (props) => {
                                 <p>Balance: {domain.balance} eth</p>
                                 <Button
                                     className={styles.withdrawbtn}
-                                    onClick={withdrawHandler}
+                                    onClick={() => {
+                                      setDomainName(domain.name);
+                                      withdrawHandler();
+                                    }}
                                 >
                                     Withdraw
                                 </Button>

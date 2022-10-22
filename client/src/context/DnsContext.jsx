@@ -202,7 +202,7 @@ export const DnsProvider = ({ children }) => {
         try {
             const transaction = await dnsContract.withdrawFrmDomain(
                 name,
-                amount
+                ethers.utils.parseEther(amount)
             );
             let tx = await transaction.wait();
             console.log("Transaction events: ", tx.events[0]);

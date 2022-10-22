@@ -134,7 +134,7 @@ const Ethertx = (props) => {
             {loading && <p>Loading</p>}
             {!loading &&
                 names &&
-                dummyBidGroup.map((domain) => {
+                names.map((domain) => {
                     return (
                         <Col lg={4} md={6} sm={12} xs={12}>
                             <Card className={styles.card} key={domain.id}>
