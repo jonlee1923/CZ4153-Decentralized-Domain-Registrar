@@ -11,6 +11,7 @@ import InputModal from "../InputModal/InputModal";
 import { DnsContext } from "../../context/DnsContext";
 import { useEffect } from "react";
 import { computePublicKey } from "ethers/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const Ethertx = (props) => {
     const dummyBidGroup = [
@@ -58,7 +59,8 @@ const Ethertx = (props) => {
     const [loading, setLoading] = useState(false);
     const [xfer,setXfer] = useState(0);
 
-    console.log(xfer);
+    const navigate = useNavigate();
+
     useEffect(() => {
         const getAllNamesHandler = async () => {
             try {
@@ -77,7 +79,7 @@ const Ethertx = (props) => {
 
                 setNames(mappedNames);
             } catch (err) {
-                // setError(err.message);
+                // setError(err);
             }
         };
         setLoading(true);
@@ -102,7 +104,7 @@ const Ethertx = (props) => {
             await sendDomain(name, amount);
             transferCancelHandler();
         } catch (err) {
-            // setError(err.message);
+            // setError(err);
         }
     };
 
@@ -119,8 +121,9 @@ const Ethertx = (props) => {
                 <InputModal
                     onConfirm={() => {
                         sendDomainHandler(nameToSend, xfer);
+                        transferCancelHandler();
                     }}
-                    title="Withdrawal"
+                    title="Transfer Ether"
                     placeholder="Please input transfer amount"
                     type="text"
                     pattern="^\d*(\.\d{0,6})?$"

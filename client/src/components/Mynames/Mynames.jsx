@@ -144,6 +144,7 @@ const Mynames = (props) => {
                     type="text"
                     pattern="^\d*(\.\d{0,6})?$"
                     label="Amount:"
+                    onCancel={withdrawHandler}
                 />
             )}
             <h2 className={styles.pagename}>My Names</h2>

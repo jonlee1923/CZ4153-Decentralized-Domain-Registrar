@@ -159,6 +159,7 @@ const Mybiddings = (props) => {
         <InputModal
           onConfirm={() => {
             revealBidSubmit();
+            revealHandler();
           }}
           title="Reveal"
           placeholder="Please input secret integer"
@@ -167,6 +168,7 @@ const Mybiddings = (props) => {
           label="Secret:"
           onChange={secretHandler}
           value={secret}
+          onCancel={revealHandler}
         />
       )}
       <h2 className={styles.pagename}>My Biddings</h2>
