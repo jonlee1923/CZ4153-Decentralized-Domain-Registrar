@@ -12,93 +12,143 @@ import { DnsContext } from "../../context/DnsContext";
 import { useEffect } from "react";
 
 const Ethertx = (props) => {
-  const dummyBidGroup = [
-      {
-        name: "JonLee.ens",
-        id: 1,
-      },
-      {
-        name: "GeneLum.ens",
-        id: 2,
-      },
-      {
-        name: "Chuansong.ens",
-        id: 3,
-      },
-      {
-        name: "CatChew.ens",
-        id: 4,
-      },
-      {
-        name: "JonLee.ens",
-        id: 5,
-      },
-      {
-        name: "GeneLum.ens",
-        id: 6,
-      },
-      {
-        name: "CatChew.ens",
-        id: 8,
-      },
-      {
-        name: "Chuansong.ens",
-        id: 7,
-      },
-  ];
-  const {
-    getDomains,
-    sendDomain,
-    withdrawFromDomain,
-  } = useContext(DnsContext);
-  
-  const [validTransfer, setValidTransfer] = useState(false);
-  const [error, setError] = useState(false);
+    const dummyBidGroup = [
+        {
+            name: "JonLee.ens",
+            id: 1,
+        },
+        {
+            name: "GeneLum.ens",
+            id: 2,
+        },
+        {
+            name: "Chuansong.ens",
+            id: 3,
+        },
+        {
+            name: "CatChew.ens",
+            id: 4,
+        },
+        {
+            name: "JonLee.ens",
+            id: 5,
+        },
+        {
+            name: "GeneLum.ens",
+            id: 6,
+        },
+        {
+            name: "CatChew.ens",
+            id: 8,
+        },
+        {
+            name: "Chuansong.ens",
+            id: 7,
+        },
+    ];
+    const { getDomains, sendDomain, withdrawFromDomain } =
+        useContext(DnsContext);
 
-  const [names, setNames] = useState();
-  const [loading, setLoading] = useState(false);
+    const [validTransfer, setValidTransfer] = useState(false);
+    const [error, setError] = useState();
 
-  const transferHandler = () => {
-    if (error) {
-        setValidTransfer(false);
-    } else {
+    const [names, setNames] = useState();
+    const [nameToSend, setNameToSend] = useState();
+    const [amountToSend, setAmountToSend] = useState();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const getAllNamesHandler = async () => {
+            try {
+                const data = await getDomains();
+
+                const mappedNames = await Promise.all(
+                    data.map(async (i) => {
+                        let domainItem = {
+                            name: i.domainName,
+                            value: i.value.toNumber(),
+                        };
+
+                        return domainItem;
+                    })
+                );
+
+                setNames(mappedNames);
+            } catch (err) {
+                setError("Something went wrong!");
+            }
+        };
+        setLoading(true);
+
+        getAllNamesHandler();
+        setLoading(false);
+    }, [getDomains]);
+
+    const transferHandler = () => {
+        // if (error) {
+        //     setValidTransfer(false);
+        // } else {
         setValidTransfer(!validTransfer);
-    }
-  };
-  return (
-    <Container>
-      {error && (
-        <ErrorModal
-          onConfirm={transferHandler}
-          title={"Balance Insufficient"}
-          message={"Please input an amount below your current balance"}
-        />
-      )}
-      {validTransfer && (
-        <InputModal
-          onConfirm={transferHandler}
-          title="Withdrawal"
-          placeholder="Please input transfer amount"
-          type="text"
-          pattern="^\d*(\.\d{0,6})?$"
-          label="Amount:"
-        />
-      )}
-      <h2 className={styles.pagename}>Ether Transfer</h2>
-      {dummyBidGroup.map((domain) => {
-        return (
-          <Col lg={4} md={6} sm={12} xs={12}>
-            <Card className={styles.card} key={domain.id}>
-              <p>Domain Name: {domain.name}</p>
-              <Button className={styles.withdrawbtn} onClick={transferHandler}>
-                Transfer Ether
-              </Button>
-            </Card>
-          </Col>
-        );
-      })}
-    </Container>
-  );
+        // }
+    };
+
+    const sendDomainHandler = async (name, amount) => {
+        try {
+            await sendDomain(name, amount);
+            transferHandler();
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    return (
+        <Container>
+            {error && (
+                <ErrorModal
+                    // onConfirm={transferHandler}
+                    title={"Balance Insufficient"}
+                    message={error}
+                />
+            )}
+            {validTransfer && (
+                <InputModal
+                    onConfirm={(amount) => {
+                        setAmountToSend(amount);
+                        setAmountToSend();
+                        sendDomainHandler(nameToSend, amountToSend);
+                    }}
+                    title="Withdrawal"
+                    placeholder="Please input transfer amount"
+                    type="text"
+                    pattern="^\d*(\.\d{0,6})?$"
+                    label="Amount:"
+                />
+            )}
+            <h2 className={styles.pagename}>Ether Transfer</h2>
+            {loading && <p>Loading</p>}
+            {!loading &&
+                names &&
+                names.map((domain) => {
+                    return (
+                        <Col lg={4} md={6} sm={12} xs={12}>
+                            <Card className={styles.card} key={domain.id}>
+                                <p>Domain Name: {domain.name}</p>
+                                <Button
+                                    className={styles.withdrawbtn}
+                                    onClick={() => {
+                                        sendDomainHandler(domain.name);
+
+                                        transferHandler();
+                                    }}
+                                >
+                                    Transfer Ether
+                                </Button>
+                            </Card>
+                        </Col>
+                    );
+                })}
+        </Container>
+    );
 };
 
 export default Ethertx;

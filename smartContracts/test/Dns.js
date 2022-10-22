@@ -5,15 +5,13 @@ describe("ENS", function () {
     let acct2;
     let Ens;
     let ens;
-    let Auction;
-    let auction;
+
 
     beforeEach(async function () {
         [owner, acct1, acct2] = await ethers.getSigners();
 
         Ens = await ethers.getContractFactory("Dns");
         ens = await Ens.deploy();
-        Auction = await ethers.getContractFactory("Auction");
 
         console.log("Contract deployed to:", ens.address);
     });

@@ -3,13 +3,13 @@ pragma solidity ^0.8.4;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./IDns.sol";
-import "./ICommit.sol";
 import "./Commit.sol";
-import "./Create2.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-//it was inheriting erc721 but i removed it
-contract Dns is IDns {
+contract Dns is IDns, ReentrancyGuard {
+    using Counters for Counters.Counter;
+
     address public owner;
     string public registryName;
 
@@ -18,18 +18,9 @@ contract Dns is IDns {
     mapping(string => uint) public nameToDomainId;
     mapping(uint => EthDomain) public domains;
 
-    // //Stores the domain to eth address mapping
-    // mapping(string => address) public domainsToEthAddr;
-
-    // //Stores the eth address to domain mapping
-    // mapping(address => EthDomain[]) public ethAddrToDomain;
-
-    // mapping(string => EthDomain) public nameToDomain;
-
     //////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////
-    using Counters for Counters.Counter;
 
     Counters.Counter private bidCount;
     Counters.Counter private auctionCount;
@@ -40,16 +31,6 @@ contract Dns is IDns {
     mapping(string => uint[]) nameToBidId;
     mapping(address => uint[]) myBiddings;
     mapping(uint => Bid) bids;
-
-    //domain name to auction structs
-    // mapping(string => Auction) public auctions;
-
-    // Auction[] public auctionsArray;
-
-    // mapping(string => Bid[]) public biddingsForAuctions;
-
-    // //owner to bids
-    // mapping(address => Bid[]) public myBiddings;
 
     modifier isOwner() {
         require(msg.sender == owner, "User must be owner");
@@ -62,23 +43,40 @@ contract Dns is IDns {
         _;
     }
 
-    // modifier existingBid(string memory _name, address bidder) {
-    //     Bid[] memory _bids = myBiddings[bidder];
-    //     for (uint i = 0; i < _bids.length; i++) {
-    //         require(
-    //             keccak256(abi.encodePacked(_bids[i].name)) !=
-    //                 keccak256(abi.encodePacked(_name)),
-    //             "Bid already exists"
-    //         );
-    //     }
-    //     _;
-    // }
+    modifier existingBid(string memory _name, address bidder) {
+        for (uint i = 0; i < myBiddings[bidder].length; i++) {
+            require(
+                keccak256(abi.encodePacked(bids[myBiddings[bidder][i]].name)) !=
+                    keccak256(abi.encodePacked(_name)),
+                "Bid already exists"
+            );
+        }
+        _;
+    }
 
-    // constructor() ERC721("NTU domain registrar", "NTU") {
+    modifier auctionExists(string memory _name) {
+        require(nameToAuctionId[_name] != 0, "auction does not exist");
+        _;
+    }
+
+    modifier onlyBeforeBidding(string memory name) {
+        require(block.timestamp < auctions[nameToAuctionId[name]].biddingEnd);
+        _;
+    }
+
+    modifier onlyBeforeReveal(string memory name) {
+        require(block.timestamp < auctions[nameToAuctionId[name]].revealEnd);
+        _;
+    }
+
     constructor() {
         registryName = "NTU domain registrar";
         owner = msg.sender;
         console.log("NTU domain registrar deployed");
+    }
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 
     //To check if the domain is already registered or not
@@ -117,25 +115,25 @@ contract Dns is IDns {
         return names;
     }
 
+    function getAllDomains() external view returns (EthDomain[] memory) {
+        EthDomain[] memory allDomains = new EthDomain[](nameCount.current());
+
+        uint index = 0;
+        for (uint i = 1; i <= nameCount.current(); i++) {
+            allDomains[index] = domains[i];
+            index++;
+        }
+        return allDomains;
+    }
+
     //Resolve someones eth address along with a particular domain name
-    // function resolveAddress(address ownerAddress, string memory name)
-    //     public
-    //     view
-    //     returns (address)
-    // {
-    //     for (uint i = 0; i < ethAddrToDomain[ownerAddress].length; i++) {
-    //         string memory _name = ethAddrToDomain[ownerAddress][i].domainName;
-
-    //         if (
-    //             (keccak256(abi.encodePacked(_name)) ==
-    //                 keccak256(abi.encodePacked(name)))
-    //         ) {
-    //             return ethAddrToDomain[ownerAddress][i].owner;
-    //         }
-    //     }
-
-    //     return address(0);
-    // }
+    function resolveDomainName(string memory _name)
+        public
+        view
+        returns (address)
+    {
+        return domains[nameToDomainId[_name]].owner;
+    }
 
     function sendDomain(string memory _name) external payable {
         require(msg.sender != address(0), "Transfer from the zero address");
@@ -147,7 +145,10 @@ contract Dns is IDns {
         emit SentToDomain(msg.sender, _name, msg.value);
     }
 
-    function withdrawFrmDomain(string memory _name, uint amount) external {
+    function withdrawFrmDomain(string memory _name, uint amount)
+        external
+        nonReentrant
+    {
         require(nameToDomainId[_name] != 0, "Domain name does not exist");
 
         EthDomain storage domain = domains[nameToDomainId[_name]];
@@ -171,10 +172,6 @@ contract Dns is IDns {
             value: _value
         });
 
-        // nameToDomain[_name] = newEthDomain;
-        // domainsToEthAddr[_name] = _owner;
-        // ethAddrToDomain[_owner].push(newEthDomain);
-
         addrToDomainId[_owner].push(nameCount.current());
         nameToDomainId[_name] = nameCount.current();
         domains[nameCount.current()] = newEthDomain;
@@ -191,36 +188,33 @@ contract Dns is IDns {
         return allAuctions;
     }
 
-    // function getBidding(string memory _name, address user)
-    //     public
-    //     view
-    //     returns (Bid memory)
-    // {
-    //     Bid[] memory bids = biddingsForAuctions[_name];
-
-    //     for (uint i = 0; i < bids.length; i++) {
-    //         if (bids[i].bidder == user) {
-    //             return bids[i];
-    //         }
-    //     }
-
-    //     revert("Not found");
-    // }
-
-    function getBiddings(address _user)
-        external
+    function getAddress(bytes memory bytecode, uint _salt)
+        public
         view
-        override
-        returns (Bid[] memory)
+        returns (address)
     {
-        uint[] memory ids = myBiddings[_user];
-        Bid[] memory myBids = new Bid[](ids.length);
-        for (uint i = 0; i < ids.length; i++) {
-            myBids[i] = bids[ids[i]];
-        }
+        bytes32 hash = keccak256(
+            abi.encodePacked(
+                bytes1(0xff),
+                address(this),
+                _salt,
+                keccak256(bytecode)
+            )
+        );
 
-        return myBids;
-        // return myBiddings[_user];
+        // NOTE: cast last 20 bytes of hash to address
+        return address(uint160(uint(hash)));
+    }
+
+    function getBytecode(address _owner, string memory _name)
+        public
+        pure
+        returns (bytes memory)
+    {
+        // bytes memory bytecode = type(Commit).creationCode;
+        bytes memory bytecode = type(Commit).creationCode;
+
+        return abi.encodePacked(bytecode, abi.encode(_owner, _name));
     }
 
     function startAuction(
@@ -248,37 +242,17 @@ contract Dns is IDns {
             highestBid: 0,
             highestBidder: address(0),
             start: block.timestamp,
-            end: block.timestamp + _bidDuration + _revealDuration
+            ended: false
         });
 
         nameToAuctionId[_name] = auctionCount.current();
         console.log(auctionCount.current());
         auctions[auctionCount.current()] = newAuction;
 
-        // auctions[_name] = newAuction;
-
-        // auctionsArray.push(newAuction);
-
         emit AuctionStarted(_name);
     }
 
     function endAuction(string memory _name) external {
-        // Auction memory auction = auctions[_name];
-        // Bid[] memory bids = biddingsForAuctions[_name];
-
-        // for (uint i = 0; i < bids.length; i++) {
-        //     if (bids[i].revealed == false) {
-        //         continue;
-        //     } else {
-        //         if (bids[i].bidder != auction.highestBidder) {
-        //             payable(bids[i].bidder).transfer(bids[i].revealedBid);
-        //         } else {
-        //             registerName(_name, bids[i].bidder);
-        //             emit AuctionEnded(_name, bids[i].bidder);
-        //         }
-        //     }
-        // }
-
         Auction storage auction = auctions[nameToAuctionId[_name]];
         uint[] memory ids = nameToBidId[_name];
 
@@ -300,37 +274,29 @@ contract Dns is IDns {
                 }
             }
         }
+        auction.ended = true;
     }
 
-    modifier onlyBeforeBidding(string memory name) {
-        require(block.timestamp < auctions[nameToAuctionId[name]].biddingEnd);
-        _;
-    }
-
-    modifier onlyBeforeReveal(string memory name) {
-        require(block.timestamp < auctions[nameToAuctionId[name]].revealEnd);
-        _;
-    }
-
-    function getBytecode(address _owner, string memory _name)
-        public
-        pure
-        returns (bytes memory)
+    function getBiddings(address _user)
+        external
+        view
+        override
+        returns (Bid[] memory)
     {
-        // bytes memory bytecode = type(Commit).creationCode;
-        bytes memory bytecode = type(TestContract).creationCode;
+        uint[] memory ids = myBiddings[_user];
+        Bid[] memory myBids = new Bid[](ids.length);
+        for (uint i = 0; i < ids.length; i++) {
+            myBids[i] = bids[ids[i]];
+        }
 
-        return abi.encodePacked(bytecode, abi.encode(_owner, _name));
+        return myBids;
     }
 
     function bid(
         bytes memory bytecode,
         uint _salt,
         string memory _name // string memory _name
-    ) public payable {
-        // require(auctions[_name].start != 0, "auction does not exist");
-        require(nameToAuctionId[_name] != 0, "auction does not exist");
-
+    ) public payable auctionExists(_name) existingBid(_name, msg.sender) {
         address addr;
         assembly {
             addr := create2(
@@ -351,11 +317,8 @@ contract Dns is IDns {
     }
 
     function _bid(address user, string memory _name) private {
-        // require(auctions[_name].start != 0, "auction does not exist");
-        require(nameToAuctionId[_name] != 0, "auction does not exist");
-
         uint startTime = auctions[nameToAuctionId[_name]].start;
-        uint endTime = auctions[nameToAuctionId[_name]].end;
+        uint endTime = auctions[nameToAuctionId[_name]].revealEnd;
         bidCount.increment();
 
         bids[bidCount.current()] = Bid({
@@ -369,45 +332,6 @@ contract Dns is IDns {
 
         nameToBidId[_name].push(bidCount.current());
         myBiddings[user].push(bidCount.current());
-
-        // myBiddings[user].push(
-        //     Bid({
-        //         name: _name,
-        //         bidder: user,
-        //         revealed: false,
-        //         revealedBid: 0,
-        //         start: startTime,
-        //         end: endTime
-        //     })
-        // );
-        // biddingsForAuctions[_name].push(
-        //     Bid({
-        //         name: _name,
-        //         bidder: user,
-        //         revealed: false,
-        //         revealedBid: 0,
-        //         start: startTime,
-        //         end: endTime
-        //     })
-        // );
-    }
-
-    function getAddress(bytes memory bytecode, uint _salt)
-        public
-        view
-        returns (address)
-    {
-        bytes32 hash = keccak256(
-            abi.encodePacked(
-                bytes1(0xff),
-                address(this),
-                _salt,
-                keccak256(bytecode)
-            )
-        );
-
-        // NOTE: cast last 20 bytes of hash to address
-        return address(uint160(uint(hash)));
     }
 
     function check(
@@ -421,10 +345,10 @@ contract Dns is IDns {
         uint[] memory ids = nameToBidId[_name];
 
         address addr = getAddress(bytecode, salt);
-        TestContract test = TestContract(addr);
-        address bidder = test.bidder();
-        string memory domainName = test.name();
-        uint balance = test.getBalance();
+        Commit commit = Commit(addr);
+        address bidder = commit.bidder();
+        string memory domainName = commit.name();
+        uint balance = commit.getBalance();
 
         require(bidder == msg.sender, "Failed to verify commit");
         require(
@@ -439,7 +363,7 @@ contract Dns is IDns {
                 bidToCheck.revealed = true;
 
                 bidToCheck.revealedBid = balance;
-                test.withdraw();
+                commit.withdraw();
                 refreshHighestBid(_name, msg.sender, bidToCheck.revealedBid);
 
                 emit BidRevealed(
@@ -451,49 +375,6 @@ contract Dns is IDns {
                 break;
             }
         }
-
-        // for (uint i = 0; i < bids.length; i++) {
-        //     if (bids[i].bidder == msg.sender) {
-        //         bidToCheck = bids[i];
-        //         bidToCheck.revealed = true;
-
-        //         bidToCheck.revealedBid = balance;
-        //         test.withdraw();
-        //         refreshHighestBid(_name, msg.sender, bidToCheck.revealedBid);
-
-        //         emit BidRevealed(
-        //             bidder,
-        //             domainName,
-        //             bidToCheck.revealedBid,
-        //             bidToCheck.revealed
-        //         );
-        //         break;
-        //     }
-        // }
-
-        //
-        //test this
-        //
-
-        // Bid[] storage usersBids = myBiddings[msg.sender];
-        // // Bid storage bidToUpdate;
-
-        // for (uint i = 0; i < usersBids.length; i++) {
-        //     if (
-        //         keccak256(abi.encodePacked(usersBids[i].name)) ==
-        //         keccak256(abi.encodePacked(_name))
-        //     ) {
-        //         usersBids[i].revealed = true;
-        //         usersBids[i].revealedBid = balance;
-        //         break;
-        //     }
-        // }
-    }
-
-    receive() external payable {}
-
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
     }
 
     function refreshHighestBid(
@@ -501,13 +382,6 @@ contract Dns is IDns {
         address bidder,
         uint _value
     ) internal returns (bool success) {
-        // if (_value <= auctions[_name].highestBid) {
-        //     return false;
-        // } else {
-        //     auctions[_name].highestBid = _value;
-        //     auctions[_name].highestBidder = bidder;
-        //     return true;
-        // }
         Auction storage auction = auctions[nameToAuctionId[_name]];
 
         if (_value <= auction.highestBid) {
@@ -519,11 +393,7 @@ contract Dns is IDns {
         }
     }
 
-    event AuctionEnded(string name, address winner);
-    event BidMade(address bidder, string name);
-    event BidRevealed(address bidder, string name, uint value, bool revealed);
-    event AuctionStarted(string name);
-    event DomainRegistered(uint id, string indexed name, address indexed owner);
-    event SentToDomain(address sender, string receiver, uint amount);
-    event WithdrawnFromDomain(address withdrawer, string name, uint amount);
+    receive() external payable {}
+
+
 }

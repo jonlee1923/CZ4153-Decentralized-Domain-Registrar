@@ -109,8 +109,9 @@ export const DnsProvider = ({ children }) => {
     const getAuctions = async () => {
         try {
             if (!ethereum) return alert("Please install metamask");
+            console.log("testing");
             let auctions = await dnsContract.getAuctions();
-            console.log(auctions);
+            console.log("after fn call ");
             return auctions;
         } catch (err) {
             console.log(err);
