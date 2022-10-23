@@ -176,10 +176,11 @@ const Mybiddings = (props) => {
                 />
             )}
             <h2 className={styles.pagename}>My Biddings</h2>
-            <Row>
+            
                 {loading && !bids && <p>Loading</p>}
+                
                 {!loading && bids && (
-                    <div>
+                    <Row>
                         {bids.map((bid) => {
                             return (
                                 <Col
@@ -219,9 +220,8 @@ const Mybiddings = (props) => {
                                 </Col>
                             );
                         })}
-                    </div>
+                    </Row>
                 )}
-            </Row>
         </Container>
     );
 };

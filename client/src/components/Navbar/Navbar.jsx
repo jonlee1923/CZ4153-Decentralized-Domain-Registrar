@@ -7,6 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Searchbar from "./Searchbar";
 import { List } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
@@ -39,18 +40,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Form className={`d-flex ${styles.form}`}>
-              <Form.Control
-                type="search"
-                placeholder="Enter Search"
-                className={`me-2 ${styles.searchbar}`}
-                aria-label="Search"
-              />
-              <Button
-                variant="none"
-                className={`${styles.searchbtn}`}
-              >
-                Search
-              </Button>
+              <Searchbar/>
               {props.connected && (
                 <Button
                   type="button"

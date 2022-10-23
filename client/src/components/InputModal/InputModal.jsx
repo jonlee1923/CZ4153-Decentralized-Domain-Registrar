@@ -34,14 +34,14 @@ const ModalOverlay = (props) => {
 
         <footer className={styles.actions}>
           <Button
-            className={`btn btn-light ${styles.btn}`}
+            className={`btn ${styles.btn} ${styles.cancelbtn}`}
             onClick={props.onCancel}
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            className={`btn btn-primary ${styles.btn}`}
+            className={`btn ${styles.btn} ${styles.confirmbtn}`}
             onClick={props.onConfirm}
           >
             Confirm
