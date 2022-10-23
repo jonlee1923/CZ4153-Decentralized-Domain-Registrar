@@ -6,8 +6,8 @@
   .card {
     position: relative;
     margin: 10px 0;
-    height: 240px;
-    column-width: 300px;
+    height: 250px;
+    column-width: 400px;
   }
 
   .card p{
@@ -15,9 +15,16 @@
   }
   
   .bidbtn {
-      position:absolute;
-      right:10px;
-      background:#484954;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background-color: #57a0d3 !important;
+    border: 3px solid white;
+    font-weight: bold;
+  }
+  .bidbtn:hover {
+    background-color: #5888ae !important;
+    border: 3px solid white !important;
   }
   
   .bidlink {

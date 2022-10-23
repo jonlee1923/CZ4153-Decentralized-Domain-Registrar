@@ -1,7 +1,7 @@
 body {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
-  background-color:white;
+  background-color: white;
 }
 .pagename {
   text-align: center;
@@ -11,20 +11,17 @@ body {
 .card {
   position: relative;
   margin: 10px 0;
-  height: 300px;
-  column-width: 400px;
+  height: 320px;
+  column-width: 600px;
 }
 
-.card p{
-  color:white;
+.card p {
+  color: white;
 }
 
 p span {
   position: absolute;
   right: 10px;
-  border: 3px solid white;
-  border-radius: 10px;
-  padding: 3px;
 }
 
 .buttons {
@@ -33,6 +30,14 @@ p span {
 .bidbtn {
   position: absolute;
   right: 10px;
+  bottom: 10px;
+  background-color: #57a0d3 !important;
+  border: 3px solid white;
+  font-weight: bold;
+}
+.bidbtn:hover {
+  background-color: #5888ae !important;
+  border: 3px solid white !important;
 }
 
 .bidlink {
@@ -41,6 +46,6 @@ p span {
 .bidlink:hover {
   color: white;
 }
-.btmbutton{
-  background:#484954;
+.btmbutton {
+  background: #484954;
 }

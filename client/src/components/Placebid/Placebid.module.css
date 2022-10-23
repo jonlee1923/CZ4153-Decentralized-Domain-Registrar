@@ -8,8 +8,8 @@ label {
 }
 
 input{
-  width:100%;
   border-radius:10px;
+  font-size:17px;
 }
 
 .placebidpage{
@@ -38,7 +38,7 @@ input{
 }
 
 .nameinput {
-  width: 50%;
+  width: 48%;
 }
 
 .secretInt{
@@ -56,17 +56,29 @@ input{
 }
 
 .cancelbtn {
-  color: black;
+  color: white;
+  background-color:#808588 !important;
+  /* border:3px solid black !important; */
+  border:none !important;
+  font-weight:bold;
 }
 .cancelbtn:hover{
-    color:black;
+    color:white;
+    /* border:3px solid black !important; */
+    border:none !important;
+    background-color:#777B7E !important;
 }
 
 .regbtn {
-  color: white;
+  background-color: #57a0d3 !important;
+  /* border: 3px solid black; */
+  border:none !important;
+  font-weight: bold;
 }
-.regbtn:hover{
-    color:white;
+.regbtn:hover {
+  background-color: #5888ae !important;
+  border:none !important;
+  /* border: 3px solid black !important; */
 }
 
 .bottombtn {

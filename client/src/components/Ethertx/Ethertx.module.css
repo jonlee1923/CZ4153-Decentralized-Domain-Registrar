@@ -21,5 +21,11 @@
   position: absolute;
   right: 10px;
   bottom: 10px;
-  background: #484954;
+  background-color: #57a0d3 !important;
+  border: 3px solid white;
+  font-weight: bold;
+}
+.transferbtn:hover {
+  background-color: #5888ae !important;
+  border: 3px solid white !important;
 }

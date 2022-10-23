@@ -41,12 +41,12 @@ const Navbar2 = React.forwardRef((props, ref) => {
             <Form className={`d-flex ${styles.form}`}>
               <Form.Control
                 type="search"
-                placeholder="Search"
+                placeholder="Enter Search"
                 className={`me-2 ${styles.searchbar}`}
                 aria-label="Search"
               />
               <Button
-                variant="outline-success"
+                variant="none"
                 className={`${styles.searchbtn}`}
               >
                 Search
@@ -54,8 +54,8 @@ const Navbar2 = React.forwardRef((props, ref) => {
               {props.connected && (
                 <Button
                   type="button"
-                  className={`btn btn-info ${styles.connectwallet} ${styles.successbtn}`}
-                  disabled={true}
+                  className={`btn ${styles.connectwallet} ${styles.successbtn}`}
+                  // disabled={true}
                 >
                   Connected!
                 </Button>

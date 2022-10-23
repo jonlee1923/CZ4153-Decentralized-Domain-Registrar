@@ -1,5 +1,5 @@
 .navbar2{
-    background: #454DF1;
+    background: #0492C2;
 }
 .searchbar{
     width:500px;
@@ -10,6 +10,13 @@
     margin-right:40px;
     margin-left:0;
     color:white;
+    background-color: #30BFBF !important;
+}
+
+.searchbtn:hover{
+    background-color: #008081 !important;
+    color:white !important;
+
 }
 
 .connectwallet{
@@ -30,4 +37,10 @@
 .dropdown{
     position:relative;
     left:50px;
+}
+
+.successbtn{
+    background-color: #30BFBF;
+    border:none;
+    pointer-events: none;
 }

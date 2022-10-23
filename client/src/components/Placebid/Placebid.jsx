@@ -79,13 +79,13 @@ const Placebid = (props) => {
               value={domainName}
               className={styles.nameinput}
             />
-            <p className={styles.domain}>.ntu</p>
+            <p className={styles.domain}>&nbsp;.ntu</p>
           </Col>
           <Col lg={4} md={6} sm={12} xs={12}>
             <Input
               id="rentalprice"
               type="text"
-              placeholder="0"
+              placeholder="Enter Bid"
               pattern="^\d*(\.\d{0,6})?$"
               value={rentalPrice}
               onChange={priceHandler}
@@ -99,6 +99,7 @@ const Placebid = (props) => {
               id="secret"
               type="password"
               pattern="\d*"
+              placeholder="Enter Secret Int"
               value={secretInt}
               onChange={secretHandler}
               inputClassName={styles.secretInt}
@@ -112,7 +113,7 @@ const Placebid = (props) => {
         <Row className={`${styles.bottombtn}`}>
           <Col lg={6} md={6} sm={12}>
             <Button
-              className={`btn btn-secondary btn-lg ${styles.reqregisterbtn}`}
+              className={`btn btn-lg ${styles.reqregisterbtn} ${styles.cancelbtn}`}
               onClick={cancelHandler}
               size="sm"
             >
@@ -123,7 +124,7 @@ const Placebid = (props) => {
             <Button
               type="submit"
               size="sm"
-              className={`btn btn-primary btn-lg ${styles.reqregisterbtn}`}
+              className={`btn btn-primary btn-lg ${styles.reqregisterbtn} ${styles.regbtn}`}
               onClick={pressBidHandler}
             >
               Register!

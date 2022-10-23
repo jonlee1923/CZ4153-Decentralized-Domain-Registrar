@@ -153,7 +153,7 @@ const BiddingList = (props) => {
           <Row>
             {auctions.map((auction) => {
               return (
-                <Col lg={4} md={6} sm={12} xs={12} key={auction.auctionId}>
+                <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
                   <Card className={styles.card} >
                     <p>
                       Domain Name: <span>{auction.name + ".ntu"}</span>
@@ -172,7 +172,7 @@ const BiddingList = (props) => {
                     </p>
                     <div className={styles.buttons}>
                       <Button
-                        className={`btn btn-secondary ${styles.bidbtn} ${styles.btmbutton}`}
+                        className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
                         onClick={() => {
                           navigate(bidPath, {
                             state: { name: auction.name },
@@ -180,14 +180,6 @@ const BiddingList = (props) => {
                         }}
                       >
                         Place a Bid!
-                      </Button>
-                      <Button
-                        className={`btn btn-secondary ${styles.btmbutton}`}
-                        onClick={() => {
-                          endAuctionHandler(auction.name);
-                        }}
-                      >
-                        End
                       </Button>
                     </div>
                   </Card>
