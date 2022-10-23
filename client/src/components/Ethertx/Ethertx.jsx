@@ -48,7 +48,7 @@ const Ethertx = (props) => {
             id: 7,
         },
     ];
-    const { getDomains, sendDomain, withdrawFromDomain } =
+    const { getDomains, sendDomain, withdrawFromDomain, getAllDomains } =
         useContext(DnsContext);
 
     const [validTransfer, setValidTransfer] = useState(false);
@@ -57,18 +57,19 @@ const Ethertx = (props) => {
     const [names, setNames] = useState();
     const [nameToSend, setNameToSend] = useState();
     const [loading, setLoading] = useState(false);
-    const [xfer,setXfer] = useState(0);
+    const [xfer, setXfer] = useState(0);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         const getAllNamesHandler = async () => {
             try {
-                const data = await getDomains();
-                // console.log("using dnsctx getdomains fn");
+                const data = await getAllDomains();
 
                 const mappedNames = await Promise.all(
                     data.map(async (i) => {
+                        console.log(i.domainName);
+                        console.log(i.value);
                         let domainItem = {
                             name: i.domainName,
                             value: i.value.toNumber(),
@@ -80,7 +81,7 @@ const Ethertx = (props) => {
 
                 setNames(mappedNames);
             } catch (err) {
-                // setError(err);
+                setError(err);
             }
         };
         setLoading(true);
@@ -90,12 +91,10 @@ const Ethertx = (props) => {
     }, [getDomains]);
 
     const transferCancelHandler = () => {
-        if(error){
+        if (error) {
             setValidTransfer(false);
-        }
-        else{
+        } else {
             setValidTransfer(!validTransfer);
-
         }
         setXfer(0);
     };
@@ -103,10 +102,9 @@ const Ethertx = (props) => {
     const sendDomainHandler = async (name, amount) => {
         try {
             await sendDomain(name, amount);
-            console.log("after handler");
             transferCancelHandler();
         } catch (err) {
-            // setError(err);
+            setError(err);
         }
     };
 
@@ -130,7 +128,9 @@ const Ethertx = (props) => {
                     type="text"
                     pattern="^\d*(\.\d{0,6})?$"
                     label="Amount:"
-                    onChange={(event)=>{setXfer(event.target.value)}}
+                    onChange={(event) => {
+                        setXfer(event.target.value);
+                    }}
                     value={xfer}
                     onCancel={transferCancelHandler}
                 />
@@ -141,9 +141,12 @@ const Ethertx = (props) => {
                 names &&
                 names.map((domain) => {
                     return (
-                        <Col lg={4} md={6} sm={12} xs={12}>
-                            <Card className={styles.card} key={domain.id}>
-                                <p>Domain Name: <span>{domain.name+".ntu"}</span></p>
+                        <Col lg={4} md={6} sm={12} xs={12} key={domain.name}>
+                            <Card className={styles.card} >
+                                <p>
+                                    Domain Name:{" "}
+                                    <span>{domain.name + ".ntu"}</span>
+                                </p>
                                 <Button
                                     className={styles.transferbtn}
                                     onClick={() => {

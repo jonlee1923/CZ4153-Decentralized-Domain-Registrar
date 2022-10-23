@@ -153,8 +153,8 @@ const BiddingList = (props) => {
           <Row>
             {auctions.map((auction) => {
               return (
-                <Col lg={4} md={6} sm={12} xs={12}>
-                  <Card className={styles.card} key={auction.id}>
+                <Col lg={4} md={6} sm={12} xs={12} key={auction.auctionId}>
+                  <Card className={styles.card} >
                     <p>
                       Domain Name: <span>{auction.name + ".ntu"}</span>
                     </p>

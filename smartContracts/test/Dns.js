@@ -6,7 +6,6 @@ describe("ENS", function () {
     let Ens;
     let ens;
 
-
     beforeEach(async function () {
         [owner, acct1, acct2] = await ethers.getSigners();
 
@@ -44,7 +43,9 @@ describe("ENS", function () {
             // await expect(ens.connect(acct1).startAuction("jon", 180, 180))
             //     .to.emit(ens, "AuctionStarted")
             //     .withArgs("jon");
-            let transaction = await ens.connect(acct1).startAuction("jon", 180, 180);
+            let transaction = await ens
+                .connect(acct1)
+                .startAuction("jon", 180, 180);
             let tx = await transaction.wait();
             console.log("Transaction events: ", tx.events[0]);
 
@@ -74,13 +75,17 @@ describe("ENS", function () {
             //         ethers.utils.parseEther("2"),
             //         true
             //     );
-            transaction = await ens.connect(acct1).check(bytecode, 123456, "jon");
+            transaction = await ens
+                .connect(acct1)
+                .check(bytecode, 123456, "jon");
             tx = await transaction.wait();
             console.log("Transaction events: ", tx.events);
 
             console.log(ethers.utils.formatEther(await acct1.getBalance()));
-            console.log(ethers.utils.formatEther(await ens.connect(acct1).getBalance()));
-            
+            console.log(
+                ethers.utils.formatEther(await ens.connect(acct1).getBalance())
+            );
+
             console.log("testing auction ended");
             await ens.connect(acct1).endAuction("jon");
             // expect(await ens.nameToDomainId("jon")).to.equal(1);
@@ -91,16 +96,44 @@ describe("ENS", function () {
             const myNames = await ens.connect(acct1).getDomains(acct1.address);
             console.log("owned names", myNames);
 
-
+            ///////
+            console.log(
+                "acct2 before",
+                ethers.utils.formatEther(await acct2.getBalance())
+            );
             transaction = await ens.connect(acct2).sendDomain("jon", {
                 value: ethers.utils.parseEther("2"),
             });
             tx = await transaction.wait();
-            console.log("Transaction events: ", tx.events);
+            // console.log("Transaction events: ", tx.events);
+            console.log(
+                "acct2 after",
+                ethers.utils.formatEther(await acct2.getBalance())
+            );
+            ///////
 
-            transaction = await ens.connect(acct1).withdrawFrmDomain("jon", 1);
+            console.log(
+                "acct1 before",
+                ethers.utils.formatEther(await acct1.getBalance())
+            );
+
+            console.log(
+                "dns b4  ",
+                ethers.utils.formatEther(await ens.connect(acct1).getBalance())
+            );
+            transaction = await ens
+                .connect(acct1)
+                .withdrawFrmDomain("jon", ethers.utils.parseEther("2"));
             tx = await transaction.wait();
-            console.log("Transaction events: ", tx.events);
+            // console.log("Transaction events: ", tx.events);
+            console.log(
+                "acct1 after",
+                ethers.utils.formatEther(await acct1.getBalance())
+            );
+            console.log(
+                "dns after ",
+                ethers.utils.formatEther(await ens.connect(acct1).getBalance())
+            );
         });
     });
 });

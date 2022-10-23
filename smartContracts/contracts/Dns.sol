@@ -59,13 +59,23 @@ contract Dns is IDns, ReentrancyGuard {
         _;
     }
 
-    modifier onlyBeforeBidding(string memory name) {
+    modifier onlyBeforeBiddingEnd(string memory name) {
         require(block.timestamp < auctions[nameToAuctionId[name]].biddingEnd);
         _;
     }
 
-    modifier onlyBeforeReveal(string memory name) {
+    modifier onlyAfterBidding(string memory name) {
+        require(block.timestamp >= auctions[nameToAuctionId[name]].biddingEnd);
+        _;
+    }
+
+    modifier onlyBeforeRevealEnd(string memory name) {
         require(block.timestamp < auctions[nameToAuctionId[name]].revealEnd);
+        _;
+    }
+
+    modifier onlyAfterReveal(string memory name) {
+        require(block.timestamp >= auctions[nameToAuctionId[name]].revealEnd);
         _;
     }
 
@@ -155,6 +165,8 @@ contract Dns is IDns, ReentrancyGuard {
         require(msg.sender == domain.owner, "You do not own these funds");
         require(amount <= domain.balance, "Insufficient funds");
         domain.balance -= amount;
+
+        payable(domain.owner).transfer(amount);
 
         emit WithdrawnFromDomain(msg.sender, _name, amount);
     }
@@ -252,7 +264,7 @@ contract Dns is IDns, ReentrancyGuard {
         emit AuctionStarted(_name);
     }
 
-    function endAuction(string memory _name) external {
+    function endAuction(string memory _name) public {
         Auction storage auction = auctions[nameToAuctionId[_name]];
         uint[] memory ids = nameToBidId[_name];
 
@@ -296,7 +308,13 @@ contract Dns is IDns, ReentrancyGuard {
         bytes memory bytecode,
         uint _salt,
         string memory _name // string memory _name
-    ) public payable auctionExists(_name) existingBid(_name, msg.sender) {
+    )
+        public
+        payable
+        auctionExists(_name)
+        existingBid(_name, msg.sender)
+        onlyBeforeBiddingEnd(_name)
+    {
         address addr;
         assembly {
             addr := create2(
@@ -338,8 +356,9 @@ contract Dns is IDns, ReentrancyGuard {
         bytes memory bytecode,
         uint salt,
         string memory _name
-    ) public {
-        // Bid[] storage bids = biddingsForAuctions[_name];
+    ) public 
+    // onlyAfterBidding(_name) onlyBeforeRevealEnd(_name) 
+    {
         Bid storage bidToCheck;
 
         uint[] memory ids = nameToBidId[_name];
@@ -393,7 +412,17 @@ contract Dns is IDns, ReentrancyGuard {
         }
     }
 
+    function checkAuctionsToEnd() public {
+        require(auctionCount.current() != 0, "No auctions created");
+
+        for (uint i = 1; i <= auctionCount.current(); i++) {
+            if (block.timestamp < auctions[i].revealEnd) {
+                continue;
+            } else {
+                endAuction(auctions[i].name);
+            }
+        }
+    }
+
     receive() external payable {}
-
-
 }

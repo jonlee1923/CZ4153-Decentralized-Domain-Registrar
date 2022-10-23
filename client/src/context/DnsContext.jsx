@@ -2,21 +2,26 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import DnsAbi from "../contractsData/Dns.json";
 import DnsAddress from "../contractsData/Dns-address.json";
+import std from "../utils/constant.js";
 export const DnsContext = React.createContext();
 
 const { ethereum } = window;
 
 const getDnsContract = async () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
-    const accounts = await ethereum.request({ method: 'eth_accounts' });
-    console.log("signer", accounts[0]);
-    const signer = provider.getSigner(accounts[0]);
-    const dnsContract = new ethers.Contract(
-        DnsAddress.address,
-        DnsAbi.abi,
-        signer
-    );
-    return dnsContract;
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+    if (accounts) {
+        const signer = provider.getSigner(accounts[0]);
+
+        if (signer) {
+            const dnsContract = new ethers.Contract(
+                DnsAddress.address,
+                DnsAbi.abi,
+                signer
+            );
+            return dnsContract;
+        }
+    }
 };
 
 export const DnsProvider = ({ children }) => {
@@ -119,8 +124,11 @@ export const DnsProvider = ({ children }) => {
             let auctions = await dnsContract.getAuctions();
             return auctions;
         } catch (err) {
-            console.log(err);
-            throw Error(err.message);
+            if (err.message === std) {
+                return;
+            } else {
+                throw Error(err.message);
+            }
         }
     };
 
@@ -128,12 +136,17 @@ export const DnsProvider = ({ children }) => {
         try {
             if (!ethereum) return alert("Please install metamask");
             let dnsContract = await getDnsContract();
+            await checkIfWalletIsConnected();
+
             let bids = await dnsContract.getBiddings(address);
 
             return bids;
         } catch (err) {
-            console.log(err);
-            throw Error(err.message);
+            if (err.message === std) {
+                return;
+            } else {
+                throw Error(err.message);
+            }
         }
     };
 
@@ -187,8 +200,24 @@ export const DnsProvider = ({ children }) => {
     const getDomains = async () => {
         try {
             let dnsContract = await getDnsContract();
-
+            // checkIfWalletIsConnected();
             const data = await dnsContract.getDomains(connected);
+            // console.log("inside dnsctx getdomains", data);
+            return data;
+        } catch (err) {
+            if (err.message === std) {
+                return;
+            } else {
+                throw Error(err.message);
+            }
+        }
+    };
+
+    const getAllDomains = async () => {
+        try {
+            let dnsContract = await getDnsContract();
+
+            const data = await dnsContract.getAllDomains();
             // console.log("inside dnsctx getdomains", data);
             return data;
         } catch (err) {
@@ -247,6 +276,7 @@ export const DnsProvider = ({ children }) => {
                 endAuction,
                 checkAuctionExists,
                 getDomains,
+                getAllDomains,
                 sendDomain,
                 withdrawFromDomain,
             }}

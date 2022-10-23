@@ -81,7 +81,7 @@ const Mynames = (props) => {
     useEffect(() => {
         const getMyNames = async () => {
             const data = await getDomains();
-            const mappedNames = await Promise.all(
+            const mappedNames = data && await Promise.all(
                 data.map(async (i) => {
                     const _name = i.domainName;
                     // const _balance = i.balance.toNumber();
@@ -152,8 +152,8 @@ const Mynames = (props) => {
                 names &&
                 names.map((domain) => {
                     return (
-                        <Col lg={4} md={6} sm={12} xs={12}>
-                            <Card className={styles.card} key={domain.id}>
+                        <Col lg={4} md={6} sm={12} xs={12} key={domain.name}>
+                            <Card className={styles.card} >
                                 <p>Domain Name: <span>{domain.name}</span></p>
                                 <p>Value Purchased: <span>{domain.value} eth</span></p>
                                 <p>Balance: <span>{domain.balance} eth</span></p>
