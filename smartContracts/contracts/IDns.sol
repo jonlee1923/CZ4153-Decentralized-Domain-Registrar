@@ -17,6 +17,7 @@ interface IDns {
         bool revealed;
         uint revealedBid;
         uint start;
+        uint revealStart;
         uint end;
     }
 
@@ -32,7 +33,7 @@ interface IDns {
         bool ended;
     }
 
-    function getDomains(address ownerAddress)
+    function getMyDomains(address ownerAddress)
         external
         view
         returns (EthDomain[] memory);

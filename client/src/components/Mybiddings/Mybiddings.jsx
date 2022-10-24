@@ -97,9 +97,17 @@ const Mybiddings = (props) => {
                             const unixEnd = i.end.toNumber();
                             let endDate = new Date(unixEnd * 1000);
                             endDate = endDate.toUTCString();
+
+                            //changing to
+                            // const revealStart = i.revealStart.toNumber();
+                            const revealStart = i.revealEnd.toNumber();
+                            let reveal = new Date(revealStart * 1000);
+                            reveal = reveal.toUTCString();
+
                             let bidItem = {
                                 name: i.name,
                                 start: startDate,
+                                revealTime:reveal, 
                                 end: endDate,
                                 revealed: i.revealed,
                             };
@@ -197,6 +205,9 @@ const Mybiddings = (props) => {
                                         </p>
                                         <p>
                                             Start: <span>{bid.start}</span>
+                                        </p>
+                                        <p>
+                                            Reveal Time: <span>{bid.revealTime}</span>
                                         </p>
                                         <p>
                                             End: <span>{bid.end}</span>
