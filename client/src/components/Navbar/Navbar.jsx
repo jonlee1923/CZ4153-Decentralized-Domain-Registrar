@@ -15,7 +15,6 @@ const Navbar2 = React.forwardRef((props, ref) => {
   // const { connectWallet, checkIfWalletIsConnected, connected } = useContext(DnsContext);
   const lumeel = require("../../assets/lumeel.png");
   const navigate = useNavigate();
-
   let myNamesPath = "";
   let myBiddingsPath = "";
   let placeBidPath = "";
@@ -29,7 +28,6 @@ const Navbar2 = React.forwardRef((props, ref) => {
   } else {
     myNamesPath = myBiddingsPath = placeBidPath = etherTxPath = "/connect";
   }
-
   return (
     <Navbar expand="xl" className={styles.navbar2}>
       <Container>
@@ -40,12 +38,11 @@ const Navbar2 = React.forwardRef((props, ref) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Form className={`d-flex ${styles.form}`}>
-              <Searchbar/>
+              <Searchbar />
               {props.connected && (
                 <Button
                   type="button"
                   className={`btn ${styles.connectwallet} ${styles.successbtn}`}
-                  // disabled={true}
                 >
                   Connected!
                 </Button>

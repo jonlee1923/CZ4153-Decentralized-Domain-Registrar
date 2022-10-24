@@ -80,7 +80,7 @@ const BiddingList = (props) => {
   }
 
   const { bid, getAuctions, endAuction } = useContext(DnsContext);
-
+  props.getAuctions(auctions);
   useEffect(() => {
     const getAuctionsHandler = async () => {
       try {
@@ -124,13 +124,13 @@ const BiddingList = (props) => {
     // console.log(auctions);
   }, [getAuctions]);
 
-  const endAuctionHandler = async (name) => {
-    try {
-      await endAuction(name);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const endAuctionHandler = async (name) => {
+  //   try {
+  //     await endAuction(name);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const errorHandler = (event) => {
     setError("");

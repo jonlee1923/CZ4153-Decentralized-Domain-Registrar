@@ -1,4 +1,4 @@
-import React,{useRef} from 'react';
+import React,{useRef,useState} from 'react';
 import styles from "./App.module.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
@@ -24,17 +24,21 @@ import { DnsContext } from "./context/DnsContext";
 
 function App() {
   const { connected, connectWallet } = useContext(DnsContext);
+  const [auctions,setAuction] = useState();
   const scrollRef = useRef();
   const executeScroll = () => {
     scrollRef.current.scrollIntoView();
+  }
+  const getAuctions = (auctions) => {
+      setAuction(auctions);
   }
 
 
   return (
     <BrowserRouter>
-      <Navbar2 connected={connected} connectWallet={connectWallet} scrollRef={scrollRef}/>
+      <Navbar2 connected={connected} connectWallet={connectWallet} scrollRef={scrollRef} auctions={auctions}/>
       <Routes>
-        <Route path="/" element={<BiddingList connected={connected} />}/>
+        <Route path="/" element={<BiddingList connected={connected} getAuctions={getAuctions}/>}/>
         <Route path="/connect" element={<Connectpage executeScroll={executeScroll} />}/>
         <Route path="/placebid" element={<Placebid connected={connected} />}/>
         <Route path="/mynames" element={<Mynames connected={connected} />}/>
