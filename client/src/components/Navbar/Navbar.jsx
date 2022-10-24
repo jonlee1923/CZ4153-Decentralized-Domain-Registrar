@@ -28,17 +28,22 @@ const Navbar2 = React.forwardRef((props, ref) => {
   } else {
     myNamesPath = myBiddingsPath = placeBidPath = etherTxPath = "/connect";
   }
+
+  console.log("navbar auctions",props.auctions);
+  const submitHandler = (event) => {
+    event.preventDefault();
+  }
   return (
     <Navbar expand="xl" className={styles.navbar2}>
       <Container>
-        <Navbar.Brand href="/">
+        <Navbar.Brand href="/" className={styles.brandarea}>
           <img src={lumeel} alt="logo pic" className={`${styles.brand}`} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Form className={`d-flex ${styles.form}`}>
-              <Searchbar />
+            <Form className={`d-flex ${styles.form}`} onSubmit={submitHandler}>
+              <Searchbar auctions={props.auctions}/>
               {props.connected && (
                 <Button
                   type="button"

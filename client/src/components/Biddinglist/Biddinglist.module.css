@@ -3,10 +3,21 @@ body {
   font-weight: 700;
   background-color: white;
 }
+
+.toprow{
+  position:relative;
+}
 .pagename {
+  display:inline-block;
+  position:relative;
+  left:43%;
   text-align: center;
   text-decoration: underline;
   font-weight: bold;
+}
+.removefilter{
+  position:absolute;
+  right:20px;
 }
 .card {
   position: relative;

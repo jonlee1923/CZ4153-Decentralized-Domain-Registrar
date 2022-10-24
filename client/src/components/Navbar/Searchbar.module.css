@@ -1,5 +1,8 @@
 .searchbar{
-    width:500px;
+    width:600px;
+    position:relative;
+    top:10px;
+    right:150px;
 }
 
 .searchbtn{
@@ -18,11 +21,21 @@
 
 .result{
     position:absolute;
-    top:80px;
+    top:60px;
+    left:-150px;
     background:white;
     z-index:1;
-    width:500px;
+    width:600px;
     border-radius:10px;
     padding-top:10px;
     padding-left:20px;
+    height:auto;
+}
+
+.resultentry{
+    cursor:pointer;
+}
+
+.resultentry:hover{
+    color:grey;
 }

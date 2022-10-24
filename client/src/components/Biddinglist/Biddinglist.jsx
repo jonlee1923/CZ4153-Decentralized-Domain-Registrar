@@ -5,7 +5,7 @@ import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
 
@@ -66,74 +66,33 @@ const BiddingList = (props) => {
       },
     ],
   ];
-
-  const [auctions, setAuctions] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [filteredData,setFilteredData] = useState([]);
   const navigate = useNavigate();
-  let bidPath = "";
+  const location = useLocation();
 
+  const { state } = location;
+  console.log("biddinglist state", state);
+
+  useEffect(()=>{
+    setFilteredData(state.data);
+  },[state]);
+
+  let bidPath = "";
   if (props.connected) {
     bidPath = "/placebid";
   } else {
     bidPath = "/connect";
   }
 
-  const { bid, getAuctions, endAuction } = useContext(DnsContext);
-  props.getAuctions(auctions);
-  useEffect(() => {
-    const getAuctionsHandler = async () => {
-      try {
-        const data = await getAuctions();
-
-        const auctionsMapped = await Promise.all(
-          data.map(async (i) => {
-            const unixStart = i.start.toNumber();
-            let startDate = new Date(unixStart * 1000);
-            startDate = startDate.toUTCString();
-
-            const unixEnd = i.revealEnd.toNumber();
-            let endDate = new Date(unixEnd * 1000);
-            endDate = endDate.toUTCString();
-
-            const unixTime = i.biddingEnd.toNumber();
-            let date = new Date(unixTime * 1000);
-            date = date.toUTCString();
-
-            let auctionItem = {
-              auctionId: i.auctionId.toNumber(),
-              name: i.name,
-              start: startDate,
-              biddingEnd: date,
-              revealEnd: endDate,
-              ended: i.ended,
-            };
-            return auctionItem;
-          })
-        );
-        setLoading(true);
-        setAuctions(auctionsMapped);
-        setLoading(false);
-      } catch (err) {
-        setError("Something went wrong!");
-      }
-    };
-
-    getAuctionsHandler();
-
-    // console.log(auctions);
-  }, [getAuctions]);
-
-  // const endAuctionHandler = async (name) => {
-  //   try {
-  //     await endAuction(name);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   const errorHandler = (event) => {
     setError("");
+  };
+
+  
+  const removeFilterHandler = () => {
+    setFilteredData([]);
   };
 
   return (
@@ -145,16 +104,65 @@ const BiddingList = (props) => {
           onConfirm={errorHandler}
         />
       )}
-      {loading && !auctions && <p>Loading</p>}
+      {filteredData.length !== 0 && (
+        <Container>
+          <div className={styles.toprow}>
+            <h2 className={styles.pagename}>Bidding List</h2>
+            <Button
+              className={styles.removefilter}
+              onClick={removeFilterHandler}
+            >
+              Remove Filter
+            </Button>
+          </div>
+          <Row>
+            {filteredData.map((auction) => {
+              return (
+                <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
+                  <Card className={styles.card}>
+                    <p>
+                      Domain Name: <span>{auction.name + ".ntu"}</span>
+                    </p>
+                    <p>
+                      Start: <span>{auction.start}</span>
+                    </p>
+                    <p>c
+                      Bidding End: <span>{auction.biddingEnd}</span>
+                    </p>
+                    <p>
+                      Reveal End: <span>{auction.revealEnd}</span>
+                    </p>
+                    <p>
+                      Auction Ended: <span>{auction.ended.toString()}</span>
+                    </p>
+                    <div className={styles.buttons}>
+                      <Button
+                        className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
+                        onClick={() => {
+                          navigate(bidPath, {
+                            state: { name: auction.name },
+                          });
+                        }}
+                      >
+                        Place a Bid!
+                      </Button>
+                    </div>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        </Container>
+      )}
 
-      {!loading && auctions && (
+      {filteredData.length===0 && props.auctions && (
         <Container>
           <h2 className={styles.pagename}>Bidding List</h2>
           <Row>
-            {auctions.map((auction) => {
+            {props.auctions.map((auction) => {
               return (
                 <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
-                  <Card className={styles.card} >
+                  <Card className={styles.card}>
                     <p>
                       Domain Name: <span>{auction.name + ".ntu"}</span>
                     </p>
