@@ -93,9 +93,14 @@ export const DnsProvider = ({ children }) => {
             let dnsContract = await getDnsContract();
 
             const bytecode = await dnsContract.getBytecode(connected, name);
-            let transaction = await dnsContract.bid(bytecode, secret, name, {
-                value: ethers.utils.parseEther(bid),
-            });
+            let transaction = await dnsContract.bid(
+                bytecode,
+                ethers.utils.id(secret),
+                name,
+                {
+                    value: ethers.utils.parseEther(bid),
+                }
+            );
 
             let tx = await transaction.wait();
             console.log("Transaction events: ", tx.events[0]);
@@ -159,7 +164,8 @@ export const DnsProvider = ({ children }) => {
             console.log("calling check");
             const transaction = await dnsContract.check(
                 bytecode,
-                parseInt(secret),
+                // parseInt(secret), //used to be this <- 
+                ethers.utils.id(secret),
                 name
             );
             let tx = await transaction.wait();
@@ -200,9 +206,10 @@ export const DnsProvider = ({ children }) => {
     const getDomains = async () => {
         try {
             let dnsContract = await getDnsContract();
-            // checkIfWalletIsConnected();
+
+            //changing to
+            // const data = await dnsContract.getMyDomains(connected);
             const data = await dnsContract.getDomains(connected);
-            // console.log("inside dnsctx getdomains", data);
             return data;
         } catch (err) {
             if (err.message === std) {

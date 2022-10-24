@@ -39,7 +39,7 @@ contract Dns is IDns, ReentrancyGuard {
 
     //To check if the domain is already registered or not
     modifier notRegistered(string memory name) {
-        require(nameToDomainId[name] == 0);
+        require(nameToDomainId[name] == 0, "domain name already exists");
         _;
     }
 
@@ -106,23 +106,19 @@ contract Dns is IDns, ReentrancyGuard {
         return false;
     }
 
-    //used to get names
-    function getDomains(address ownerAddress)
+    function getMyDomains(address _user)
         external
         view
         override
         returns (EthDomain[] memory)
     {
-        uint index = 0;
-        EthDomain[] memory names = new EthDomain[](
-            addrToDomainId[ownerAddress].length
-        );
-
-        for (uint i = 0; i < addrToDomainId[ownerAddress].length; i++) {
-            names[index] = domains[addrToDomainId[ownerAddress][i]];
+        uint[] memory ids = addrToDomainId[_user];
+        EthDomain[] memory myDomains = new EthDomain[](ids.length);
+        for (uint i = 0; i < ids.length; i++) {
+            myDomains[i] = domains[ids[i]];
         }
 
-        return names;
+        return myDomains;
     }
 
     function getAllDomains() external view returns (EthDomain[] memory) {
@@ -176,6 +172,7 @@ contract Dns is IDns, ReentrancyGuard {
         address _owner,
         uint _value
     ) public notRegistered(_name) {
+        console.log(_name);
         nameCount.increment();
         EthDomain memory newEthDomain = EthDomain({
             domainName: _name,
@@ -185,6 +182,9 @@ contract Dns is IDns, ReentrancyGuard {
         });
 
         addrToDomainId[_owner].push(nameCount.current());
+        console.log("checking");
+        // console.log(addrToDomainId[_owner]);
+        // console.log(addrToDomainId[_owner]);
         nameToDomainId[_name] = nameCount.current();
         domains[nameCount.current()] = newEthDomain;
         emit DomainRegistered(nameCount.current(), _name, _owner);
@@ -277,6 +277,7 @@ contract Dns is IDns, ReentrancyGuard {
                         bids[ids[i]].revealedBid
                     );
                 } else {
+                    console.log(_name);
                     registerName(
                         _name,
                         bids[ids[i]].bidder,
@@ -315,6 +316,7 @@ contract Dns is IDns, ReentrancyGuard {
         existingBid(_name, msg.sender)
         onlyBeforeBiddingEnd(_name)
     {
+        console.log("hashed ", _salt);
         address addr;
         assembly {
             addr := create2(
@@ -335,8 +337,8 @@ contract Dns is IDns, ReentrancyGuard {
     }
 
     function _bid(address user, string memory _name) private {
-        uint startTime = auctions[nameToAuctionId[_name]].start;
-        uint endTime = auctions[nameToAuctionId[_name]].revealEnd;
+        // uint startTime = auctions[nameToAuctionId[_name]].start;
+        // uint endTime = auctions[nameToAuctionId[_name]].revealEnd;
         bidCount.increment();
 
         bids[bidCount.current()] = Bid({
@@ -344,8 +346,9 @@ contract Dns is IDns, ReentrancyGuard {
             bidder: user,
             revealed: false,
             revealedBid: 0,
-            start: startTime,
-            end: endTime
+            start: auctions[nameToAuctionId[_name]].start,
+            revealStart: auctions[nameToAuctionId[_name]].biddingEnd,
+            end: auctions[nameToAuctionId[_name]].revealEnd
         });
 
         nameToBidId[_name].push(bidCount.current());
@@ -354,16 +357,15 @@ contract Dns is IDns, ReentrancyGuard {
 
     function check(
         bytes memory bytecode,
-        uint salt,
-        string memory _name
-    ) public 
-    // onlyAfterBidding(_name) onlyBeforeRevealEnd(_name) 
-    {
+        uint _salt,
+        string memory _name // onlyAfterBidding(_name) onlyBeforeRevealEnd(_name)
+    ) public {
         Bid storage bidToCheck;
+        console.log("hashed ", _salt);
 
         uint[] memory ids = nameToBidId[_name];
 
-        address addr = getAddress(bytecode, salt);
+        address addr = getAddress(bytecode, _salt);
         Commit commit = Commit(addr);
         address bidder = commit.bidder();
         string memory domainName = commit.name();
@@ -414,13 +416,15 @@ contract Dns is IDns, ReentrancyGuard {
 
     function checkAuctionsToEnd() public {
         require(auctionCount.current() != 0, "No auctions created");
-
+        console.log(auctionCount.current());
         for (uint i = 1; i <= auctionCount.current(); i++) {
-            if (block.timestamp < auctions[i].revealEnd) {
-                continue;
-            } else {
-                endAuction(auctions[i].name);
-            }
+            // if (block.timestamp < auctions[i].revealEnd || auctions[i].ended) {
+            //     console.log("continuing for this auction: ", auctions[i].name);
+            //     continue;
+            // } else {
+            console.log("ending auction ", auctions[i].name);
+            endAuction(auctions[i].name);
+            // }
         }
     }
 

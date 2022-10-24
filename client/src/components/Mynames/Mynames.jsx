@@ -80,6 +80,8 @@ const Mynames = (props) => {
   useEffect(() => {
     const getMyNames = async () => {
       const data = await getDomains();
+      console.log(data);
+
       const mappedNames =
         data &&
         (await Promise.all(
@@ -100,8 +102,7 @@ const Mynames = (props) => {
         ));
 
       setNames(mappedNames);
-
-      console.log(names);
+          
     };
     setLoading(true);
     getMyNames();
