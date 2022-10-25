@@ -128,7 +128,7 @@ const BiddingList = (props) => {
                       Start: <span>{auction.start}</span>
                     </p>
                     <p>
-                      c Bidding End: <span>{auction.biddingEnd}</span>
+                      Bidding End: <span>{auction.biddingEnd}</span>
                     </p>
                     <p>
                       Reveal End: <span>{auction.revealEnd}</span>
