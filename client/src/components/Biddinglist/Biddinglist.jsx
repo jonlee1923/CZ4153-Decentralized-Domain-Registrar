@@ -72,8 +72,8 @@ const BiddingList = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { state } = location;
-  console.log("biddinglist state", state);
+    const { state } = location;
+    console.log("biddinglist state", state);
 
   useEffect(() => {
     if (state) {
@@ -81,16 +81,16 @@ const BiddingList = (props) => {
     }
   }, [state]);
 
-  let bidPath = "";
-  if (props.connected) {
-    bidPath = "/placebid";
-  } else {
-    bidPath = "/connect";
-  }
+    let bidPath = "";
+    if (props.connected) {
+        bidPath = "/placebid";
+    } else {
+        bidPath = "/connect";
+    }
 
-  const errorHandler = (event) => {
-    setError("");
-  };
+    const errorHandler = (event) => {
+        setError("");
+    };
 
   const removeFilterHandler = () => {
     setFilteredData([]);

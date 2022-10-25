@@ -64,21 +64,7 @@ const Ethertx = (props) => {
   useEffect(() => {
     const getAllNamesHandler = async () => {
       try {
-        const data = await getAllDomains();
-
-        const mappedNames = await Promise.all(
-          data.map(async (i) => {
-            console.log(i.domainName);
-            console.log(i.value);
-            let domainItem = {
-              name: i.domainName,
-              value: i.value.toNumber(),
-            };
-
-            return domainItem;
-          })
-        );
-
+        const mappedNames = await getAllDomains();
         setNames(mappedNames);
       } catch (err) {
         setError(err);
