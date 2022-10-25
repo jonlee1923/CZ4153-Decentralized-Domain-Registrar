@@ -32,35 +32,11 @@ function App() {
   useEffect(() => {
     const getAuctionsHandler = async () => {
       try {
-        const data = await getAuctions();
+        const mappedData = await getAuctions();
 
-        const auctionsMapped = await Promise.all(
-          data.map(async (i) => {
-            const unixStart = i.start.toNumber();
-            let startDate = new Date(unixStart * 1000);
-            startDate = startDate.toUTCString();
-
-            const unixEnd = i.revealEnd.toNumber();
-            let endDate = new Date(unixEnd * 1000);
-            endDate = endDate.toUTCString();
-
-            const unixTime = i.biddingEnd.toNumber();
-            let date = new Date(unixTime * 1000);
-            date = date.toUTCString();
-
-            let auctionItem = {
-              auctionId: i.auctionId.toNumber(),
-              name: i.name,
-              start: startDate,
-              biddingEnd: date,
-              revealEnd: endDate,
-              ended: i.ended,
-            };
-            return auctionItem;
-          })
-        );
+        
         // setLoading(true);
-        setAuctions(auctionsMapped);
+        setAuctions(mappedData);
         // setLoading(false);
         console.log("app auctions",auctions);
       } catch (err) {

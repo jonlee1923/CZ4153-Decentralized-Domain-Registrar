@@ -127,7 +127,32 @@ export const DnsProvider = ({ children }) => {
             if (!ethereum) return alert("Please install metamask");
             let dnsContract = await getDnsContract();
             let auctions = await dnsContract.getAuctions();
-            return auctions;
+            const auctionsMapped = await Promise.all(
+                auctions.map(async (i) => {
+                  const unixStart = i.start.toNumber();
+                  let startDate = new Date(unixStart * 1000);
+                  startDate = startDate.toUTCString();
+      
+                  const unixEnd = i.revealEnd.toNumber();
+                  let endDate = new Date(unixEnd * 1000);
+                  endDate = endDate.toUTCString();
+      
+                  const unixTime = i.biddingEnd.toNumber();
+                  let date = new Date(unixTime * 1000);
+                  date = date.toUTCString();
+      
+                  let auctionItem = {
+                    auctionId: i.auctionId.toNumber(),
+                    name: i.name,
+                    start: startDate,
+                    biddingEnd: date,
+                    revealEnd: endDate,
+                    ended: i.ended,
+                  };
+                  return auctionItem;
+                })
+              );
+            return auctionsMapped;
         } catch (err) {
             if (err.message === std) {
                 return;
@@ -225,7 +250,19 @@ export const DnsProvider = ({ children }) => {
             let dnsContract = await getDnsContract();
 
             const data = await dnsContract.getAllDomains();
-            return data;
+            const mappedNames = await Promise.all(
+                data.map(async (i) => {
+                  console.log(i.domainName);
+                  console.log(i.value);
+                  let domainItem = {
+                    name: i.domainName,
+                    value: i.value.toNumber(),
+                  };
+      
+                  return domainItem;
+                })
+              );
+            return mappedNames;
         } catch (err) {
             console.log(err);
             throw Error(err.message);
