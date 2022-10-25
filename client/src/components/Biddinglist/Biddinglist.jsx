@@ -68,16 +68,18 @@ const BiddingList = (props) => {
   ];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [filteredData,setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
   const { state } = location;
   console.log("biddinglist state", state);
 
-  useEffect(()=>{
-    setFilteredData(state.data);
-  },[state]);
+  useEffect(() => {
+    if (state) {
+      setFilteredData(state.data);
+    }
+  }, [state]);
 
   let bidPath = "";
   if (props.connected) {
@@ -90,7 +92,6 @@ const BiddingList = (props) => {
     setError("");
   };
 
-  
   const removeFilterHandler = () => {
     setFilteredData([]);
   };
@@ -126,8 +127,8 @@ const BiddingList = (props) => {
                     <p>
                       Start: <span>{auction.start}</span>
                     </p>
-                    <p>c
-                      Bidding End: <span>{auction.biddingEnd}</span>
+                    <p>
+                      c Bidding End: <span>{auction.biddingEnd}</span>
                     </p>
                     <p>
                       Reveal End: <span>{auction.revealEnd}</span>
@@ -155,7 +156,7 @@ const BiddingList = (props) => {
         </Container>
       )}
 
-      {filteredData.length===0 && props.auctions && (
+      {filteredData.length === 0 && props.auctions && (
         <Container>
           <h2 className={styles.pagename}>Bidding List</h2>
           <Row>
