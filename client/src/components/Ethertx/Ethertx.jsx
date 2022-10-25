@@ -54,27 +54,13 @@ const Ethertx = (props) => {
   const [validTransfer, setValidTransfer] = useState(false);
   const [error, setError] = useState(false);
 
-  const [names, setNames] = useState();
   const [nameToSend, setNameToSend] = useState();
   const [loading, setLoading] = useState(false);
   const [xfer, setXfer] = useState(0);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getAllNamesHandler = async () => {
-      try {
-        const mappedNames = await getAllDomains();
-        setNames(mappedNames);
-      } catch (err) {
-        setError(err);
-      }
-    };
-    setLoading(true);
 
-    getAllNamesHandler();
-    setLoading(false);
-  }, [getDomains]);
 
   const transferCancelHandler = () => {
     if (error) {
@@ -123,10 +109,9 @@ const Ethertx = (props) => {
       )}
       <h2 className={styles.pagename}>Ether Transfer</h2>
       <Row>
-        {loading && <p>Loading</p>}
-        {!loading &&
-          names &&
-          names.map((domain) => {
+        {/* {loading && <p>Loading</p>} */}
+          {props.names &&
+          props.names.map((domain) => {
             return (
               <Col lg={4} md={6} sm={12} xs={12} key={domain.name}>
                 <Card className={styles.card}>

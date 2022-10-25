@@ -9,6 +9,7 @@ import { CodeSlash } from "react-bootstrap-icons";
 const Searchbar = (props) => {
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [existFilter, setExistFilter] = useState([]);
   const navigate = useNavigate();
 
   const filterHandler = (event) => {
@@ -16,33 +17,40 @@ const Searchbar = (props) => {
   };
   console.log("searchbar auctions", props.auctions);
   console.log("searchbar filter", filteredData);
+  console.log("searchbar existfilter", existFilter);
   useEffect(() => {
     const newFilter = props.auctions.filter((value, key) => {
       return value.name.toLowerCase().includes(query.toLowerCase());
     });
+    const eFilter = props.names.filter((value, key) => {
+      return value.name.toLowerCase().includes(query.toLowerCase());
+    });
     if (query === "") {
       setFilteredData([]);
+      setExistFilter([]);
     } else {
       setFilteredData(newFilter);
+      setExistFilter(eFilter);
     }
-  }, [query, props.auctions]);
-
-  const clearInput = () => {
-    setQuery("");
-    setFilteredData([]);
-  };
+  }, [query, props.auctions, props.names]);
 
   const enterHandler = (event) => {
     if (event.key === "Enter") {
-      if (filteredData.length === 0) {
+      if (existFilter.length !== 0) {
+        console.log("Name already exists!");
+      } else if (filteredData.length === 0) {
         console.log("Nothing Found!");
       } else {
+        props.filterHandler(true);
         navigate("/", { state: { data: filteredData } });
       }
     }
   };
 
+
+
   const clickHandler = (event) => {
+    props.filterHandler(true);
     navigate("/", { state: { data: filteredData } });
   };
   return (
@@ -56,9 +64,6 @@ const Searchbar = (props) => {
         onChange={filterHandler}
         onKeyDown={enterHandler}
       />
-      {/* <Button variant="none" className={`${styles.searchbtn}`}>
-        Search
-      </Button> */}
       {filteredData.length !== 0 && (
         <div className={styles.result}>
           {filteredData.slice(0, 15).map((value, key) => {

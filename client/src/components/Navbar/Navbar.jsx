@@ -43,7 +43,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Form className={`d-flex ${styles.form}`} onSubmit={submitHandler}>
-              <Searchbar auctions={props.auctions}/>
+              <Searchbar auctions={props.auctions} names={props.names} filter={props.filter} filterHandler={props.filterHandler}/>
               {props.connected && (
                 <Button
                   type="button"

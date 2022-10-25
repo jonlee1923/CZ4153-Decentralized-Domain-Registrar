@@ -74,12 +74,12 @@ const BiddingList = (props) => {
 
     const { state } = location;
     console.log("biddinglist state", state);
-
+    console.log("biddinglist filterstate",props.filter);
   useEffect(() => {
-    if (state) {
+    if (state && props.filter) {
       setFilteredData(state.data);
     }
-  }, [state]);
+  }, [state,props.filter]);
 
     let bidPath = "";
     if (props.connected) {
@@ -94,6 +94,7 @@ const BiddingList = (props) => {
 
   const removeFilterHandler = () => {
     setFilteredData([]);
+    props.filterHandler(false);
   };
 
   return (
