@@ -225,7 +225,6 @@ export const DnsProvider = ({ children }) => {
             let dnsContract = await getDnsContract();
 
             const data = await dnsContract.getAllDomains();
-            // console.log("inside dnsctx getdomains", data);
             return data;
         } catch (err) {
             console.log(err);
