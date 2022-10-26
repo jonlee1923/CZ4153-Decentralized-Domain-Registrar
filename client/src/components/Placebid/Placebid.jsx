@@ -23,7 +23,7 @@ const Placebid = (props) => {
   const cancelHandler = () => {
     navigate("/");
   };
-  const {createAuctionAndBid, checkAuctionExists, bid } =
+  const { createAuctionAndBid, checkAuctionExists, bid } =
     useContext(DnsContext);
 
   // if (state) {
@@ -56,7 +56,7 @@ const Placebid = (props) => {
     setLoading(true);
     const result = await checkAuctionExists(domainName);
     if (result === true) {
-      bid(domainName, rentalPrice, secretInt); 
+      bid(domainName, rentalPrice, secretInt);
     } else {
       createAuctionAndBid(domainName, rentalPrice, secretInt);
     }
@@ -65,77 +65,76 @@ const Placebid = (props) => {
 
   return (
     <Container className={styles.placebidbox}>
-    {loading && <p>Loading...</p>}
-    {!loading && (
-      <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
-        <Row className={`${styles.topbar}`}>
-          <Col lg={4} md={6} sm={12} xs={12} className={styles.newauction}>
-            <label htmlFor="nameinput">Domain Name: </label>
-            <input
-              id="nameinput"
-              type="text"
-              placeholder="Enter Domain Name"
-              onChange={domainNameHandler}
-              value={domainName}
-              className={styles.nameinput}
-            />
-            <p className={styles.domain}>&nbsp;.ntu</p>
-          </Col>
-          <Col lg={4} md={6} sm={12} xs={12}>
-            <Input
-              id="rentalprice"
-              type="text"
-              placeholder="Enter Bid"
-              pattern="^\d*(\.\d{0,6})?$"
-              value={rentalPrice}
-              onChange={priceHandler}
-              inputClassName={styles.rentalprice}
-              label="Bid:"
-              divClassName={styles.price}
-            />
-          </Col>
-          <Col lg={4} md={6} sm={12} xs={12}>
-            <Input
-              id="secret"
-              type="password"
-              pattern="\d*"
-              placeholder="Enter Secret Int"
-              value={secretInt}
-              onChange={secretHandler}
-              inputClassName={styles.secretInt}
-              label="Secret:"
-              divClassName={styles.secret}
-            />
-          </Col>
-        </Row>
+      {loading && <p>Loading...</p>}
+      {!loading && (
+        <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
+          <Row className={`${styles.topbar}`}>
+            <Col lg={4} md={6} sm={12} xs={12} className={styles.newauction}>
+              <label htmlFor="nameinput">Domain Name: </label>
+              <input
+                id="nameinput"
+                type="text"
+                placeholder="Enter Domain Name"
+                onChange={domainNameHandler}
+                value={domainName}
+                className={styles.nameinput}
+              />
+              <p className={styles.domain}>&nbsp;.ntu</p>
+            </Col>
+            <Col lg={4} md={6} sm={12} xs={12}>
+              <Input
+                id="rentalprice"
+                type="text"
+                placeholder="Enter Bid"
+                pattern="^\d*(\.\d{0,6})?$"
+                value={rentalPrice}
+                onChange={priceHandler}
+                inputClassName={styles.rentalprice}
+                label="Bid:"
+                divClassName={styles.price}
+              />
+            </Col>
+            <Col lg={4} md={6} sm={12} xs={12}>
+              <Input
+                id="secret"
+                type="password"
+                pattern="\d*"
+                placeholder="Enter Secret Int"
+                value={secretInt}
+                onChange={secretHandler}
+                inputClassName={styles.secretInt}
+                label="Secret:"
+                divClassName={styles.secret}
+              />
+            </Col>
+          </Row>
 
-        <Steps />
-        <Row className={`${styles.bottombtn}`}>
-          <Col lg={6} md={6} sm={12}>
-            <Button
-              type="button"
-              className={`btn btn-lg ${styles.reqregisterbtn} ${styles.cancelbtn}`}
-              onClick={cancelHandler}
-              size="sm"
-            >
-              Cancel
-            </Button>
-          </Col>
-          <Col lg={6} md={6} sm={12}>
-            <Button
-              type="submit"
-              size="sm"
-              className={`btn btn-primary btn-lg ${styles.reqregisterbtn} ${styles.regbtn}`}
-              onClick={pressBidHandler}
-            >
-              Register!
-            </Button>
-          </Col>
-        </Row>
-      </form>
+          <Steps />
+          <Row className={`${styles.bottombtn}`}>
+            <Col lg={6} md={6} sm={12}>
+              <Button
+                type="button"
+                className={`btn btn-lg ${styles.reqregisterbtn} ${styles.cancelbtn}`}
+                onClick={cancelHandler}
+                size="sm"
+              >
+                Cancel
+              </Button>
+            </Col>
+            <Col lg={6} md={6} sm={12}>
+              <Button
+                type="submit"
+                size="sm"
+                className={`btn btn-primary btn-lg ${styles.reqregisterbtn} ${styles.regbtn}`}
+                onClick={pressBidHandler}
+              >
+                Register!
+              </Button>
+            </Col>
+          </Row>
+        </form>
       )}
     </Container>
-
   );
 };
 

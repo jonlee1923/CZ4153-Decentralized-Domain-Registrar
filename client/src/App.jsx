@@ -9,7 +9,7 @@ import Connectpage from "./components/Connectpage/Connectpage";
 import Placebid from "./components/Placebid/Placebid";
 import Ethertx from "./components/Ethertx/Ethertx";
 import Mynames from "./components/Mynames/Mynames";
-import InputModal from "./components/InputModal/InputModal";
+import ErrorModal from "./components/ErrorModal/ErrorModal";
 
 import {
   BrowserRouter,
@@ -34,6 +34,7 @@ function App() {
   const [auctions, setAuctions] = useState([]);
   const [names, setNames] = useState([]);
   const [filter, setFilter] = useState(false);
+  const [error, setError] = useState(false);
   const scrollRef = useRef();
   const executeScroll = () => {
     scrollRef.current.scrollIntoView();
@@ -46,6 +47,7 @@ function App() {
         const mappedData = await getAuctions();
         setAuctions(mappedData);
       } catch (err) {
+        setError(true);
         console.log("Something went wrong!");
       }
     };
@@ -55,6 +57,7 @@ function App() {
         const mappedNames = await getAllDomains();
         setNames(mappedNames);
       } catch (err) {
+        setError(true);
         console.log("Something went wrong!");
       }
     };
@@ -68,6 +71,9 @@ function App() {
   console.log("app names", names);
   console.log("app auctions", auctions);
 
+  const confirmHandler = (event) => {
+    setError(!error)
+  }
   return (
     <BrowserRouter>
       <Navbar2
@@ -79,6 +85,7 @@ function App() {
         filter={filter}
         filterHandler={filterHandler}
       />
+      {/* {error && <ErrorModal title="Error" message="Something went wrong!" onConfirm={confirmHandler}/>} */}
       <Routes>
         <Route
           path="/"

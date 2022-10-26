@@ -81,6 +81,10 @@ const BiddingList = (props) => {
     }
   }, [state,props.filter]);
 
+
+    if(!props.connected){
+      navigate("/connect");
+    }
     let bidPath = "";
     if (props.connected) {
         bidPath = "/placebid";
