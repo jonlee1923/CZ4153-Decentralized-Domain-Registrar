@@ -233,8 +233,8 @@ export const DnsProvider = ({ children }) => {
             let dnsContract = await getDnsContract();
 
             //changing to
-            // const data = await dnsContract.getMyDomains(connected);
-            const data = await dnsContract.getDomains(connected);
+            const data = await dnsContract.getMyDomains(connected);
+            // const data = await dnsContract.getDomains(connected);
             return data;
         } catch (err) {
             if (err.message === std) {

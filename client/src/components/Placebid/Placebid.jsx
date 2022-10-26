@@ -51,6 +51,7 @@ const Placebid = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
         console.log("submitted!");
+        pressBidHandler();
     };
 
     const pressBidHandler = async () => {
@@ -65,6 +66,9 @@ const Placebid = (props) => {
         } catch (err) {
         } finally {
             setLoading(false);
+            setDomainName("");
+            setRentalPrice("");
+            setSecretInt("");
         }
     };
 
@@ -137,7 +141,6 @@ const Placebid = (props) => {
               type="submit"
               size="sm"
               className={`btn btn-primary btn-lg ${styles.reqregisterbtn} ${styles.regbtn}`}
-              onClick={pressBidHandler}
             >
               Register!
             </Button>
