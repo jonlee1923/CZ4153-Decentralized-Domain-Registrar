@@ -1,0 +1,42 @@
+.searchbar{
+    width:400px;
+    position:relative;
+    top:10px;
+    right:100px;
+}
+
+.searchbtn{
+    width:175px;
+    margin-right:40px;
+    margin-left:0;
+    color:white;
+    background-color: #30BFBF !important;
+}
+
+.searchbtn:hover{
+    background-color: #008081 !important;
+    color:white !important;
+
+}
+
+.result{
+    position:absolute;
+    top:60px;
+    left:-150px;
+    background:white;
+    z-index:1;
+    width:600px;
+    border-radius:10px;
+    padding-top:10px;
+    padding-left:20px;
+    height:auto;
+}
+
+.resultentry{
+    cursor:pointer;
+}
+
+.resultentry:hover{
+    color:grey;
+}
+
