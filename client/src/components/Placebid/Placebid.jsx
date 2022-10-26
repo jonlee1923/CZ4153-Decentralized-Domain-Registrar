@@ -113,6 +113,7 @@ const Placebid = (props) => {
         <Row className={`${styles.bottombtn}`}>
           <Col lg={6} md={6} sm={12}>
             <Button
+              type="button"
               className={`btn btn-lg ${styles.reqregisterbtn} ${styles.cancelbtn}`}
               onClick={cancelHandler}
               size="sm"

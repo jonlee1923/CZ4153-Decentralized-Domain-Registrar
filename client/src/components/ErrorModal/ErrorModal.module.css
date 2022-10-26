@@ -18,17 +18,21 @@
   }
   
   .header {
-    background: #4f005f;
+    background: red;
     padding: 1rem;
+    
   }
   
   .header h2 {
     margin: 0;
     color: white;
+    font-weight:bold;
   }
   
   .content {
     padding: 1rem;
+    background:#0492C2;
+    color:white;
   }
 
   .content p{
@@ -46,4 +50,17 @@
       left: calc(50% - 20rem);
       width: 40rem;
     }
+  }
+
+  .okaybtn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background-color: #57a0d3 !important;
+    border: 3px solid white;
+    font-weight: bold;
+  }
+  .okaybtn:hover {
+    background-color: #5888ae !important;
+    border: 3px solid white !important;
   }

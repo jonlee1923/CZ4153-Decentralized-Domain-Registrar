@@ -5,11 +5,13 @@ import styles from "./Searchbar.module.css";
 import data from "./data.json";
 import { useNavigate } from "react-router-dom";
 import { CodeSlash } from "react-bootstrap-icons";
+import ErrorModal from "../ErrorModal/ErrorModal";
 
 const Searchbar = (props) => {
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [existFilter, setExistFilter] = useState([]);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const filterHandler = (event) => {
@@ -22,23 +24,26 @@ const Searchbar = (props) => {
     const newFilter = props.auctions.filter((value, key) => {
       return value.name.toLowerCase().includes(query.toLowerCase());
     });
-    const eFilter = props.names.filter((value, key) => {
-      return value.name.toLowerCase().includes(query.toLowerCase());
-    });
+
     if (query === "") {
       setFilteredData([]);
       setExistFilter([]);
     } else {
       setFilteredData(newFilter);
-      setExistFilter(eFilter);
     }
   }, [query, props.auctions, props.names]);
 
   const enterHandler = (event) => {
+    const eFilter = props.names.filter((value, key) => {
+      return value.name.toLowerCase().includes(query.toLowerCase());
+    });
+    setExistFilter(eFilter);
     if (event.key === "Enter") {
       if (existFilter.length !== 0) {
+        setError(true);
         console.log("Name already exists!");
       } else if (filteredData.length === 0) {
+        setError(true);
         console.log("Nothing Found!");
       } else {
         props.filterHandler(true);
@@ -47,12 +52,14 @@ const Searchbar = (props) => {
     }
   };
 
-
-
   const clickHandler = (event) => {
     props.filterHandler(true);
     navigate("/", { state: { data: filteredData } });
   };
+
+  const confirmHandler = (event) => {
+    setError(!error);
+  }
   return (
     <div className={styles.search}>
       <Form.Control
@@ -64,7 +71,10 @@ const Searchbar = (props) => {
         onChange={filterHandler}
         onKeyDown={enterHandler}
       />
-      {filteredData.length !== 0 && (
+
+      {error && existFilter.length !== 0 && <ErrorModal title="Owned name" message="Input name is already owned by another user!" onConfirm={confirmHandler}/>}
+      {error && filteredData.length === 0 && <ErrorModal title="Doesn't exist" message="Input name does not exist. Start an auction on the placebid page!" onConfirm={confirmHandler}/>}
+      {!error && filteredData.length !== 0 && (
         <div className={styles.result}>
           {filteredData.slice(0, 15).map((value, key) => {
             return (
