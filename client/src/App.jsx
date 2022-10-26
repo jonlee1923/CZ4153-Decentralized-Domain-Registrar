@@ -40,7 +40,7 @@ function App() {
     scrollRef.current.scrollIntoView();
   };
 
-  console.log("appfilter",filter);
+  console.log("appfilter", filter);
   useEffect(() => {
     const getAuctionsHandler = async () => {
       try {
@@ -72,8 +72,8 @@ function App() {
   console.log("app auctions", auctions);
 
   const confirmHandler = (event) => {
-    setError(!error)
-  }
+    setError(!error);
+  };
   return (
     <BrowserRouter>
       <Navbar2
@@ -110,7 +110,14 @@ function App() {
         />
         <Route
           path="/ethertx"
-          element={<Ethertx connected={connected} names={names} />}
+          element={
+            <Ethertx
+              connected={connected}
+              names={names}
+              filterHandler={filterHandler}
+              filter={filter}
+            />
+          }
         />
       </Routes>
     </BrowserRouter>

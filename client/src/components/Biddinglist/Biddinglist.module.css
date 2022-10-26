@@ -20,16 +20,16 @@ body {
   right:20px;
 }
 .removefilter {
-  position: absolute;
-  right:20px;
+  position:absolute;
   top:2px;
+  right:50px;
   background-color: #57a0d3 !important;
-  border: 3px solid white;
+  border: 3px solid black;
   font-weight: bold;
 }
 .removefilter:hover {
   background-color: #5888ae !important;
-  border: 3px solid white !important;
+  border: 3px solid black !important;
 }
 .card {
   position: relative;

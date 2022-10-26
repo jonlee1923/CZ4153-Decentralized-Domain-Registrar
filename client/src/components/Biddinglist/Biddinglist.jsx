@@ -72,29 +72,28 @@ const BiddingList = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-    const { state } = location;
-    console.log("biddinglist state", state);
-    console.log("biddinglist filterstate",props.filter);
+  const { state } = location;
+  console.log("biddinglist state", state);
+  console.log("biddinglist filterstate", props.filter);
   useEffect(() => {
     if (state && props.filter) {
       setFilteredData(state.data);
     }
-  }, [state,props.filter]);
+  }, [state, props.filter]);
 
+  if (!props.connected) {
+    navigate("/connect");
+  }
+  let bidPath = "";
+  if (props.connected) {
+    bidPath = "/placebid";
+  } else {
+    bidPath = "/connect";
+  }
 
-    if(!props.connected){
-      navigate("/connect");
-    }
-    let bidPath = "";
-    if (props.connected) {
-        bidPath = "/placebid";
-    } else {
-        bidPath = "/connect";
-    }
-
-    const errorHandler = (event) => {
-        setError("");
-    };
+  const errorHandler = (event) => {
+    setError("");
+  };
 
   const removeFilterHandler = () => {
     setFilteredData([]);
@@ -102,7 +101,7 @@ const BiddingList = (props) => {
   };
 
   return (
-    <div>
+    <Container>
       {error && (
         <ErrorModal
           title="Error occurred"
@@ -110,100 +109,95 @@ const BiddingList = (props) => {
           onConfirm={errorHandler}
         />
       )}
+      <div className={styles.toprow}>
+        <h2 className={styles.pagename}>Bidding List</h2>
+        {filteredData.length !== 0 && (
+          <Button className={styles.removefilter} onClick={removeFilterHandler}>
+            Remove Filter
+          </Button>
+        )}
+      </div>
+
       {filteredData.length !== 0 && (
-        <Container>
-          <div className={styles.toprow}>
-            <h2 className={styles.pagename}>Bidding List</h2>
-            <Button
-              className={styles.removefilter}
-              onClick={removeFilterHandler}
-            >
-              Remove Filter
-            </Button>
-          </div>
-          <Row>
-            {filteredData.map((auction) => {
-              return (
-                <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
-                  <Card className={styles.card}>
-                    <p>
-                      Domain Name: <span>{auction.name + ".ntu"}</span>
-                    </p>
-                    <p>
-                      Start: <span>{auction.start}</span>
-                    </p>
-                    <p>
-                      Bidding End: <span>{auction.biddingEnd}</span>
-                    </p>
-                    <p>
-                      Reveal End: <span>{auction.revealEnd}</span>
-                    </p>
-                    <p>
-                      Auction Ended: <span>{auction.ended.toString()}</span>
-                    </p>
-                    <div className={styles.buttons}>
-                      <Button
-                        className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
-                        onClick={() => {
-                          navigate(bidPath, {
-                            state: { name: auction.name },
-                          });
-                        }}
-                      >
-                        Place a Bid!
-                      </Button>
-                    </div>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        </Container>
+        <Row>
+          {filteredData.map((auction) => {
+            return (
+              <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
+                <Card className={styles.card}>
+                  <p>
+                    Domain Name: <span>{auction.name + ".ntu"}</span>
+                  </p>
+                  <p>
+                    Start: <span>{auction.start}</span>
+                  </p>
+                  <p>
+                    Bidding End: <span>{auction.biddingEnd}</span>
+                  </p>
+                  <p>
+                    Reveal End: <span>{auction.revealEnd}</span>
+                  </p>
+                  <p>
+                    Auction Ended: <span>{auction.ended.toString()}</span>
+                  </p>
+                  <div className={styles.buttons}>
+                    <Button
+                      className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
+                      onClick={() => {
+                        navigate(bidPath, {
+                          state: { name: auction.name },
+                        });
+                      }}
+                    >
+                      Place a Bid!
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
       )}
 
       {filteredData.length === 0 && props.auctions && (
-        <Container>
-          <h2 className={styles.pagename}>Bidding List</h2>
-          <Row>
-            {props.auctions.map((auction) => {
-              return (
-                <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
-                  <Card className={styles.card}>
-                    <p>
-                      Domain Name: <span>{auction.name + ".ntu"}</span>
-                    </p>
-                    <p>
-                      Start: <span>{auction.start}</span>
-                    </p>
-                    <p>
-                      Bidding End: <span>{auction.biddingEnd}</span>
-                    </p>
-                    <p>
-                      Reveal End: <span>{auction.revealEnd}</span>
-                    </p>
-                    <p>
-                      Auction Ended: <span>{auction.ended.toString()}</span>
-                    </p>
-                    <div className={styles.buttons}>
-                      <Button
-                        className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
-                        onClick={() => {
-                          navigate(bidPath, {
-                            state: { name: auction.name },
-                          });
-                        }}
-                      >
-                        Place a Bid!
-                      </Button>
-                    </div>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        </Container>
+        <Row>
+          {props.auctions.map((auction) => {
+            return (
+              <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
+                <Card className={styles.card}>
+                  <p>
+                    Domain Name: <span>{auction.name + ".ntu"}</span>
+                  </p>
+                  <p>
+                    Start: <span>{auction.start}</span>
+                  </p>
+                  <p>
+                    Bidding End: <span>{auction.biddingEnd}</span>
+                  </p>
+                  <p>
+                    Reveal End: <span>{auction.revealEnd}</span>
+                  </p>
+                  <p>
+                    Auction Ended: <span>{auction.ended.toString()}</span>
+                  </p>
+                  <div className={styles.buttons}>
+                    <Button
+                      className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
+                      onClick={() => {
+                        navigate(bidPath, {
+                          state: { name: auction.name },
+                        });
+                      }}
+                    >
+                      Place a Bid!
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
       )}
-    </div>
+    </Container>
   );
 };
 

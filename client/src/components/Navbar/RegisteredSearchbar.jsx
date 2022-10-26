@@ -39,13 +39,13 @@ const Searchbar = (props) => {
     });
     setFilteredData(newFilter);
     if (event.key === "Enter") {
-      if (filteredData.length !== 0) {
+      if (existFilter.length !== 0) {
         props.filterHandler(true);
-        setExistFilter([]);
+        setFilteredData([]);
         navigate("/ethertx", { state: { data: existFilter } });
-      } else if (existFilter.length !== 0) {
+      } else if (filteredData.length !== 0) {
         setError(true);
-        console.log("Name already exists!");
+        console.log("There is an existing bid going on!");
       } else {
         setError(true);
         console.log("Nothing Found!");
@@ -89,7 +89,7 @@ const Searchbar = (props) => {
       )}
       {!error && existFilter.length !== 0 && (
         <div className={styles.result}>
-          {filteredData.slice(0, 15).map((value, key) => {
+          {existFilter.slice(0, 15).map((value, key) => {
             return (
               <p
                 key={key}

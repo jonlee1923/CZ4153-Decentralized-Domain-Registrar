@@ -40,7 +40,11 @@ const Searchbar = (props) => {
     });
     setExistFilter(eFilter);
     if (event.key === "Enter") {
-      if (filteredData.length !== 0) {
+      if(query === ""){
+        setFilteredData([]);
+        setExistFilter([]);
+      }
+      else if (filteredData.length !== 0) {
         props.filterHandler(true);
         setExistFilter([]);
         navigate("/", { state: { data: filteredData } });
