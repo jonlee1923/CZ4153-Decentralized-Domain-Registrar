@@ -21,11 +21,11 @@ const Placebid = (props) => {
     const { state } = location;
     const navigate = useNavigate();
 
-    const cancelHandler = () => {
-        navigate("/");
-    };
-    const { createAuctionAndBid, checkAuctionExists, bid } =
-        useContext(DnsContext);
+  const cancelHandler = () => {
+    navigate("/");
+  };
+  const { createAuctionAndBid, checkAuctionExists, bid } =
+    useContext(DnsContext);
 
     // if (state) {
     //     setDomainName(state.name);
@@ -149,7 +149,6 @@ const Placebid = (props) => {
       </form>
       )}
     </Container>
-
   );
 };
 
