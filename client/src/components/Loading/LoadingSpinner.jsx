@@ -1,7 +1,7 @@
 import Spinner from "react-bootstrap/Spinner";
 import Card from "react-bootstrap/Card";
 
-export default function LoadingSpinner() {
+export default function LoadingSpinner(props) {
     return (
         <Card>
             <Card.Title className="d-flex justify-content-center header">
@@ -18,7 +18,7 @@ export default function LoadingSpinner() {
                 </Spinner>
             </Card.Body>
             <Card.Text className="d-flex justify-content-center header">
-                Please wait for your transaction to complete :)
+                {props.message}
             </Card.Text>
         </Card>
     );

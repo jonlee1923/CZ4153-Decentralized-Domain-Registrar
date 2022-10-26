@@ -129,29 +129,34 @@ export const DnsProvider = ({ children }) => {
             let auctions = await dnsContract.getAuctions();
             const auctionsMapped = await Promise.all(
                 auctions.map(async (i) => {
-                  const unixStart = i.start.toNumber();
-                  let startDate = new Date(unixStart * 1000);
-                  startDate = startDate.toUTCString();
-      
-                  const unixEnd = i.revealEnd.toNumber();
-                  let endDate = new Date(unixEnd * 1000);
-                  endDate = endDate.toUTCString();
-      
-                  const unixTime = i.biddingEnd.toNumber();
-                  let date = new Date(unixTime * 1000);
-                  date = date.toUTCString();
-      
-                  let auctionItem = {
-                    auctionId: i.auctionId.toNumber(),
-                    name: i.name,
-                    start: startDate,
-                    biddingEnd: date,
-                    revealEnd: endDate,
-                    ended: i.ended,
-                  };
-                  return auctionItem;
+                    if (!i.ended) {
+                        const unixStart = i.start.toNumber();
+                        let startDate = new Date(unixStart * 1000);
+                        startDate = startDate.toLocaleString();
+
+                        const unixEnd = i.revealEnd.toNumber();
+                        let endDate = new Date(unixEnd * 1000);
+                        endDate = endDate.toLocaleString();
+
+                        const unixTime = i.biddingEnd.toNumber();
+                        let date = new Date(unixTime * 1000);
+                        date = date.toLocaleString();
+
+                        let auctionItem = {
+                            auctionId: i.auctionId.toNumber(),
+                            name: i.name,
+                            start: startDate,
+                            biddingEnd: date,
+                            revealEnd: endDate,
+                            ended: i.ended,
+                        };
+                        return auctionItem;
+                    }
                 })
-              );
+            );
+            if (!auctionsMapped){
+                return []
+            }
             return auctionsMapped;
         } catch (err) {
             if (err.message === std) {
@@ -189,7 +194,7 @@ export const DnsProvider = ({ children }) => {
             console.log("calling check");
             const transaction = await dnsContract.check(
                 bytecode,
-                // parseInt(secret), //used to be this <- 
+                // parseInt(secret), //used to be this <-
                 ethers.utils.id(secret),
                 name
             );
@@ -252,16 +257,16 @@ export const DnsProvider = ({ children }) => {
             const data = await dnsContract.getAllDomains();
             const mappedNames = await Promise.all(
                 data.map(async (i) => {
-                  console.log(i.domainName);
-                  console.log(i.value);
-                  let domainItem = {
-                    name: i.domainName,
-                    value: i.value.toNumber(),
-                  };
-      
-                  return domainItem;
+                    console.log(i.domainName);
+                    console.log(i.value);
+                    let domainItem = {
+                        name: i.domainName,
+                        value: i.value.toNumber(),
+                    };
+
+                    return domainItem;
                 })
-              );
+            );
             return mappedNames;
         } catch (err) {
             console.log(err);

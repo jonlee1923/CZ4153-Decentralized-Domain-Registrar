@@ -74,7 +74,7 @@ const Placebid = (props) => {
 
     return (
         <Container className={styles.placebidbox}>
-            {loading && <LoadingSpinner/>}
+            {loading && <LoadingSpinner message={"Please wait for your transaction to complete :)"}/>}
             {!loading && (
                 <form className={`${styles.mainpage}`} onSubmit={submitHandler}>
                     <Row className={`${styles.topbar}`}>

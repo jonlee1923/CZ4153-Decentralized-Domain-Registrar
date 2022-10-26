@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 import Card from "../Card/Card.jsx";
 import InputModal from "../InputModal/InputModal";
 import ErrorModal from "../ErrorModal/ErrorModal";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 // import { useEffect } from "react";
 
 const Mybiddings = (props) => {
@@ -78,8 +79,12 @@ const Mybiddings = (props) => {
         getMyBiddings,
     } = useContext(DnsContext);
     const [loading, setLoading] = useState(false);
-    const [bids, setBiddings] = useState();
-    // const [errorMsg,setErrorMsg] = useState("");
+    const [revealLoading, setRevealLoading] = useState(false);
+    const [bids, setBiddings] = useState([]);
+    const [reveal, setReveal] = useState(false);
+    const [secret, setSecret] = useState();
+    const [name, setName] = useState("");
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const getBids = async () => {
@@ -92,17 +97,17 @@ const Mybiddings = (props) => {
                         data.map(async (i) => {
                             const unixStart = i.start.toNumber();
                             let startDate = new Date(unixStart * 1000);
-                            startDate = startDate.toUTCString();
+                            startDate = startDate.toLocaleString();
 
                             const unixEnd = i.end.toNumber();
                             let endDate = new Date(unixEnd * 1000);
-                            endDate = endDate.toUTCString();
+                            endDate = endDate.toLocaleString();
 
                             //changing to
-                            // const revealStart = i.revealStart.toNumber();
-                            const revealStart = i.revealEnd.toNumber();
+                            const revealStart = i.revealStart.toNumber();
+                            // const revealStart = i.revealEnd.toNumber();
                             let reveal = new Date(revealStart * 1000);
-                            reveal = reveal.toUTCString();
+                            reveal = reveal.toLocaleString();
 
                             let bidItem = {
                                 name: i.name,
@@ -127,22 +132,17 @@ const Mybiddings = (props) => {
         setLoading(false);
     }, [getMyBiddings]);
 
-    const [reveal, setReveal] = useState(false);
-    const [secret, setSecret] = useState();
-    const [name, setName] = useState("");
-    const [error, setError] = useState("");
-
     const revealBidSubmit = async () => {
         try {
-            console.log("secret ", secret, " name ", name);
-
+            setRevealLoading(true);
             await revealBid(name, secret);
 
-            console.log("exit revealBid js function");
             revealHandler();
         } catch (err) {
             setError(true);
             setReveal(false);
+        } finally {
+            setRevealLoading(false);
         }
     };
 
@@ -185,9 +185,9 @@ const Mybiddings = (props) => {
             )}
             <h2 className={styles.pagename}>My Biddings</h2>
             
-                {loading && !bids && <p>Loading</p>}
-                
-                {!loading && bids && (
+                {loading && bids.length === 0 && <LoadingSpinner message={"Loading your bids"}/>}
+                {revealLoading && <LoadingSpinner message={"Verifying your reveal, please wait"}/>}
+                {!revealLoading && !loading && bids && (
                     <Row>
                         {bids.map((bid) => {
                             return (
