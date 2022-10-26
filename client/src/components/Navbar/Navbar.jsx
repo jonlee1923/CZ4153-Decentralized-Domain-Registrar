@@ -7,19 +7,21 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Searchbar from "./Searchbar";
+import OngoingSearchbar from "./OngoingSearchbar";
+import RegisteredSearchbar from "./RegisteredSearchbar";
 import { List } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
 const Navbar2 = React.forwardRef((props, ref) => {
   // const { connectWallet, checkIfWalletIsConnected, connected } = useContext(DnsContext);
+  const [searchChoice, setSearchChoice] = useState("ongoing");
   const lumeel = require("../../assets/lumeel.png");
   const navigate = useNavigate();
   let myNamesPath = "";
   let myBiddingsPath = "";
   let placeBidPath = "";
   let etherTxPath = "";
-
+  
   if (props.connected) {
     myNamesPath = "/mynames";
     myBiddingsPath = "/mybiddings";
@@ -29,10 +31,10 @@ const Navbar2 = React.forwardRef((props, ref) => {
     myNamesPath = myBiddingsPath = placeBidPath = etherTxPath = "/connect";
   }
 
-  console.log("navbar auctions",props.auctions);
+  console.log("navbar auctions", props.auctions);
   const submitHandler = (event) => {
     event.preventDefault();
-  }
+  };
   return (
     <Navbar expand="xl" className={styles.navbar2}>
       <Container>
@@ -43,7 +45,32 @@ const Navbar2 = React.forwardRef((props, ref) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Form className={`d-flex ${styles.form}`} onSubmit={submitHandler}>
-              <Searchbar auctions={props.auctions} names={props.names} filter={props.filter} filterHandler={props.filterHandler}/>
+              {searchChoice === "ongoing" ? (
+                <OngoingSearchbar
+                  auctions={props.auctions}
+                  names={props.names}
+                  filter={props.filter}
+                  filterHandler={props.filterHandler}
+                />
+              ) : (
+                <RegisteredSearchbar
+                  auctions={props.auctions}
+                  names={props.names}
+                  filter={props.filter}
+                  filterHandler={props.filterHandler}
+                />
+              )}
+
+              <Form.Select
+                className={styles.select}
+                value={searchChoice}
+                onChange={(event) => {
+                  setSearchChoice(event.target.value);
+                }}
+              >
+                <option value="ongoing">Ongoing Auctions</option>
+                <option value="registered">Registered Domains</option>
+              </Form.Select>
               {props.connected && (
                 <Button
                   type="button"
