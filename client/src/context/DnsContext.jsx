@@ -128,8 +128,9 @@ export const DnsProvider = ({ children }) => {
             let dnsContract = await getDnsContract();
             let auctions = await dnsContract.getAuctions();
             const auctionsMapped = await Promise.all(
-                auctions.map(async (i) => {
-                    if (!i.ended) {
+                auctions
+                    .filter((auction) => !auction.ended)
+                    .map(async (i) => {
                         const unixStart = i.start.toNumber();
                         let startDate = new Date(unixStart * 1000);
                         startDate = startDate.toLocaleString();
@@ -151,11 +152,10 @@ export const DnsProvider = ({ children }) => {
                             ended: i.ended,
                         };
                         return auctionItem;
-                    }
-                })
+                    })
             );
-            if (!auctionsMapped){
-                return []
+            if (!auctionsMapped) {
+                return [];
             }
             return auctionsMapped;
         } catch (err) {
