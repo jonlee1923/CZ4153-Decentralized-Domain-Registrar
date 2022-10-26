@@ -5,7 +5,8 @@
 .connectwallet{
     position:relative;
     width:200px;
-    left:100px;
+    top:10px;
+    left:40px;
 }
 
 .brand{
@@ -15,15 +16,15 @@
 
 .brandarea{
     position:relative;
-    right:200px;
+    right:100px;
 }
 .form{
     position:relative;
 }
 
 .dropdown{
-    position:relative;
-    left:350px;
+    position:absolute;
+    right:120px;
 }
 
 .successbtn{

@@ -120,32 +120,34 @@ const Placebid = (props) => {
                         </Col>
                     </Row>
 
-                    <Steps />
-                    <Row className={`${styles.bottombtn}`}>
-                        <Col lg={6} md={6} sm={12}>
-                            <Button
-                                className={`btn btn-lg ${styles.reqregisterbtn} ${styles.cancelbtn}`}
-                                onClick={cancelHandler}
-                                size="sm"
-                            >
-                                Cancel
-                            </Button>
-                        </Col>
-                        <Col lg={6} md={6} sm={12}>
-                            <Button
-                                type="submit"
-                                size="sm"
-                                className={`btn btn-primary btn-lg ${styles.reqregisterbtn} ${styles.regbtn}`}
-                                onClick={pressBidHandler}
-                            >
-                                Register!
-                            </Button>
-                        </Col>
-                    </Row>
-                </form>
-            )}
-        </Container>
-    );
+        <Steps />
+        <Row className={`${styles.bottombtn}`}>
+          <Col lg={6} md={6} sm={12}>
+            <Button
+              type="button"
+              className={`btn btn-lg ${styles.reqregisterbtn} ${styles.cancelbtn}`}
+              onClick={cancelHandler}
+              size="sm"
+            >
+              Cancel
+            </Button>
+          </Col>
+          <Col lg={6} md={6} sm={12}>
+            <Button
+              type="submit"
+              size="sm"
+              className={`btn btn-primary btn-lg ${styles.reqregisterbtn} ${styles.regbtn}`}
+              onClick={pressBidHandler}
+            >
+              Register!
+            </Button>
+          </Col>
+        </Row>
+      </form>
+      )}
+    </Container>
+
+  );
 };
 
 export default Placebid;
