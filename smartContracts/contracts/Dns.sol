@@ -160,6 +160,7 @@ contract Dns is IDns, ReentrancyGuard {
         EthDomain storage domain = domains[nameToDomainId[_name]];
         require(msg.sender == domain.owner, "You do not own these funds");
         require(amount <= domain.balance, "Insufficient funds");
+        require(domain.balance > 0);
         domain.balance -= amount;
 
         payable(domain.owner).transfer(amount);
@@ -182,9 +183,6 @@ contract Dns is IDns, ReentrancyGuard {
         });
 
         addrToDomainId[_owner].push(nameCount.current());
-        console.log("checking");
-        // console.log(addrToDomainId[_owner]);
-        // console.log(addrToDomainId[_owner]);
         nameToDomainId[_name] = nameCount.current();
         domains[nameCount.current()] = newEthDomain;
         emit DomainRegistered(nameCount.current(), _name, _owner);
@@ -337,8 +335,6 @@ contract Dns is IDns, ReentrancyGuard {
     }
 
     function _bid(address user, string memory _name) private {
-        // uint startTime = auctions[nameToAuctionId[_name]].start;
-        // uint endTime = auctions[nameToAuctionId[_name]].revealEnd;
         bidCount.increment();
 
         bids[bidCount.current()] = Bid({
@@ -358,8 +354,8 @@ contract Dns is IDns, ReentrancyGuard {
     function check(
         bytes memory bytecode,
         uint _salt,
-        string memory _name // onlyAfterBidding(_name) onlyBeforeRevealEnd(_name)
-    ) public {
+        string memory _name
+    ) public onlyAfterBidding(_name) onlyBeforeRevealEnd(_name) {
         Bid storage bidToCheck;
         console.log("hashed ", _salt);
 
@@ -418,13 +414,13 @@ contract Dns is IDns, ReentrancyGuard {
         require(auctionCount.current() != 0, "No auctions created");
         console.log(auctionCount.current());
         for (uint i = 1; i <= auctionCount.current(); i++) {
-            // if (block.timestamp < auctions[i].revealEnd || auctions[i].ended) {
-            //     console.log("continuing for this auction: ", auctions[i].name);
-            //     continue;
-            // } else {
+            if (block.timestamp < auctions[i].revealEnd || auctions[i].ended) {
+                console.log("continuing for this auction: ", auctions[i].name);
+                continue;
+            } else {
             console.log("ending auction ", auctions[i].name);
             endAuction(auctions[i].name);
-            // }
+            }
         }
     }
 
