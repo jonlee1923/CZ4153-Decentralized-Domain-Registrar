@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import styles from "./Ethertx.module.css";
+import styles from "./DomainNames.module.css";
 import { ethers } from "ethers";
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";

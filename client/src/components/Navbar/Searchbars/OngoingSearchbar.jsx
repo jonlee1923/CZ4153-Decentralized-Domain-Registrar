@@ -4,7 +4,7 @@ import Button from "react-bootstrap/esm/Button";
 import styles from "./OngoingSearchbar.module.css";
 import { useNavigate } from "react-router-dom";
 import { CodeSlash } from "react-bootstrap-icons";
-import ErrorModal from "../ErrorModal/ErrorModal";
+import ErrorModal from "../../ErrorModal/ErrorModal";
 
 const Searchbar = (props) => {
   const [query, setQuery] = useState("");
@@ -16,36 +16,45 @@ const Searchbar = (props) => {
   const filterHandler = (event) => {
     setQuery(event.target.value);
   };
-  console.log("registered searchbar auctions", props.auctions);
-  console.log("registered searchbar names", props.names);
-  console.log("registered searchbar filter", filteredData);
-  console.log("registered searchbar existfilter", existFilter);
+  console.log("ongoing searchbar auctions", props.auctions);
+  console.log("ongoing searchbar names", props.names);
+  console.log("ongoing searchbar filter", filteredData);
+  console.log("ongoing searchbar existfilter", existFilter);
+
   useEffect(() => {
-    const eFilter = props.names.filter((value, key) => {
+    const newFilter = props.auctions.filter((value, key) => {
       return value.name.toLowerCase().includes(query.toLowerCase());
     });
-    setExistFilter(eFilter);
 
     if (query === "") {
       setFilteredData([]);
       setExistFilter([]);
     } else {
+      setFilteredData(newFilter);
     }
   }, [query, props.auctions, props.names]);
 
   const enterHandler = (event) => {
-    const newFilter = props.auctions.filter((value, key) => {
+    const eFilter = props.names.filter((value, key) => {
       return value.name.toLowerCase().includes(query.toLowerCase());
     });
-    setFilteredData(newFilter);
+    setExistFilter(eFilter);
     if (event.key === "Enter") {
-      if (existFilter.length !== 0) {
-        props.filterHandler(true);
-        setFilteredData([]);
-        navigate("/ethertx", { state: { data: existFilter } });
-      } else if (filteredData.length !== 0) {
+      if(!props.connected){
         setError(true);
-        console.log("There is an existing bid going on!");
+        console.log("Not connected!");
+      }
+      else if(query === ""){
+        setFilteredData([]);
+        setExistFilter([]);
+      }
+      else if (filteredData.length !== 0) {
+        props.filterHandler(true);
+        setExistFilter([]);
+        navigate("/", { state: { data: filteredData } });
+      } else if (existFilter.length !== 0) {
+        setError(true);
+        console.log("Name already exists!");
       } else {
         setError(true);
         console.log("Nothing Found!");
@@ -55,7 +64,7 @@ const Searchbar = (props) => {
 
   const clickHandler = (event) => {
     props.filterHandler(true);
-    navigate("/ethertx", { state: { data: existFilter } });
+    navigate("/", { state: { data: filteredData } });
   };
 
   const confirmHandler = (event) => {
@@ -72,24 +81,30 @@ const Searchbar = (props) => {
         onChange={filterHandler}
         onKeyDown={enterHandler}
       />
-
-      {error && filteredData.length !== 0 && (
+      {error && !props.connected && (
         <ErrorModal
-          title="Existing Bid"
-          message="There is an ongoing bid for the input name. Use the Ongoing Auctions Searchbar to place a bid!"
+          title="Not Connected"
+          message="Please connect to your MetaMask wallet before making a search!"
           onConfirm={confirmHandler}
         />
       )}
-      {error && existFilter.length === 0 && filteredData.length === 0 && (
+      {error && existFilter.length !== 0 && props.connected && (
+        <ErrorModal
+          title="Owned name"
+          message="Input name is already owned by another user!"
+          onConfirm={confirmHandler}
+        />
+      )}
+      {error && filteredData.length === 0 && existFilter.length === 0 && props.connected &&(
         <ErrorModal
           title="Doesn't exist"
           message="Input name does not exist. Start an auction on the placebid page!"
           onConfirm={confirmHandler}
         />
       )}
-      {!error && existFilter.length !== 0 && (
+      {!error && filteredData.length !== 0 && props.connected &&(
         <div className={styles.result}>
-          {existFilter.slice(0, 15).map((value, key) => {
+          {filteredData.slice(0, 15).map((value, key) => {
             return (
               <p
                 key={key}

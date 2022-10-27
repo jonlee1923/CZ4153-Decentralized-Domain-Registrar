@@ -7,8 +7,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import OngoingSearchbar from "./OngoingSearchbar";
-import RegisteredSearchbar from "./RegisteredSearchbar";
+import OngoingSearchbar from "./Searchbars/OngoingSearchbar";
+import RegisteredSearchbar from "./Searchbars/RegisteredSearchbar";
 import { List } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
@@ -51,6 +51,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
                   names={props.names}
                   filter={props.filter}
                   filterHandler={props.filterHandler}
+                  connected = {props.connected}
                 />
               ) : (
                 <RegisteredSearchbar
@@ -58,6 +59,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
                   names={props.names}
                   filter={props.filter}
                   filterHandler={props.filterHandler}
+                  connected = {props.connected}
                 />
               )}
 

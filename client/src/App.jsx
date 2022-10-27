@@ -3,11 +3,11 @@ import styles from "./App.module.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 import Navbar2 from "./components/Navbar/Navbar.jsx";
-import BiddingList from "./components/Biddinglist/Biddinglist.jsx";
+import BiddingList from "./components/Auctions/Auctions.jsx";
 import Mybiddings from "./components/Mybiddings/Mybiddings";
 import Connectpage from "./components/Connectpage/Connectpage";
 import Placebid from "./components/Placebid/Placebid";
-import Ethertx from "./components/Ethertx/Ethertx";
+import Ethertx from "./components/DomainNames/DomainNames";
 import Mynames from "./components/Mynames/Mynames";
 import ErrorModal from "./components/ErrorModal/ErrorModal";
 

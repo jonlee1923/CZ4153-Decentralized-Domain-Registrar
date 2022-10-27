@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import styles from "./Biddinglist.module.css";
+import styles from "./Auctions.module.css";
 import { DnsContext } from "../../context/DnsContext";
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
@@ -105,7 +105,7 @@ const BiddingList = (props) => {
         />
       )}
       <div className={styles.toprow}>
-        <h2 className={styles.pagename}>Bidding List</h2>
+        <h2 className={styles.pagename}>Auctions</h2>
         {filteredData.length !== 0 && (
           <Button className={styles.removefilter} onClick={removeFilterHandler}>
             Remove Filter
