@@ -261,12 +261,12 @@ export const DnsProvider = ({ children }) => {
                     console.log(i.value);
                     let domainItem = {
                         name: i.domainName,
-                        value: i.value.toNumber(),
                     };
 
                     return domainItem;
                 })
             );
+            console.log("names: ", mappedNames);
             return mappedNames;
         } catch (err) {
             console.log(err);
