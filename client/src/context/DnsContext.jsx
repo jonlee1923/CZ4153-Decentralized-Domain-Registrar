@@ -106,7 +106,7 @@ export const DnsProvider = ({ children }) => {
             console.log("Transaction events: ", tx.events[0]);
         } catch (err) {
             console.log(err);
-            throw Error(err.message);
+            throw Error(err);
         }
     };
 
@@ -237,10 +237,25 @@ export const DnsProvider = ({ children }) => {
         try {
             let dnsContract = await getDnsContract();
 
-            //changing to
             const data = await dnsContract.getMyDomains(connected);
-            // const data = await dnsContract.getDomains(connected);
-            return data;
+            const mappedNames =
+                await Promise.all(
+                    data.map(async (i) => {
+                        const _name = i.domainName;
+                        // const _balance = i.balance.toNumber();
+                        const _balance = ethers.utils.formatEther(i.balance);
+                        const _value = ethers.utils.formatEther(i.value);
+
+                        let domainName = {
+                            name: _name,
+                            balance: _balance,
+                            value: _value,
+                        };
+
+                        return domainName;
+                    })
+                );
+            return mappedNames;
         } catch (err) {
             if (err.message === std) {
                 return;

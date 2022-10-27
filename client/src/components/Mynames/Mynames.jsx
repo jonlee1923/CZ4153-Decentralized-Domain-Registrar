@@ -11,145 +11,119 @@ import InputModal from "../InputModal/InputModal";
 import { DnsContext } from "../../context/DnsContext";
 import { useEffect } from "react";
 import LoadingSpinner from "../Loading/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const Mynames = (props) => {
-    const { getDomains, sendDomain, withdrawFromDomain } =
-        useContext(DnsContext);
-    const [balanceError, setBalanceError] = useState(false);
-    const [validWithdraw, setValidWithdraw] = useState(false);
-    const [error, setError] = useState(false);
-    const [amount, setAmount] = useState(0);
-    const [name, setDomainName] = useState(0);
-    const [names, setNames] = useState();
-    const [loading, setLoading] = useState(false);
-    const [withdrawLoading, setWithdrawLoading] = useState(false);
-
-    useEffect(() => {
-        const getMyNames = async () => {
-            const data = await getDomains();
-            console.log(data);
-
-            const mappedNames =
-                data &&
-                (await Promise.all(
-                    data.map(async (i) => {
-                        const _name = i.domainName;
-                        // const _balance = i.balance.toNumber();
-                        const _balance = ethers.utils.formatEther(i.balance);
-                        const _value = ethers.utils.formatEther(i.value);
-
-                        let domainName = {
-                            name: _name,
-                            balance: _balance,
-                            value: _value,
-                        };
-
-                        return domainName;
-                    })
-                ));
-
-            setNames(mappedNames);
-        };
-        setLoading(true);
-        getMyNames();
-        setLoading(false);
-    }, [getDomains]);
-
-    const withdrawHandler = () => {
-        if (error) {
-            setValidWithdraw(false);
-        } else {
-            setValidWithdraw(!validWithdraw);
-        }
+  const { getDomains, sendDomain, withdrawFromDomain } = useContext(DnsContext);
+  const [balanceError, setBalanceError] = useState(false);
+  const [validWithdraw, setValidWithdraw] = useState(false);
+  const [amount, setAmount] = useState(0);
+  const [name, setDomainName] = useState(0);
+  const [names, setNames] = useState();
+  const [loading, setLoading] = useState(false);
+  const [withdrawLoading, setWithdrawLoading] = useState(false);
+  useEffect(() => {
+    const getMyNames = async () => {
+      const data = await getDomains();
+      // console.log(data);
+      setNames(data);
     };
+    setLoading(true);
+    getMyNames();
+    setLoading(false);
+  }, [getDomains]);
 
-    const withdrawDomain = async () => {
-        try {
-            setWithdrawLoading(true);
-            await withdrawFromDomain(name, amount);
-        } catch (err) {
-        } finally {
-            setWithdrawLoading(false);
-        }
-    };
+  // if(reload){
+  //     // window.location.reload(false);
+  //     setReload(false);
+  // }
+  const withdrawHandler = () => {
+    if (balanceError) {
+      setValidWithdraw(false);
+      setBalanceError(false);
+    } else {
+      setValidWithdraw(!validWithdraw);
+    }
+  };
 
-    return (
-        <Container>
-            {withdrawLoading && (
-                <LoadingSpinner
-                    message={"Please wait for your transaction to complete :)"}
-                />
-            )}
-            {balanceError && (
-                <ErrorModal
-                    onConfirm={withdrawHandler}
-                    title={"Balance Insufficient"}
-                    message={
-                        "Please input an amount below your current balance"
-                    }
-                />
-            )}
-            {validWithdraw && (
-                <InputModal
-                    onConfirm={() => {
+  const withdrawDomain = async () => {
+    try {
+      setWithdrawLoading(true);
+      await withdrawFromDomain(name, amount);
+    } catch (err) {
+        setBalanceError(true);
+    } finally {
+      setWithdrawLoading(false);
+      setNames(await getDomains());
+    }
+  };
+
+  return (
+    <Container>
+      {withdrawLoading && (
+        <LoadingSpinner
+          message={"Please wait for your transaction to complete :)"}
+        />
+      )}
+      {balanceError && (
+        <ErrorModal
+          onConfirm={withdrawHandler}
+          title={"Balance Insufficient"}
+          message={"Please input an amount below your current balance"}
+        />
+      )}
+      {validWithdraw && (
+        <InputModal
+          onConfirm={() => {
+            withdrawHandler();
+            withdrawDomain();
+          }}
+          onChange={(event) => {
+            setAmount(event.target.value);
+          }}
+          title="Withdrawal"
+          placeholder="Please input withdraw amount"
+          type="text"
+          pattern="^\d*(\.\d{0,6})?$"
+          label="Amount:"
+          onCancel={withdrawHandler}
+        />
+      )}
+      <h2 className={styles.pagename}>My Names</h2>
+      <Row>
+        {!loading && !withdrawLoading && names && (
+          <Row>
+            {names.map((domain) => {
+              return (
+                <Col lg={4} md={6} sm={12} xs={12} key={domain.name}>
+                  <Card className={styles.card}>
+                    <p>
+                      Domain Name: <span>{domain.name}</span>
+                    </p>
+                    <p>
+                      Value Purchased: <span>{domain.value} eth</span>
+                    </p>
+                    <p>
+                      Balance: <span>{domain.balance} eth</span>
+                    </p>
+                    <Button
+                      className={styles.withdrawbtn}
+                      onClick={() => {
+                        setDomainName(domain.name);
                         withdrawHandler();
-                        withdrawDomain();
-                    }}
-                    onChange={(event) => {
-                        setAmount(event.target.value);
-                    }}
-                    title="Withdrawal"
-                    placeholder="Please input withdraw amount"
-                    type="text"
-                    pattern="^\d*(\.\d{0,6})?$"
-                    label="Amount:"
-                    onCancel={withdrawHandler}
-                />
-            )}
-            <h2 className={styles.pagename}>My Names</h2>
-            <Row>
-                {!loading && !withdrawLoading && names && (
-                    <Row>
-                        {names.map((domain) => {
-                            return (
-                                <Col
-                                    lg={4}
-                                    md={6}
-                                    sm={12}
-                                    xs={12}
-                                    key={domain.name}
-                                >
-                                    <Card className={styles.card}>
-                                        <p>
-                                            Domain Name:{" "}
-                                            <span>{domain.name}</span>
-                                        </p>
-                                        <p>
-                                            Value Purchased:{" "}
-                                            <span>{domain.value} eth</span>
-                                        </p>
-                                        <p>
-                                            Balance:{" "}
-                                            <span>{domain.balance} eth</span>
-                                        </p>
-                                        <Button
-                                            className={styles.withdrawbtn}
-                                            onClick={() => {
-                                                setDomainName(domain.name);
-                                                withdrawHandler();
-                                            }}
-                                        >
-                                            Withdraw
-                                        </Button>
-                                    </Card>
-                                </Col>
-                            );
-                        })}
-                    </Row>
-                )}
-            </Row>
-        </Container>
-    );
+                      }}
+                    >
+                      Withdraw
+                    </Button>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        )}
+      </Row>
+    </Container>
+  );
 };
 
 export default Mynames;
