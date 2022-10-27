@@ -84,7 +84,7 @@ const Mybiddings = (props) => {
     const [reveal, setReveal] = useState(false);
     const [secret, setSecret] = useState();
     const [name, setName] = useState("");
-    const [error, setError] = useState("");
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const getBids = async () => {
@@ -123,7 +123,7 @@ const Mybiddings = (props) => {
 
                 console.log(bids);
             } catch (err) {
-                setError(err.message);
+                setError(true);
                 setReveal(false);
             }
         };
@@ -155,7 +155,7 @@ const Mybiddings = (props) => {
     };
 
     const errorHandler = (event) => {
-        setError("");
+        setError(false);
     };
 
     return (
@@ -163,7 +163,7 @@ const Mybiddings = (props) => {
             {error && (
                 <ErrorModal
                     title="Error occurred"
-                    message={error}
+                    message="You have already revealed this bid"
                     onConfirm={errorHandler}
                 />
             )}

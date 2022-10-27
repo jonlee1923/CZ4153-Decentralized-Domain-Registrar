@@ -84,12 +84,7 @@ const BiddingList = (props) => {
   if (!props.connected) {
     navigate("/connect");
   }
-  let bidPath = "";
-  if (props.connected) {
-    bidPath = "/placebid";
-  } else {
-    bidPath = "/connect";
-  }
+  console.log("connected prop",props.connected);
 
   const errorHandler = (event) => {
     setError("");
@@ -143,7 +138,7 @@ const BiddingList = (props) => {
                     <Button
                       className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
                       onClick={() => {
-                        navigate(bidPath, {
+                        navigate("/placebid", {
                           state: { name: auction.name },
                         });
                       }}
@@ -183,7 +178,7 @@ const BiddingList = (props) => {
                     <Button
                       className={`btn ${styles.bidbtn} ${styles.btmbutton}`}
                       onClick={() => {
-                        navigate(bidPath, {
+                        navigate("/placebid", {
                           state: { name: auction.name },
                         });
                       }}
