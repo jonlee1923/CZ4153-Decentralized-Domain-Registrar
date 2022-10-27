@@ -33,12 +33,12 @@ interface IDns {
         bool ended;
     }
 
-    function getMyDomains(address ownerAddress)
-        external
-        view
-        returns (EthDomain[] memory);
+    // function getMyDomains(address ownerAddress)
+    //     external
+    //     view
+    //     returns (EthDomain[] memory);
 
-    function getBiddings(address user) external view returns (Bid[] memory);
+    // function getBiddings(address user) external view returns (Bid[] memory);
 
     event AuctionEnded(string name, address winner);
     event BidMade(address bidder, string name);

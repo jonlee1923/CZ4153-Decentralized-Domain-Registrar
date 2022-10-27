@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.4;
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./IDns.sol";
 import "./Commit.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -26,7 +25,7 @@ contract Dns is IDns, ReentrancyGuard {
     Counters.Counter private auctionCount;
 
     mapping(string => uint) nameToAuctionId;
-    mapping(uint => Auction) public auctions;
+    mapping(uint => Auction) auctions;
 
     mapping(string => uint[]) nameToBidId;
     mapping(address => uint[]) myBiddings;
@@ -109,7 +108,6 @@ contract Dns is IDns, ReentrancyGuard {
     function getMyDomains(address _user)
         external
         view
-        override
         returns (EthDomain[] memory)
     {
         uint[] memory ids = addrToDomainId[_user];
@@ -291,7 +289,6 @@ contract Dns is IDns, ReentrancyGuard {
     function getBiddings(address _user)
         external
         view
-        override
         returns (Bid[] memory)
     {
         uint[] memory ids = myBiddings[_user];
