@@ -377,6 +377,7 @@ contract Dns is IDns, ReentrancyGuard {
         for (uint i = 0; i < ids.length; i++) {
             if (bids[ids[i]].bidder == msg.sender) {
                 bidToCheck = bids[ids[i]];
+                require(bidToCheck.revealed != true, "Bid has already been revealed");
                 bidToCheck.revealed = true;
 
                 bidToCheck.revealedBid = balance;
