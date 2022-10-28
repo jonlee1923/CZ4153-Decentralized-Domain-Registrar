@@ -1,96 +1,48 @@
-import React, { useState, useEffect, useContext } from "react";
+// States, styles, etc..
+import React, { useState, useEffect } from "react";
 import styles from "./Auctions.module.css";
-import { DnsContext } from "../../context/DnsContext";
+import { useNavigate, useLocation } from "react-router-dom";
+
+// Bootstrap components
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useNavigate, useLocation } from "react-router-dom";
+
+// React components
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
 
-const BiddingList = (props) => {
-  const dummyBidGroup = [
-    [
-      {
-        name: "JonLee.ens",
-        start: "20/10/22 18:30",
-        end: "20/10/22 19:30",
-        id: 1,
-      },
-      {
-        name: "GeneLum.ens",
-        start: "19/10/22 16:30",
-        end: "19/10/22 17:30",
-        id: 2,
-      },
-      {
-        name: "Chuansong.ens",
-        start: "10/10/22 01:00",
-        end: "10/10/22 02:00",
-        id: 3,
-      },
-    ],
-    [
-      {
-        name: "CatChew.ens",
-        start: "09/09/22 18:30",
-        end: "09/09/22 19:30",
-        id: 4,
-      },
-      {
-        name: "JonLee.ens",
-        start: "09/09/22 18:30",
-        end: "09/09/22 19:30",
-        id: 5,
-      },
-      {
-        name: "GeneLum.ens",
-        start: "09/09/22 18:30",
-        end: "09/09/22 19:30",
-        id: 6,
-      },
-    ],
-    [
-      {
-        name: "CatChew.ens",
-        start: "09/09/22 18:30",
-        end: "09/09/22 19:30",
-        id: 8,
-      },
-      {
-        name: "Chuansong.ens",
-        start: "09/09/22 18:30",
-        end: "09/09/22 19:30",
-        id: 7,
-      },
-    ],
-  ];
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+const Auctions = (props) => {
+  // Variable / Constants declaration
   const navigate = useNavigate();
   const location = useLocation();
 
   const { state } = location;
-  console.log("biddinglist state", state);
-  console.log("biddinglist filterstate", props.filter);
+
+  //States
+  const [error, setError] = useState(false); // State to control ErrorModal prompt
+  const [filteredData, setFilteredData] = useState([]); // State for array of filteredData
+
   useEffect(() => {
     if (state && props.filter) {
+      // If there is a filter, set filteredData to data
       setFilteredData(state.data);
     }
   }, [state, props.filter]);
 
+  // Functions
   if (!props.connected) {
+    // If unconnected, block access and navigate to Connect page
     navigate("/connect");
   }
-  console.log("connected prop",props.connected);
-
   const errorHandler = (event) => {
-    setError("");
+    // To control error state
+    setError(!error);
   };
 
   const removeFilterHandler = () => {
+    // To control filter state
     setFilteredData([]);
     props.filterHandler(false);
   };
@@ -100,7 +52,7 @@ const BiddingList = (props) => {
       {error && (
         <ErrorModal
           title="Error occurred"
-          message={error}
+          message="Something went wrong!"
           onConfirm={errorHandler}
         />
       )}
@@ -196,4 +148,4 @@ const BiddingList = (props) => {
   );
 };
 
-export default BiddingList;
+export default Auctions;

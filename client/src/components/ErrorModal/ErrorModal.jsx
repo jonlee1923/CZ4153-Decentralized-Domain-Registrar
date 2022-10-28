@@ -1,8 +1,13 @@
-import Card from "../Card/Card";
-import Button from "react-bootstrap/esm/Button";
-import styles from "./ErrorModal.module.css";
+// States, styles, etc..
 import React from "react";
 import ReactDOM from "react-dom";
+import styles from "./ErrorModal.module.css";
+
+// Bootstrap components
+import Button from "react-bootstrap/esm/Button";
+
+// React components
+import Card from "../Card/Card";
 
 const Backdrop = (props) => {
   return <div className={styles.backdrop} onClick={props.onConfirm} />;
@@ -18,7 +23,9 @@ const ModalOverlay = (props) => {
         <p>{props.message}</p>
       </div>
       <footer className={styles.actions}>
-        <Button className={styles.okaybtn} onClick={props.onConfirm}>Okay</Button>
+        <Button className={styles.okaybtn} onClick={props.onConfirm}>
+          Okay
+        </Button>
       </footer>
     </Card>
   );

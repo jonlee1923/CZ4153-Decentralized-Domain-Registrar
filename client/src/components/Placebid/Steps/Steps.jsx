@@ -1,5 +1,8 @@
+// States, styles, etc..
 import React from "react";
 import styles from "./Steps.module.css";
+
+// Bootstrap components
 import {
   Icon1Circle,
   Icon2Circle,
@@ -30,12 +33,6 @@ const Steps = (props) => {
               Enter bid for blind auction.
               <br />
             </p>
-            {/* <span className={styles.note}>
-              <ol>
-                <b>Note:</b><li>Bid cannot be withdrawn</li>
-                <li>Bid amount cannot be changed once committed</li>
-              </ol>
-            </span> */}
           </span>
         </Col>
         <Col lg={3} md={12} sm={12} className={styles.step}>

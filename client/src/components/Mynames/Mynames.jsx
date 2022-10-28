@@ -1,31 +1,34 @@
-import React, { useState, useContext } from "react";
+// States, styles, etc..
+import React, { useState, useContext, useEffect } from "react";
 import styles from "./Mynames.module.css";
-import { ethers } from "ethers";
+import { DnsContext } from "../../context/DnsContext";
+
+// Boostrap components
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
+// React components
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
 import InputModal from "../InputModal/InputModal";
-import { DnsContext } from "../../context/DnsContext";
-import { useEffect } from "react";
 import LoadingSpinner from "../Loading/LoadingSpinner";
-import { useNavigate } from "react-router-dom";
 
 const Mynames = (props) => {
-  const { getDomains, sendDomain, withdrawFromDomain } = useContext(DnsContext);
-  const [balanceError, setBalanceError] = useState(false);
-  const [validWithdraw, setValidWithdraw] = useState(false);
-  const [amount, setAmount] = useState(0);
-  const [name, setDomainName] = useState(0);
-  const [names, setNames] = useState();
-  const [loading, setLoading] = useState(false);
-  const [withdrawLoading, setWithdrawLoading] = useState(false);
+  // States
+  const { getDomains, withdrawFromDomain } = useContext(DnsContext);
+  const [balanceError, setBalanceError] = useState(false); // State to control ErrorModal prompt
+  const [validWithdraw, setValidWithdraw] = useState(false); // State for valid withdraw
+  const [amount, setAmount] = useState(0); // State to hold user input's transfer amount
+  const [name, setDomainName] = useState(""); // State to hold withdrawal target's domain name
+  const [names, setNames] = useState(); // State to hold user's registered domain names
+  const [loading, setLoading] = useState(false); // State to trigger loading prompt
+  const [withdrawLoading, setWithdrawLoading] = useState(false); // State to trigger loading prompt
+
   useEffect(() => {
     const getMyNames = async () => {
       const data = await getDomains();
-      // console.log(data);
       setNames(data);
     };
     setLoading(true);
@@ -33,11 +36,9 @@ const Mynames = (props) => {
     setLoading(false);
   }, [getDomains]);
 
-  // if(reload){
-  //     // window.location.reload(false);
-  //     setReload(false);
-  // }
+  // Functions
   const withdrawHandler = () => {
+    // Function to control withdraw and modal states
     if (balanceError) {
       setValidWithdraw(false);
       setBalanceError(false);
@@ -47,11 +48,12 @@ const Mynames = (props) => {
   };
 
   const withdrawDomain = async () => {
+    // Function to control withdrawal from target domain name
     try {
       setWithdrawLoading(true);
       await withdrawFromDomain(name, amount);
     } catch (err) {
-        setBalanceError(true);
+      setBalanceError(true);
     } finally {
       setWithdrawLoading(false);
       setNames(await getDomains());
