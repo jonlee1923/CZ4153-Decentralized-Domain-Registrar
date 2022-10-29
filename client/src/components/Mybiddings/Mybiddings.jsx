@@ -103,9 +103,7 @@ const Mybiddings = (props) => {
                             let endDate = new Date(unixEnd * 1000);
                             endDate = endDate.toLocaleString();
 
-                            //changing to
                             const revealStart = i.revealStart.toNumber();
-                            // const revealStart = i.revealEnd.toNumber();
                             let reveal = new Date(revealStart * 1000);
                             reveal = reveal.toLocaleString();
 

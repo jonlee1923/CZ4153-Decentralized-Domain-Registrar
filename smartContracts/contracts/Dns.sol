@@ -9,13 +9,13 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract Dns is IDns, ReentrancyGuard {
     using Counters for Counters.Counter;
 
-    address public owner;
+    address public immutable owner;
     string public registryName;
 
     Counters.Counter private nameCount;
-    mapping(address => uint[]) public addrToDomainId;
-    mapping(string => uint) public nameToDomainId;
-    mapping(uint => EthDomain) public domains;
+    mapping(address => uint[]) addrToDomainId;
+    mapping(string => uint) nameToDomainId;
+    mapping(uint => EthDomain) domains;
 
     //////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////
@@ -94,7 +94,9 @@ contract Dns is IDns, ReentrancyGuard {
         view
         returns (bool)
     {
-        for (uint i = 1; i <= auctionCount.current(); i++) {
+        uint length = auctionCount.current();
+
+        for (uint i = 1; i <= length; i++) {
             if (
                 keccak256(abi.encodePacked(auctions[i].name)) ==
                 keccak256(abi.encodePacked(_name))
@@ -123,7 +125,8 @@ contract Dns is IDns, ReentrancyGuard {
         EthDomain[] memory allDomains = new EthDomain[](nameCount.current());
 
         uint index = 0;
-        for (uint i = 1; i <= nameCount.current(); i++) {
+        uint length = nameCount.current();
+        for (uint i = 1; i <= length; i++) {
             allDomains[index] = domains[i];
             index++;
         }
@@ -146,7 +149,7 @@ contract Dns is IDns, ReentrancyGuard {
         EthDomain storage domain = domains[nameToDomainId[_name]];
         domain.balance += msg.value;
 
-        emit SentToDomain(msg.sender, _name, msg.value);
+        // emit SentToDomain(msg.sender, _name, msg.value);
     }
 
     function withdrawFrmDomain(string memory _name, uint amount)
@@ -163,7 +166,7 @@ contract Dns is IDns, ReentrancyGuard {
 
         payable(domain.owner).transfer(amount);
 
-        emit WithdrawnFromDomain(msg.sender, _name, amount);
+        // emit WithdrawnFromDomain(msg.sender, _name, amount);
     }
 
     function registerName(
@@ -171,7 +174,6 @@ contract Dns is IDns, ReentrancyGuard {
         address _owner,
         uint _value
     ) public notRegistered(_name) {
-        console.log(_name);
         nameCount.increment();
         EthDomain memory newEthDomain = EthDomain({
             domainName: _name,
@@ -180,16 +182,21 @@ contract Dns is IDns, ReentrancyGuard {
             value: _value
         });
 
-        addrToDomainId[_owner].push(nameCount.current());
-        nameToDomainId[_name] = nameCount.current();
-        domains[nameCount.current()] = newEthDomain;
-        emit DomainRegistered(nameCount.current(), _name, _owner);
+        //cache value to save gas
+        uint currentCount = nameCount.current();
+
+        addrToDomainId[_owner].push(currentCount);
+        nameToDomainId[_name] = currentCount;
+        domains[currentCount] = newEthDomain;
+        emit DomainRegistered(currentCount, _name, _owner);
     }
 
     function getAuctions() external view returns (Auction[] memory) {
-        Auction[] memory allAuctions = new Auction[](auctionCount.current());
+        uint currentCount = auctionCount.current();
+
+        Auction[] memory allAuctions = new Auction[](currentCount);
         uint index = 0;
-        for (uint i = 1; i <= auctionCount.current(); i++) {
+        for (uint i = 1; i <= currentCount; i++) {
             allAuctions[index] = auctions[i];
             index += 1;
         }
@@ -210,7 +217,6 @@ contract Dns is IDns, ReentrancyGuard {
             )
         );
 
-        // NOTE: cast last 20 bytes of hash to address
         return address(uint160(uint(hash)));
     }
 
@@ -219,7 +225,6 @@ contract Dns is IDns, ReentrancyGuard {
         pure
         returns (bytes memory)
     {
-        // bytes memory bytecode = type(Commit).creationCode;
         bytes memory bytecode = type(Commit).creationCode;
 
         return abi.encodePacked(bytecode, abi.encode(_owner, _name));
@@ -231,7 +236,6 @@ contract Dns is IDns, ReentrancyGuard {
         uint _revealDuration
     ) external {
         require(
-            // auctions[_name].auctionId == 0,
             nameToAuctionId[_name] == 0,
             "Auction for this already exists"
         );
@@ -241,21 +245,22 @@ contract Dns is IDns, ReentrancyGuard {
         );
 
         auctionCount.increment();
+        uint currentCount = auctionCount.current();
 
         Auction memory newAuction = Auction({
             biddingEnd: block.timestamp + _bidDuration,
             revealEnd: block.timestamp + _bidDuration + _revealDuration,
             name: _name,
-            auctionId: auctionCount.current(),
+            auctionId: currentCount,
             highestBid: 0,
             highestBidder: address(0),
             start: block.timestamp,
             ended: false
         });
 
-        nameToAuctionId[_name] = auctionCount.current();
-        console.log(auctionCount.current());
-        auctions[auctionCount.current()] = newAuction;
+        nameToAuctionId[_name] = currentCount;
+        console.log(currentCount);
+        auctions[currentCount] = newAuction;
 
         emit AuctionStarted(_name);
     }
@@ -273,13 +278,12 @@ contract Dns is IDns, ReentrancyGuard {
                         bids[ids[i]].revealedBid
                     );
                 } else {
-                    console.log(_name);
                     registerName(
                         _name,
                         bids[ids[i]].bidder,
                         bids[ids[i]].revealedBid
                     );
-                    emit AuctionEnded(_name, bids[ids[i]].bidder);
+                    // emit AuctionEnded(_name, bids[ids[i]].bidder);
                 }
             }
         }
@@ -311,7 +315,6 @@ contract Dns is IDns, ReentrancyGuard {
         existingBid(_name, msg.sender)
         onlyBeforeBiddingEnd(_name)
     {
-        console.log("hashed ", _salt);
         address addr;
         assembly {
             addr := create2(
@@ -328,13 +331,14 @@ contract Dns is IDns, ReentrancyGuard {
         }
 
         _bid(msg.sender, _name);
-        emit BidMade(msg.sender, _name);
+        // emit BidMade(msg.sender, _name);
     }
 
     function _bid(address user, string memory _name) private {
         bidCount.increment();
+        uint currentCount = bidCount.current();
 
-        bids[bidCount.current()] = Bid({
+        bids[currentCount] = Bid({
             name: _name,
             bidder: user,
             revealed: false,
@@ -344,8 +348,8 @@ contract Dns is IDns, ReentrancyGuard {
             end: auctions[nameToAuctionId[_name]].revealEnd
         });
 
-        nameToBidId[_name].push(bidCount.current());
-        myBiddings[user].push(bidCount.current());
+        nameToBidId[_name].push(currentCount);
+        myBiddings[user].push(currentCount);
     }
 
     function check(
@@ -354,7 +358,6 @@ contract Dns is IDns, ReentrancyGuard {
         string memory _name
     ) public onlyAfterBidding(_name) onlyBeforeRevealEnd(_name) {
         Bid storage bidToCheck;
-        console.log("hashed ", _salt);
 
         uint[] memory ids = nameToBidId[_name];
 
@@ -381,12 +384,12 @@ contract Dns is IDns, ReentrancyGuard {
                 commit.withdraw();
                 refreshHighestBid(_name, msg.sender, bidToCheck.revealedBid);
 
-                emit BidRevealed(
-                    bidder,
-                    domainName,
-                    bidToCheck.revealedBid,
-                    bidToCheck.revealed
-                );
+                // emit BidRevealed(
+                //     bidder,
+                //     domainName,
+                //     bidToCheck.revealedBid,
+                //     bidToCheck.revealed
+                // );
                 break;
             }
         }
@@ -410,13 +413,12 @@ contract Dns is IDns, ReentrancyGuard {
 
     function checkAuctionsToEnd() public {
         require(auctionCount.current() != 0, "No auctions created");
-        console.log(auctionCount.current());
-        for (uint i = 1; i <= auctionCount.current(); i++) {
+
+        uint currentCount = auctionCount.current();
+        for (uint i = 1; i <= currentCount; i++) {
             if (block.timestamp < auctions[i].revealEnd || auctions[i].ended) {
-                console.log("continuing for this auction: ", auctions[i].name);
                 continue;
             } else {
-            console.log("ending auction ", auctions[i].name);
             endAuction(auctions[i].name);
             }
         }
