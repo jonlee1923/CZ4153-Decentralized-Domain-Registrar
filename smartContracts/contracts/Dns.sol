@@ -12,14 +12,17 @@ contract Dns is IDns, ReentrancyGuard {
     address public immutable owner;
     string public registryName;
 
+    // Mappings for Domain Names
+    // A counter from openzeppelin is used to ensure accurate counting of ids
+    // Each domain struct is mapped to the id to allow for easy linking between user addresses and string names, without duplicate structs
     Counters.Counter private nameCount;
     mapping(address => uint[]) addrToDomainId;
     mapping(string => uint) nameToDomainId;
     mapping(uint => EthDomain) domains;
 
-    //////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////
+    // Mappings for Auctions and bids
+    // Counters from openzeppelin used to ensure accurate counting of ids
+    // Mappings are connected via the id of the bid or auction so as to link domain names or user addresses to the bid/auction structs with ease
 
     Counters.Counter private bidCount;
     Counters.Counter private auctionCount;
@@ -31,17 +34,13 @@ contract Dns is IDns, ReentrancyGuard {
     mapping(address => uint[]) myBiddings;
     mapping(uint => Bid) bids;
 
-    modifier isOwner() {
-        require(msg.sender == owner, "User must be owner");
-        _;
-    }
-
     //To check if the domain is already registered or not
     modifier notRegistered(string memory name) {
         require(nameToDomainId[name] == 0, "domain name already exists");
         _;
     }
 
+    //Check for existing bids made by a user for a particular domain name
     modifier existingBid(string memory _name, address bidder) {
         for (uint i = 0; i < myBiddings[bidder].length; i++) {
             require(
@@ -53,26 +52,36 @@ contract Dns is IDns, ReentrancyGuard {
         _;
     }
 
+    //Check if a auction for a particular domain names already exists and ensures that has not ended
+    //Used for the bid function
     modifier auctionExists(string memory _name) {
         require(nameToAuctionId[_name] != 0, "auction does not exist");
+        require(
+            auctions[nameToAuctionId[_name]].ended == false,
+            "auction has ended"
+        );
         _;
     }
 
+    // Check if a function is being called before the end of the bidding phase
     modifier onlyBeforeBiddingEnd(string memory name) {
         require(block.timestamp < auctions[nameToAuctionId[name]].biddingEnd);
         _;
     }
 
+    // Check if a function is being called after the end of the bidding phase
     modifier onlyAfterBidding(string memory name) {
         require(block.timestamp >= auctions[nameToAuctionId[name]].biddingEnd);
         _;
     }
 
+    // Check if a function is being called before the end of the reveal phase
     modifier onlyBeforeRevealEnd(string memory name) {
         require(block.timestamp < auctions[nameToAuctionId[name]].revealEnd);
         _;
     }
 
+    // Check if a function is being called after the reveal phase has ended
     modifier onlyAfterReveal(string memory name) {
         require(block.timestamp >= auctions[nameToAuctionId[name]].revealEnd);
         _;
@@ -94,6 +103,7 @@ contract Dns is IDns, ReentrancyGuard {
         view
         returns (bool)
     {
+        //Cache length for gas optimization
         uint length = auctionCount.current();
 
         for (uint i = 1; i <= length; i++) {
@@ -107,6 +117,7 @@ contract Dns is IDns, ReentrancyGuard {
         return false;
     }
 
+    // To return the domains owned by a certain user
     function getMyDomains(address _user)
         external
         view
@@ -121,11 +132,12 @@ contract Dns is IDns, ReentrancyGuard {
         return myDomains;
     }
 
+    //Function to return all the existing domains
     function getAllDomains() external view returns (EthDomain[] memory) {
         EthDomain[] memory allDomains = new EthDomain[](nameCount.current());
 
         uint index = 0;
-        uint length = nameCount.current();
+        uint length = nameCount.current(); //Cache length for gas optimization
         for (uint i = 1; i <= length; i++) {
             allDomains[index] = domains[i];
             index++;
@@ -142,6 +154,8 @@ contract Dns is IDns, ReentrancyGuard {
         return domains[nameToDomainId[_name]].owner;
     }
 
+    // Function to send ETH to a particular domain
+    // Carries out appropriate checks to ensure transfer is not done to zero address and that the domain exists
     function sendDomain(string memory _name) external payable {
         require(msg.sender != address(0), "Transfer from the zero address");
         require(nameToDomainId[_name] != 0, "Domain name does not exist");
@@ -152,12 +166,14 @@ contract Dns is IDns, ReentrancyGuard {
         // emit SentToDomain(msg.sender, _name, msg.value);
     }
 
+    //Function to withdraw ETH from a owned domain
+    //Uses the nonReentrant modifier from the openzeppelin contract to ensure reentrancy cannot be carried out with this withdraw function
     function withdrawFrmDomain(string memory _name, uint amount)
         external
         nonReentrant
     {
+        // Checks are done first to ensure that even if reentrancy is done a attacker cannot continuously withdraw funds from this contract
         require(nameToDomainId[_name] != 0, "Domain name does not exist");
-
         EthDomain storage domain = domains[nameToDomainId[_name]];
         require(msg.sender == domain.owner, "You do not own these funds");
         require(amount <= domain.balance, "Insufficient funds");
@@ -169,6 +185,7 @@ contract Dns is IDns, ReentrancyGuard {
         // emit WithdrawnFromDomain(msg.sender, _name, amount);
     }
 
+    // Function to register a domain name to a user
     function registerName(
         string memory _name,
         address _owner,
@@ -191,6 +208,7 @@ contract Dns is IDns, ReentrancyGuard {
         emit DomainRegistered(currentCount, _name, _owner);
     }
 
+    //Function to return all the existing auctions in the dns
     function getAuctions() external view returns (Auction[] memory) {
         uint currentCount = auctionCount.current();
 
@@ -203,6 +221,7 @@ contract Dns is IDns, ReentrancyGuard {
         return allAuctions;
     }
 
+    //Function to get the address of a particular deployed contract with the create2 function
     function getAddress(bytes memory bytecode, uint _salt)
         public
         view
@@ -211,7 +230,7 @@ contract Dns is IDns, ReentrancyGuard {
         bytes32 hash = keccak256(
             abi.encodePacked(
                 bytes1(0xff),
-                address(this),
+                address(this), //needa change this actually
                 _salt,
                 keccak256(bytecode)
             )
@@ -220,6 +239,7 @@ contract Dns is IDns, ReentrancyGuard {
         return address(uint160(uint(hash)));
     }
 
+    //Function that gets the bytecode of a particular contract
     function getBytecode(address _owner, string memory _name)
         public
         pure
@@ -230,22 +250,21 @@ contract Dns is IDns, ReentrancyGuard {
         return abi.encodePacked(bytecode, abi.encode(_owner, _name));
     }
 
+    // Function to start an auction
+    // Does appropriate checks to ensure that an auction with the same name does not already exist or owned by a user
     function startAuction(
         string calldata _name,
         uint _bidDuration,
         uint _revealDuration
-    ) external {
-        require(
-            nameToAuctionId[_name] == 0,
-            "Auction for this already exists"
-        );
-        require(
-            nameToDomainId[_name] == 0,
-            "This domain name is already owned"
-        );
+    ) external notRegistered(_name) {
+        require(nameToAuctionId[_name] == 0, "Auction for this already exists");
+        // require(
+        //     nameToDomainId[_name] == 0,
+        //     "This domain name is already owned"
+        // );
 
         auctionCount.increment();
-        uint currentCount = auctionCount.current();
+        uint currentCount = auctionCount.current(); //Cache the count value to give a new auction id
 
         Auction memory newAuction = Auction({
             biddingEnd: block.timestamp + _bidDuration,
@@ -265,6 +284,8 @@ contract Dns is IDns, ReentrancyGuard {
         emit AuctionStarted(_name);
     }
 
+    // Function to end an auction
+    // It also carries out refunds to bidders who lost the auction
     function endAuction(string memory _name) public {
         Auction storage auction = auctions[nameToAuctionId[_name]];
         uint[] memory ids = nameToBidId[_name];
@@ -290,11 +311,8 @@ contract Dns is IDns, ReentrancyGuard {
         auction.ended = true;
     }
 
-    function getBiddings(address _user)
-        external
-        view
-        returns (Bid[] memory)
-    {
+    // Function to get all existing bids of a user
+    function getBiddings(address _user) external view returns (Bid[] memory) {
         uint[] memory ids = myBiddings[_user];
         Bid[] memory myBids = new Bid[](ids.length);
         for (uint i = 0; i < ids.length; i++) {
@@ -304,6 +322,7 @@ contract Dns is IDns, ReentrancyGuard {
         return myBids;
     }
 
+    //Function to make a bid for a auction
     function bid(
         bytes memory bytecode,
         uint _salt,
@@ -334,6 +353,8 @@ contract Dns is IDns, ReentrancyGuard {
         // emit BidMade(msg.sender, _name);
     }
 
+    //Private bid function that gives a bid its id
+    //And adds the id to the bid mappings as well as the bid struct to the bid mapping
     function _bid(address user, string memory _name) private {
         bidCount.increment();
         uint currentCount = bidCount.current();
@@ -352,7 +373,11 @@ contract Dns is IDns, ReentrancyGuard {
         myBiddings[user].push(currentCount);
     }
 
-    function check(
+    // Function to reveal a bid and checks that the reveal is done after the bidding phase and before the reveal phase ends
+    // Uses the secret value input by the user to verify that it is indeed the user who has chosen to reveal his/her bid 
+    // This is done with the getAddress function which initialises the commit contract deployed
+    // If the correct secret value was input, the domain name will match that of the one being revealed, this is checked by keccak256 hashing the string values 
+    function reveal(
         bytes memory bytecode,
         uint _salt,
         string memory _name
@@ -374,10 +399,15 @@ contract Dns is IDns, ReentrancyGuard {
             "Failed to verify commit"
         );
 
+        // The bids are then updated as revealed and the highest bidder and highest bid amount are updated
+        // The value that is locked in the commit address is then returned to the DNS as a locked in value
         for (uint i = 0; i < ids.length; i++) {
             if (bids[ids[i]].bidder == msg.sender) {
                 bidToCheck = bids[ids[i]];
-                require(bidToCheck.revealed != true, "Bid has already been revealed");
+                require(
+                    bidToCheck.revealed != true,
+                    "Bid has already been revealed"
+                );
                 bidToCheck.revealed = true;
 
                 bidToCheck.revealedBid = balance;
@@ -395,6 +425,7 @@ contract Dns is IDns, ReentrancyGuard {
         }
     }
 
+    //Function to keep track and update the highest bidder and his/her highest bid amount
     function refreshHighestBid(
         string memory _name,
         address bidder,
@@ -411,6 +442,8 @@ contract Dns is IDns, ReentrancyGuard {
         }
     }
 
+    //This function is called by chainlink every minute to check what auctions have reached their end time 
+    //If so, the auction will be ended by calling the endAuction function which registers the new domainName to the winner and returns funds to the losing bids
     function checkAuctionsToEnd() public {
         require(auctionCount.current() != 0, "No auctions created");
 
@@ -419,7 +452,7 @@ contract Dns is IDns, ReentrancyGuard {
             if (block.timestamp < auctions[i].revealEnd || auctions[i].ended) {
                 continue;
             } else {
-            endAuction(auctions[i].name);
+                endAuction(auctions[i].name);
             }
         }
     }

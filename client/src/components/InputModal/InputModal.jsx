@@ -1,15 +1,19 @@
-import Card from "../Card/Card";
-import Button from "react-bootstrap/esm/Button";
-import styles from "./InputModal.module.css";
-import React, { useState } from "react";
+// States, styles, etc..
+import React from "react";
 import ReactDOM from "react-dom";
+import styles from "./InputModal.module.css";
+
+// Bootstrap components
+import Button from "react-bootstrap/esm/Button";
+
+//React components
+import Card from "../Card/Card";
 
 const Backdrop = (props) => {
   return <div className={styles.backdrop} />;
 };
 
 const ModalOverlay = (props) => {
-  
   const submitHandler = (event) => {
     event.preventDefault();
     props.onConfirm();

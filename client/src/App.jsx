@@ -1,63 +1,53 @@
-import React, { useRef, useState, useEffect } from "react";
+// States, styles, etc..
+import React, { useRef, useState, useEffect,useContext } from "react";
 import styles from "./App.module.css";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-
-import Navbar2 from "./components/Navbar/Navbar.jsx";
-import BiddingList from "./components/Auctions/Auctions.jsx";
-import Mybiddings from "./components/Mybiddings/Mybiddings";
-import Connectpage from "./components/Connectpage/Connectpage";
-import Placebid from "./components/Placebid/Placebid";
-import Ethertx from "./components/DomainNames/DomainNames";
-import Mynames from "./components/Mynames/Mynames";
-import ErrorModal from "./components/ErrorModal/ErrorModal";
-
+import { DnsContext } from "./context/DnsContext";
 import {
   BrowserRouter,
   Routes,
   Route,
-  Link,
-  useParams,
 } from "react-router-dom";
 
-import { useContext } from "react";
-import { DnsContext } from "./context/DnsContext";
+// React components
+import Navbar2 from "./components/Navbar/Navbar.jsx";
+import Auctions from "./components/Auctions/Auctions.jsx";
+import Mybiddings from "./components/Mybiddings/Mybiddings";
+import Connectpage from "./components/Connectpage/Connectpage";
+import Placebid from "./components/Placebid/Placebid";
+import DomainNames from "./components/DomainNames/DomainNames";
+import Mynames from "./components/Mynames/Mynames";
+
 
 function App() {
+  // States
   const {
     connected,
     connectWallet,
-    bid,
     getAuctions,
-    endAuction,
     getAllDomains,
   } = useContext(DnsContext);
-  const [auctions, setAuctions] = useState([]);
-  const [names, setNames] = useState([]);
-  const [filter, setFilter] = useState(false);
-  const [error, setError] = useState(false);
-  const scrollRef = useRef();
-  const executeScroll = () => {
-    scrollRef.current.scrollIntoView();
-  };
 
-  console.log("appfilter", filter);
-  useEffect(() => {
-    const getAuctionsHandler = async () => {
+  const [auctions, setAuctions] = useState([]); // State for array of ongoing auctions
+  const [names, setNames] = useState([]); // State for array of registered domain names
+  const [filter, setFilter] = useState(false); // State for checking if any searches occurred
+  const scrollRef = useRef(); 
+  
+  useEffect(() => { 
+    const getAuctionsHandler = async () => { // Get current ongoing auctions
       try {
         const mappedData = await getAuctions();
         setAuctions(mappedData);
       } catch (err) {
-        setError(true);
         console.log("Something went wrong!");
       }
     };
 
-    const getAllNamesHandler = async () => {
+    const getAllNamesHandler = async () => { // Get registered domain names
       try {
         const mappedNames = await getAllDomains();
         setNames(mappedNames);
       } catch (err) {
-        setError(true);
         console.log("Something went wrong!");
       }
     };
@@ -65,17 +55,17 @@ function App() {
     getAllNamesHandler();
   }, [getAuctions, getAllDomains]);
 
-  const filterHandler = (check) => {
+  // Functions 
+  const executeScroll = () => { // For onClick's scrolling effect
+    scrollRef.current.scrollIntoView();
+  };
+
+  const filterHandler = (check) => { // To set filter
     setFilter(check);
   };
-  console.log("app names", names);
-  console.log("app auctions", auctions);
 
-  const confirmHandler = (event) => {
-    setError(!error);
-  };
   return (
-    <BrowserRouter>
+    <BrowserRouter> 
       <Navbar2
         connected={connected}
         connectWallet={connectWallet}
@@ -85,12 +75,11 @@ function App() {
         filter={filter}
         filterHandler={filterHandler}
       />
-      {/* {error && <ErrorModal title="Error" message="Something went wrong!" onConfirm={confirmHandler}/>} */}
       <Routes>
-        <Route
+        <Route        
           path="/"
           element={
-            <BiddingList
+            <Auctions
               connected={connected}
               auctions={auctions}
               filterHandler={filterHandler}
@@ -111,7 +100,7 @@ function App() {
         <Route
           path="/ethertx"
           element={
-            <Ethertx
+            <DomainNames
               connected={connected}
               names={names}
               filterHandler={filterHandler}

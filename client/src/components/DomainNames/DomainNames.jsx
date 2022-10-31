@@ -1,48 +1,50 @@
-import React, { useState, useContext } from "react";
+// States, styles, etc..
+import React, { useState, useContext, useEffect } from "react";
 import styles from "./DomainNames.module.css";
-import { ethers } from "ethers";
+import { DnsContext } from "../../context/DnsContext";
+import { useLocation } from "react-router-dom";
+
+// Bootstrap components
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Card from "../Card/Card.jsx";
+
+// React components
 import ErrorModal from "../ErrorModal/ErrorModal";
 import InputModal from "../InputModal/InputModal";
-import { DnsContext } from "../../context/DnsContext";
-import { useEffect } from "react";
-import { computePublicKey } from "ethers/lib/utils";
-import { useNavigate, useLocation } from "react-router-dom";
+import Card from "../Card/Card.jsx";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 
-const Ethertx = (props) => {
-  const { getDomains, sendDomain, withdrawFromDomain, getAllDomains } =
-    useContext(DnsContext);
+const DomainNames = (props) => {
+  // States
+  const { sendDomain } = useContext(DnsContext);
 
-  const [validTransfer, setValidTransfer] = useState(false);
-  const [error, setError] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
-  const [nameToSend, setNameToSend] = useState();
-  const [loading, setLoading] = useState(false);
-  const [sendLoading, setSendLoading] = useState(false);
-  const [xfer, setXfer] = useState(0);
+  const [validTransfer, setValidTransfer] = useState(false); // State for valid transfer
+  const [error, setError] = useState(false); // State to control ErrorModal prompt
+  const [filteredData, setFilteredData] = useState([]); // State for array of filteredData
+  const [nameToSend, setNameToSend] = useState(); // State to hold recipient's address / domain name
+  const [sendLoading, setSendLoading] = useState(false); // State to trigger loading prompt
+  const [xfer, setXfer] = useState(0); // State to hold transfer amount
 
-  const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
-  console.log("ethertx state", state);
-  console.log("ethertx filterstate", props.filter);
+
   useEffect(() => {
     if (state && props.filter) {
       setFilteredData(state.data);
     }
   }, [state, props.filter]);
 
+  // Functions
   const removeFilterHandler = () => {
+    // To control filter state
     setFilteredData([]);
     props.filterHandler(false);
   };
 
   const transferCancelHandler = () => {
+    // Function to control transfer and modal states
     if (error) {
       setValidTransfer(false);
     } else {
@@ -52,6 +54,7 @@ const Ethertx = (props) => {
   };
 
   const sendDomainHandler = async (name, amount) => {
+    // Function that handles a valid transfer
     try {
       setSendLoading(true);
       await sendDomain(name, amount);
@@ -155,5 +158,4 @@ const Ethertx = (props) => {
     </Container>
   );
 };
-
-export default Ethertx;
+export default DomainNames;

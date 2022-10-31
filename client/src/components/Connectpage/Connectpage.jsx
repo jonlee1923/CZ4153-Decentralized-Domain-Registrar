@@ -1,23 +1,28 @@
-import React,{useRef} from 'react';
+// States, styles, etc..
+import React from "react";
 import styles from "./Connectpage.module.css";
 
-import {ArrowUp} from "react-bootstrap-icons";
-
+// Bootstrap components
+import { ArrowUp } from "react-bootstrap-icons";
 
 const Connectpage = (props) => {
-  const connectpagebg = require("../../assets/connectpage.jpg");
-
-  
+  // Variable / Constants declaration
+  const connectpagebg = require("../../assets/connectpage.jpg"); // To get image stored in assets folder
   return (
     <div className={styles.connectpage}>
       <img src={connectpagebg} alt="background" />
       <div className={styles.connectbox}>
-        <ArrowUp size={84} className={styles.arrow} onClick={props.executeScroll} />
-        <p className={styles.connectmsg}>Connect your metamask wallet to get started!</p>
+        <ArrowUp
+          size={84}
+          className={styles.arrow}
+          onClick={props.executeScroll}
+        />
+        <p className={styles.connectmsg}>
+          Connect your metamask wallet to get started!
+        </p>
       </div>
     </div>
+  );
+};
 
-  )
-}
-
-export default Connectpage
+export default Connectpage;

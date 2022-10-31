@@ -1,29 +1,28 @@
+// States, styles, etc..
 import React, { useState, useEffect } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/esm/Button";
 import styles from "./OngoingSearchbar.module.css";
 import { useNavigate } from "react-router-dom";
-import { CodeSlash } from "react-bootstrap-icons";
+
+// Bootstrap components
+import Form from "react-bootstrap/Form";
+
+// React components
 import ErrorModal from "../../ErrorModal/ErrorModal";
+
 const Searchbar = (props) => {
-  const [query, setQuery] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
-  const [existFilter, setExistFilter] = useState([]);
-  const [error, setError] = useState(false);
+  // Variables / Constant declaration
   const navigate = useNavigate();
 
-  const filterHandler = (event) => {
-    setQuery(event.target.value);
-  };
-  console.log("registered searchbar auctions", props.auctions);
-  console.log("registered searchbar names", props.names);
-  console.log("registered searchbar filter", filteredData);
-  console.log("registered searchbar existfilter", existFilter);
+  // States
+  const [query, setQuery] = useState(""); // State to hold user's query
+  const [filteredData, setFilteredData] = useState([]); // State to hold array of filtered data
+  const [existFilter, setExistFilter] = useState([]); // State to hold array of existing registered domain names
+  const [error, setError] = useState(false); // State to control ErrorModal prompt
+
   useEffect(() => {
     const eFilter = props.names.filter((value, key) => {
       return value.name.toLowerCase().includes(query.toLowerCase());
     });
-    
 
     if (query === "") {
       setFilteredData([]);
@@ -33,7 +32,14 @@ const Searchbar = (props) => {
     }
   }, [query, props.auctions, props.names]);
 
+  // Functions
+  const filterHandler = (event) => {
+    // Set query based on user input
+    setQuery(event.target.value);
+  };
+
   const enterHandler = (event) => {
+    // Actions that occur when enter key is pressed
     const newFilter = props.auctions.filter((value, key) => {
       return value.name.toLowerCase().includes(query.toLowerCase());
     });
@@ -57,11 +63,13 @@ const Searchbar = (props) => {
   };
 
   const clickHandler = (event) => {
+    // Actions that occur when filtered data is clicked
     props.filterHandler(true);
     navigate("/ethertx", { state: { data: existFilter } });
   };
 
   const confirmHandler = (event) => {
+    // To control error state
     setError(!error);
   };
   return (

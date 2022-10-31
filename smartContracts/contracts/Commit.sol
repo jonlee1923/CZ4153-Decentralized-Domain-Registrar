@@ -3,6 +3,8 @@ pragma solidity ^0.8.4;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+// This contract is used to lock bid values placed by bidders
+// It also inherists the reentrancyGuard to protect from reentrancy attacks
 contract Commit is ReentrancyGuard{
     address public bidder;
     string public name;
@@ -18,6 +20,8 @@ contract Commit is ReentrancyGuard{
         return address(this).balance;
     }
 
+    // Function to be called by the DNS contract if a user has been able to succesfully reveal his bid
+    // It only allows the DNS contract to withdraw funds 
     function withdraw() external nonReentrant{
         require(msg.sender == dns, "You cannot withdraw from this contract");
         (bool success,) = dns.call{value:address(this).balance}("");

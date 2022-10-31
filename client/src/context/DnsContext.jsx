@@ -192,7 +192,7 @@ export const DnsProvider = ({ children }) => {
             const bytecode = getBytecode(name);
 
             console.log("calling check");
-            const transaction = await dnsContract.check(
+            const transaction = await dnsContract.reveal(
                 bytecode,
                 // parseInt(secret), //used to be this <-
                 ethers.utils.id(secret),

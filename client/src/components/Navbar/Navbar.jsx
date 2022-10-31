@@ -1,28 +1,36 @@
-import React, { useState, useEffect, useContext } from "react";
+// States, styles, etc..
+import React, { useState } from "react";
 import styles from "./Navbar.module.css";
+import { useNavigate } from "react-router-dom";
 
+// Bootstrap components
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { List } from "react-bootstrap-icons";
+
+// React components
 import OngoingSearchbar from "./Searchbars/OngoingSearchbar";
 import RegisteredSearchbar from "./Searchbars/RegisteredSearchbar";
-import { List } from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
+
 
 const Navbar2 = React.forwardRef((props, ref) => {
-  // const { connectWallet, checkIfWalletIsConnected, connected } = useContext(DnsContext);
-  const [searchChoice, setSearchChoice] = useState("ongoing");
-  const lumeel = require("../../assets/lumeel.png");
-  const navigate = useNavigate();
+  // Variable / Constants declaration
+  const lumeel = require("../../assets/lumeel.png"); // To get picture from assets folder
   let myNamesPath = "";
   let myBiddingsPath = "";
   let placeBidPath = "";
   let etherTxPath = "";
-  
-  if (props.connected) {
+  const navigate = useNavigate();
+
+  // States
+  const [searchChoice, setSearchChoice] = useState("ongoing"); // State to hold current search type
+
+  // Functions 
+  if (props.connected) { // Set paths to connect page if wallet is not connected
     myNamesPath = "/mynames";
     myBiddingsPath = "/mybiddings";
     placeBidPath = "/placebid";
@@ -31,10 +39,10 @@ const Navbar2 = React.forwardRef((props, ref) => {
     myNamesPath = myBiddingsPath = placeBidPath = etherTxPath = "/connect";
   }
 
-  console.log("navbar auctions", props.auctions);
-  const submitHandler = (event) => {
+  const submitHandler = (event) => { // Prevent refresh on submit
     event.preventDefault();
   };
+  
   return (
     <Navbar expand="xl" className={styles.navbar2}>
       <Container>
