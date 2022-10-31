@@ -94,7 +94,7 @@ const DomainNames = (props) => {
         />
       )}
       <div className={styles.toprow}>
-        <h2 className={styles.pagename}>Ether Transfer</h2>
+        <h2 className={styles.pagename}>Domain Names</h2>
         {filteredData.length !== 0 && (
           <Button className={styles.removefilter} onClick={removeFilterHandler}>
             Remove Filter

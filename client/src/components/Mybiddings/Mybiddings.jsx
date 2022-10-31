@@ -77,7 +77,7 @@ const Mybiddings = (props) => {
             {error && (
                 <ErrorModal
                     title="Error occurred"
-                    message="You have already revealed this bid"
+                    message="You have already revealed this bid / please wait for reveal phase"
                     onConfirm={errorHandler}
                 />
             )}

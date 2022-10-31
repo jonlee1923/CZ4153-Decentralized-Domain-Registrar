@@ -74,7 +74,7 @@ const Placebid = (props) => {
     } catch (err) {
       setError(true);
     } finally {
-      setLoading(false);
+      setLoading(false);      
       setDomainName("");
       setRentalPrice("");
       setSecretInt("");
