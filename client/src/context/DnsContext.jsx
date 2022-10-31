@@ -171,11 +171,38 @@ export const DnsProvider = ({ children }) => {
         try {
             if (!ethereum) return alert("Please install metamask");
             let dnsContract = await getDnsContract();
-            await checkIfWalletIsConnected();
+            let data = await dnsContract.getBiddings(address);
 
-            let bids = await dnsContract.getBiddings(address);
+            const bidsMapped = await Promise.all(
+                data.filter((bid) => !bid.revealed).map(async (i) => {
+                    const unixStart = i.start.toNumber();
+                    let startDate = new Date(unixStart * 1000);
+                    startDate = startDate.toLocaleString();
 
-            return bids;
+                    const unixEnd = i.end.toNumber();
+                    let endDate = new Date(unixEnd * 1000);
+                    endDate = endDate.toLocaleString();
+
+                    const revealStart = i.revealStart.toNumber();
+                    let reveal = new Date(revealStart * 1000);
+                    reveal = reveal.toLocaleString();
+
+                    let bidItem = {
+                        name: i.name,
+                        start: startDate,
+                        revealTime: reveal,
+                        end: endDate,
+                        revealed: i.revealed,
+                    };
+                    return bidItem;
+                })
+            );
+
+            if (!bidsMapped) {
+                return [];
+            }
+
+            return bidsMapped;
         } catch (err) {
             if (err.message === std) {
                 return;
@@ -238,23 +265,22 @@ export const DnsProvider = ({ children }) => {
             let dnsContract = await getDnsContract();
 
             const data = await dnsContract.getMyDomains(connected);
-            const mappedNames =
-                await Promise.all(
-                    data.map(async (i) => {
-                        const _name = i.domainName;
-                        // const _balance = i.balance.toNumber();
-                        const _balance = ethers.utils.formatEther(i.balance);
-                        const _value = ethers.utils.formatEther(i.value);
+            const mappedNames = await Promise.all(
+                data.map(async (i) => {
+                    const _name = i.domainName;
+                    // const _balance = i.balance.toNumber();
+                    const _balance = ethers.utils.formatEther(i.balance);
+                    const _value = ethers.utils.formatEther(i.value);
 
-                        let domainName = {
-                            name: _name,
-                            balance: _balance,
-                            value: _value,
-                        };
+                    let domainName = {
+                        name: _name,
+                        balance: _balance,
+                        value: _value,
+                    };
 
-                        return domainName;
-                    })
-                );
+                    return domainName;
+                })
+            );
             return mappedNames;
         } catch (err) {
             if (err.message === std) {
