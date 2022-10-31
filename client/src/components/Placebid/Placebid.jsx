@@ -127,7 +127,7 @@ const Placebid = (props) => {
               <Input
                 id="secret"
                 type="password"
-                pattern="\d*"
+                pattern="[a-zA-Z0-9]+"
                 placeholder="Enter Secret Int"
                 value={secretInt}
                 onChange={secretHandler}

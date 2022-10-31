@@ -36,7 +36,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
     placeBidPath = "/placebid";
     etherTxPath = "/ethertx";
   } else {
-    myNamesPath = myBiddingsPath = placeBidPath = etherTxPath = "/connect";
+    myNamesPath = myBiddingsPath = placeBidPath = etherTxPath = "/";
   }
 
   const submitHandler = (event) => { // Prevent refresh on submit
@@ -108,7 +108,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
               id="basic-nav-dropdown"
               className={styles.dropdown}
             >
-              <NavDropdown.Item href="/">Bidding List</NavDropdown.Item>
+              <NavDropdown.Item href="/">Auctions</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href={myBiddingsPath}>
                 My Biddings
@@ -121,7 +121,7 @@ const Navbar2 = React.forwardRef((props, ref) => {
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href={etherTxPath}>
-                Ether Transaction
+                Registered Domains
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>

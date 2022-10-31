@@ -1,5 +1,5 @@
 // States, styles, etc..
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "./Auctions.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -13,13 +13,15 @@ import Col from "react-bootstrap/Col";
 import Card from "../Card/Card.jsx";
 import ErrorModal from "../ErrorModal/ErrorModal";
 
+import { DnsContext } from "../../context/DnsContext";
+
 const Auctions = (props) => {
   // Variable / Constants declaration
   const navigate = useNavigate();
   const location = useLocation();
 
   const { state } = location;
-
+  const { checkIfWalletIsConnected, connected } = useContext(DnsContext);
   //States
   const [error, setError] = useState(false); // State to control ErrorModal prompt
   const [filteredData, setFilteredData] = useState([]); // State for array of filteredData
@@ -31,11 +33,22 @@ const Auctions = (props) => {
     }
   }, [state, props.filter]);
 
+
+
+
+  // if (props.connected) {
+  //   // If unconnected, block access and navigate to Connect page
+  //   console.log("connected", props.connected);
+  //   navigate("/");
+  // } 
+  // else{
+  //   console.log("not connected", props.connected);
+  //   navigate("/connect");
+  // }
+
+
   // Functions
-  if (!props.connected) {
-    // If unconnected, block access and navigate to Connect page
-    navigate("/connect");
-  }
+
   const errorHandler = (event) => {
     // To control error state
     setError(!error);
