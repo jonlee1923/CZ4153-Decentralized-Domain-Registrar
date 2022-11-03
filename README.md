@@ -12,7 +12,7 @@ Lumeel is a Web3 Domain Name Registrar that allows the public to bid for .ntu do
 ### Installation:
 1. Run `git clone https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar.git`
 2. Run `npm install` in the client folder and smartContracts folder individually
-3. In the smartContracts folder also insert your private key from metamask in the hardhat.config.js file in the smartContracts folder
+3. In the smartContracts folder also insert your private key from metamask in the hardhat.config.js file in "accounts: ['private key']"
 4. Change directory to client folder 
 5. Run `npm start` to launch frontend
 
