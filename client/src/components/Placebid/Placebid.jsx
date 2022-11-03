@@ -67,9 +67,9 @@ const Placebid = (props) => {
     try {
       const result = await checkAuctionExists(domainName);
       if (result === true) {
-        await bid(domainName, rentalPrice, secretInt);
+        await bid(domainName+".ntu", rentalPrice, secretInt);
       } else {
-        await createAuctionAndBid(domainName, rentalPrice, secretInt);
+        await createAuctionAndBid(domainName+".ntu", rentalPrice, secretInt);
       }
     } catch (err) {
       setError(true);

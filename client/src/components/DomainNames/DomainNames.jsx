@@ -114,7 +114,7 @@ const DomainNames = (props) => {
               <Col lg={4} md={6} sm={12} xs={12} key={domain.name}>
                 <Card className={styles.card}>
                   <p>
-                    Domain Name: <span>{domain.name + ".ntu"}</span>
+                    Domain Name: <span>{domain.name}</span>
                   </p>
                   <Button
                     className={styles.transferbtn}
@@ -138,7 +138,7 @@ const DomainNames = (props) => {
               <Col lg={4} md={6} sm={12} xs={12} key={domain.name}>
                 <Card className={styles.card}>
                   <p>
-                    Domain Name: <span>{domain.name + ".ntu"}</span>
+                    Domain Name: <span>{domain.name}</span>
                   </p>
                   <Button
                     className={styles.transferbtn}

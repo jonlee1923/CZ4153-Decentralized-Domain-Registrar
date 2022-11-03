@@ -85,7 +85,7 @@ const Auctions = (props) => {
               <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
                 <Card className={styles.card}>
                   <p>
-                    Domain Name: <span>{auction.name + ".ntu"}</span>
+                    Domain Name: <span>{auction.name}</span>
                   </p>
                   <p>
                     Start: <span>{auction.start}</span>
@@ -125,7 +125,7 @@ const Auctions = (props) => {
               <Col lg={6} md={6} sm={12} xs={12} key={auction.auctionId}>
                 <Card className={styles.card}>
                   <p>
-                    Domain Name: <span>{auction.name + ".ntu"}</span>
+                    Domain Name: <span>{auction.name}</span>
                   </p>
                   <p>
                     Start: <span>{auction.start}</span>

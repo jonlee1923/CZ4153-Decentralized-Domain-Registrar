@@ -115,7 +115,7 @@ const Mybiddings = (props) => {
                                 <Card className={styles.card}>
                                     <p>
                                         Domain Name:{" "}
-                                        <span>{bid.name + ".ntu"}</span>
+                                        <span>{bid.name}</span>
                                     </p>
                                     <p>
                                         Start: <span>{bid.start}</span>
