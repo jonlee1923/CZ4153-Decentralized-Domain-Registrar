@@ -12,3 +12,9 @@ Lumeel is a Web3 Domain Name Registrar that allows the public to bid for .ntu do
 3. In the smartContracts folder also insert your private key from metamask in the hardhat.config.js file in the smartContracts folder
 4. Change directory to client folder 
 5. Run `npm start` to launch frontend
+
+## Functionalities
+- Bid for domain names through an auction
+- Send Ether to domain names
+- Withdraw from domain names
+- Search for registered domain names and ongoing auctions
