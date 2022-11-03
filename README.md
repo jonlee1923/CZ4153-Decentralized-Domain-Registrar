@@ -2,27 +2,13 @@
 
 Lumeel is a Web3 Domain Name Registrar that allows the public to bid for .ntu domain names 
 
-
-## Getting Started
-1. Run `git clone https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar.git`
-2. Create a .env file in each folder
-3. Set up an account with infura to get credentials
-5. Set up a metamask wallet to insert private key
+## Adding Goerli testnet to metamask
+1. Start from step 4 of this blogpost https://blog.cryptostars.is/goerli-g%C3%B6rli-testnet-network-to-metamask-and-receiving-test-ethereum-in-less-than-2-min-de13e6fe5677 
+2. Otherwise here is a quick youtube video on how to do it https://www.youtube.com/watch?v=SFl8Cxrxuuk
 
 ### Installation:
-1. Run `npm install` in the root directory
-2. Open the terminal and change directory to the backend
-3. Run `npm start` to launch the backend
-5. Open another terminal and change directory to the frontend
-6. Run `npm start` to launch the frontend locally
-
-## Usage 
-
-1. Connect to MetaMask
-2. Browse through Homescreen to understand the platform
-3. Go to list of companies and look at the available organisations 
-4. See the available list of NFTs that each organisation has
-5. Sponsor the organisations that aligns with your belief
-
-
-
+1. Run `git clone https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar.git`
+2. Run `npm install` in the client folder and smartContracts folder individually
+3. In the smartContracts folder also insert your private key from metamask in the hardhat.config.js file in the smartContracts folder
+4. Change directory to client folder 
+5. Run `npm start` to launch frontend
