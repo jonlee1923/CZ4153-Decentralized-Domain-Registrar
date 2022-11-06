@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.4;
+// This solidity version has safemath library built in to protect form overflow and underflow bugs
 import "hardhat/console.sol";
 import "./IDns.sol";
 import "./Commit.sol";
@@ -191,7 +192,10 @@ contract Dns is IDns, ReentrancyGuard {
         address _owner,
         uint _value
     ) public notRegistered(_name) {
+        // increment id count
         nameCount.increment();
+
+        //create new domain name struct
         EthDomain memory newEthDomain = EthDomain({
             domainName: _name,
             owner: _owner,
@@ -227,10 +231,11 @@ contract Dns is IDns, ReentrancyGuard {
         view
         returns (address)
     {
+        //getting the unique address
         bytes32 hash = keccak256(
             abi.encodePacked(
                 bytes1(0xff),
-                address(this), //needa change this actually
+                address(this), 
                 _salt,
                 keccak256(bytecode)
             )
@@ -258,14 +263,17 @@ contract Dns is IDns, ReentrancyGuard {
         uint _revealDuration
     ) external notRegistered(_name) {
         require(nameToAuctionId[_name] == 0, "Auction for this already exists");
-        // require(
-        //     nameToDomainId[_name] == 0,
-        //     "This domain name is already owned"
-        // );
+        require(
+            nameToDomainId[_name] == 0,
+            "This domain name is already owned"
+        );
 
+
+        //increment id
         auctionCount.increment();
         uint currentCount = auctionCount.current(); //Cache the count value to give a new auction id
 
+        //create a auction struct
         Auction memory newAuction = Auction({
             biddingEnd: block.timestamp + _bidDuration,
             revealEnd: block.timestamp + _bidDuration + _revealDuration,
@@ -277,11 +285,11 @@ contract Dns is IDns, ReentrancyGuard {
             ended: false
         });
 
+        // assign to mappings
         nameToAuctionId[_name] = currentCount;
-        console.log(currentCount);
         auctions[currentCount] = newAuction;
 
-        emit AuctionStarted(_name);
+        // emit AuctionStarted(_name);
     }
 
     // Function to end an auction
@@ -291,14 +299,17 @@ contract Dns is IDns, ReentrancyGuard {
         uint[] memory ids = nameToBidId[_name];
 
         for (uint i = 0; i < ids.length; i++) {
+            //skip bid if it has not been revealed
             if (bids[ids[i]].revealed == false) {
                 continue;
             } else {
+
+                //if the bidder is not the higest bidder refund the bid
                 if (bids[ids[i]].bidder != auction.highestBidder) {
                     payable(bids[ids[i]].bidder).transfer(
                         bids[ids[i]].revealedBid
                     );
-                } else {
+                } else { //else register the domain name
                     registerName(
                         _name,
                         bids[ids[i]].bidder,
@@ -392,6 +403,8 @@ contract Dns is IDns, ReentrancyGuard {
         string memory domainName = commit.name();
         uint balance = commit.getBalance();
 
+        // verify the bid by comparing the domain name of the retrieved commit contract and the _name argument
+        // valid reveal if they match
         require(bidder == msg.sender, "Failed to verify commit");
         require(
             keccak256(abi.encodePacked(domainName)) ==
