@@ -2,7 +2,9 @@
 
 Lumeel is a Web3 Domain Name Registrar that allows the public to bid for .ntu domain names 
 
-![alt text](https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar/blob/main/Screenshot.png)
+![alt text](https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar/blob/main/SS1.png)
+![alt text](https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar/blob/main/SS2.png)
+![alt text](https://github.com/jonlee1923/CZ4153-Decentralized-Domain-Registrar/blob/main/SS3.png)
 
 ## Adding Goerli testnet to metamask
 1. Start from step 4 of this blogpost https://blog.cryptostars.is/goerli-g%C3%B6rli-testnet-network-to-metamask-and-receiving-test-ethereum-in-less-than-2-min-de13e6fe5677 
